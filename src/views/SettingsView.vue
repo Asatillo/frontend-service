@@ -1,6 +1,6 @@
 <template>
     <Layout>
-      <Home />
+      <Settings />
     </Layout>
 </template>
 
@@ -8,15 +8,15 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Home from '../components/Home.vue';
-import Layout from '../components/Layout.vue';
+import Settings from '../components/Settings.vue';
+import Layout from '@/components/Layout.vue';
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'SettingsView',
 
   components: {
-    Home,
+    Settings,
     Layout
-  },
+},
 });
 </script>

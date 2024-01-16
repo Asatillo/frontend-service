@@ -1,6 +1,6 @@
 <template>
     <Layout>
-      <Home />
+      <Sales />
     </Layout>
 </template>
 
@@ -8,14 +8,14 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Home from '../components/Home.vue';
 import Layout from '../components/Layout.vue';
+import Sales from '../components/Sales.vue';
 
 export default defineComponent({
   name: 'HomeView',
 
   components: {
-    Home,
+    Sales,
     Layout
   },
 });
