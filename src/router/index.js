@@ -58,7 +58,7 @@ const routes = [
     props: {
       errorMessage: "This page could not be found", 
       errorStatus: "404", 
-      errorText: "SORRY BUT THE PAGE YOU ARE LOOKING FOR DOES NOT EXIST, HAVE BEEN REMOVED. NAME CHANGED OR IS TEMPORARILY UNAVAILABLE"
+      errorText: "SORRY BUT THE PAGE YOU ARE LOOKING FOR DOES NOT EXIST, HAVE BEEN REMOVED, NAME CHANGED OR IS TEMPORARILY UNAVAILABLE"
     },
     component: () => import('../views/ErrorTemplate.vue')
   }
