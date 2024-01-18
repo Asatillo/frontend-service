@@ -1,39 +1,139 @@
 <template>
   <div class="d-flex justify-center" style="height: 100vh">
-    <v-sheet width="400" class="mx-auto">
+    <v-sheet width="400" class="mx-6">
       <v-container class="d-flex justify-center" style="max-width: 200px ">
         <v-img src="../assets/logo1.png" width="200"></v-img>
       </v-container>
-      <v-form fast-fail @submit.prevent="signup">
-        <v-text-field v-model="username" label="Username"></v-text-field>
-        <v-text-field v-model="email" label="Email"></v-text-field>
-        <v-text-field v-model="password" label="Password"></v-text-field>
-        <v-text-field v-model="password2" label="Confirm password"></v-text-field>
-        <v-btn type="submit" color="primary" block class="mt-2"> Sign up </v-btn>
+      <v-form @submit.prevent="handleSignup">
+        
+        <v-text-field 
+          v-model="username" 
+          label="Username" 
+          :rules="usernameRules">
+        </v-text-field>
+
+        <v-text-field 
+          v-model="firstName" 
+          label="First name" 
+          :rules="nameRules">
+        </v-text-field>
+        
+        <v-text-field 
+          v-model="lastName" 
+          label="Last name" 
+          :rules="nameRules">
+        </v-text-field>
+        
+        <v-text-field 
+          v-model="email" 
+          label="Email" 
+          :rules="emailRules">
+        </v-text-field>
+        
+        <v-text-field 
+          v-model="password" 
+          label="Password" 
+          :rules="passwordRules"
+          :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show1 ? 'text' : 'password'"
+          @click:append-inner="show1 = !show1">
+        </v-text-field>
+        
+        <v-text-field 
+          v-model="password2" 
+          label="Confirm password" 
+          :rules="confirmPasswordRules"
+          :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show2 ? 'text' : 'password'"
+          @click:append-inner="show2 = !show2">
+        </v-text-field>
+        
+        <v-btn type="submit" color="primary" block class="mt-2" :disabled="!areAllRulesMet"> Sign up </v-btn>
       </v-form>
       <div class="mt-2">
         <p class="text-body-2"> Already have an account? <router-link to="/login"> Sign in </router-link></p>
-      </div>
+      </div> <br>
+      <v-alert type="error" v-if="error" dismissible>
+        {{ error }}
+      </v-alert>
     </v-sheet>
   </div>
 </template>
 
-<script>
-export default {
-    name: 'Signup',
-    data() {
-        return {
-            username: '',
-            password: '',
-            password2: '',
-            email: '',
-        };
-    },
-    methods: {
-        signup() {
-        // Your login logic here
-            this.$router.push('/');
-        }
-    },
+<script setup>
+import { ref, computed } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const show1 = ref(false);
+const show2 = ref(false);
+const username = ref('');
+const firstName = ref('');
+const lastName = ref('');
+const email = ref('');
+const password = ref('');
+const password2 = ref('');
+const error = ref('');
+
+const nameRules = computed(() => [required(firstName.value), required(lastName.value)]);
+const usernameRules = computed(() => [required(username.value)]);
+const emailRules = computed(() => [required(email.value), emailValidator(email.value)]);
+const passwordRules = computed(() => [required(password.value), min(password.value)]);
+const confirmPasswordRules = computed(() => [required(password2.value), confirmPassword(password2.value)]);
+
+const areAllRulesMet = computed(() => {
+  return [
+    nameRules.value.every(result => result === true),
+    usernameRules.value.every(result => result === true),
+    emailRules.value.every(result => result === true),
+    passwordRules.value.every(result => result === true),
+    confirmPasswordRules.value.every(result => result === true),
+  ].every(Boolean);
+});
+
+function required(value) {
+  return !!value || 'Required.';
+}
+
+function emailValidator(value) {
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  return emailRegex.test(value) || 'Invalid email format.';
+}
+
+function min(value) {
+  return value.length >= 5 || 'Min 5 characters.';
+}
+
+function confirmPassword(value) {
+  return value === password.value || 'Passwords do not match.';
+}
+
+async function handleSignup() {
+  if (password.value !== password2.value) {
+    error.value = 'Passwords do not match';
+    return;
+  }
+
+  try {
+    const userData = await axios.post('http://localhost:8765/auth-service/auth/register', {
+      username: username.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      password: password.value,
+      email: email.value,
+    });
+
+    console.log(userData);
+    if (userData.data.token){
+      localStorage.setItem('accessToken', userData.data.token);
+      localStorage.setItem('user', JSON.stringify(userData.data.user));
+      router.push('/');
+    }
+  } catch (err) {
+    console.log(err);
+    error.value = err.response?.data?.message || 'An error occurred during registration.';
+  }
 }
 </script>
