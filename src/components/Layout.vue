@@ -1,19 +1,18 @@
 <!-- Layout.vue -->
 <template>
-    <v-app>
-        <Navbar>
-            <slot></slot>
-        </Navbar>
-    </v-app>
-  </template>
+  <Navbar />
+  <v-container style="max-width: 70%;">
+    <slot></slot>
+  </v-container>
+</template>
   
-  <script>
-  import Navbar from "../components/Navbar.vue"
-  
-  export default {
-    components: {
-      Navbar
-    },
-  };
-  </script>
+<script>
+import Navbar from "../components/Navbar.vue"
+
+export default {
+  components: {
+    Navbar
+  },
+};
+</script>
   
