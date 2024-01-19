@@ -1,9 +1,7 @@
 <template>
     <v-container fluid>
         <v-row justify="center">
-            <v-col cols="12" md="8">
-                <h2 class="text-h2 text-center">Settings</h2>
-            </v-col>
+            <h2 class="text-h2 text-center">Settings</h2>
         </v-row>
     </v-container>
 </template>

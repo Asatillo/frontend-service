@@ -1,9 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="12" md="8">
         <h2 class="text-h2 text-center">Subscriptions</h2>
-      </v-col>
     </v-row>
   </v-container>
   <v-container v-if="subscriptions.length">
