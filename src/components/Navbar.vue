@@ -18,7 +18,9 @@
             </v-navigation-drawer>
 
             <v-main class="h-screen transition-all">
+                <v-container fluid style="max-width: 70%;">
                     <slot></slot>
+                </v-container>
             </v-main>
         </v-layout>
     </v-card>
