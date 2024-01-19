@@ -6,22 +6,16 @@
     </v-container>
     <v-container>
         <v-row>
-            <v-col v-for="plan in plans" :key="plan.id" cols="12" sm="6" md="4">
-                <v-card >
+            <v-col v-for="plan in plans" :key="plan.id" cols="12" sm="6" md="3">
+                <v-card>
                     <v-card-title>{{ plan.name }}</v-card-title>
                     <v-card-subtitle>{{ plan.description }}</v-card-subtitle>
                     <v-card-text>
-                        <v-list-item>
-                            <v-list-item>
-                                <v-icon>mdi-calendar-clock</v-icon>
-                                <v-list-item-title>Duration</v-list-item-title>
-                                <v-list-item-subtitle>{{ plan.duration }}</v-list-item-subtitle>
-                            </v-list-item>
-                            <v-list-item>
-                                <v-icon>mdi-cash-multiple</v-icon>
-                                <v-list-item-title>Price</v-list-item-title>
-                                <v-list-item-subtitle>{{ plan.price | 'HUF' }}</v-list-item-subtitle>
-                            </v-list-item>
+                        <v-list-item prepend-icon="mdi-calendar-clock">
+                            <v-list-item-title>Duration: {{ plan.duration }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item prepend-icon="mdi-cash-multiple">
+                            <v-list-item-title>Price: {{ plan.price }} HUF</v-list-item-title>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list dense>
