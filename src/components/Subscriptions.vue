@@ -4,50 +4,37 @@
         <h2 class="text-h2 text-center">Subscriptions</h2>
     </v-row>
   </v-container>
-  <v-container v-if="subscriptions.length">
-    <v-table>
-      <!-- https://vuetifyjs.com/en/components/data-tables/server-side-tables/#server-side-search -->
-      <thead>
-        <tr>
-          <th class="text-left">Id</th>
-          <th class="text-left">Customer</th>
-          <th class="text-left">Active</th>
-          <th class="text-left">Network Entity</th>
-          <th class="text-left">Plan</th>
-          <th class="text-left">Device</th>
-          <th class="text-left">Start Date</th>
-          <th class="text-left">End Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in subscriptions" :key="item.id">
+  <v-container >
+    <v-data-table-server
+    v-model:itemsPerPage="itemsPerPage"
+    :headers="headers"
+    :items-length="totalItems"
+    :items="subscriptions"
+    item-value="id"
+    :itemsPerPageOptions="[10, 15, 20]"
+    :loading="loading"
+    @update:options="getSubscriptions">    
+      <template v-slot:item.active="{ item }">
+        <v-icon v-if="item.active" color="green">mdi-check</v-icon>
+        <v-icon v-else color="red">mdi-close</v-icon>
+      </template>
+      <template v-slot:item.device.deviceTemplate.model="{ item }">
+        <span v-if="item.device">{{ item.device.deviceTemplate.model }}</span>
+        <span v-else>-</span>
+      </template>
+      <template v-slot:item.networkEntity.networkIdentifier="{ item }">
+        <v-icon v-if="item.networkEntity.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
+        <v-icon v-else color="blue">mdi-router-wireless</v-icon>
+        <span>{{ item.networkEntity.networkIdentifier }}</span>
+      </template>
+      <template v-slot:item.startDate="{ item }">
+        <span>{{ formatDateString(item.startDate) }}</span>
+      </template>
+      <template v-slot:item.endDate="{ item }">
+        <span>{{ formatDateString(item.endDate) }}</span>
+      </template>
+    </v-data-table-server>
 
-          <td>{{ item.id }}</td>
-          <td>
-            <span v-if="item.networkEntity.owner">{{ item.networkEntity.owner.firstName }} {{ item.networkEntity.owner.lastName }}</span>
-            <span v-else>-</span>
-          </td>
-          <td>{{ item.active }}</td>
-          <td>{{ item.networkEntity.networkIdentifier }}</td>
-          <td>{{ item.plan.name }}</td>
-          <td>
-            <span v-if="item.device">{{ item.device.deviceTemplate.model }}</span>
-            <span v-else>-</span>  
-          </td>
-          <td>{{ item.startDate }}</td>
-          <td>{{ item.endDate }}</td>
-        </tr>
-      </tbody>
-    </v-table>
-    <v-pagination :length="totalPages"></v-pagination>
-  </v-container>
-  <v-container v-else>
-    
-    <v-row justify="center">
-      <v-col cols="12" md="8" justify="center">
-        <v-progress-circular color="blue-lighten-3" :size="40" indeterminate></v-progress-circular>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
@@ -57,33 +44,48 @@ export default {
   name: 'Subscriptions',
   data() {
     return {
+      itemsPerPage: 10,
+      search: '',
       subscriptions: [],
-      totalPages: "",
-      currentPage: "",
+      loading: false,
+      totalItems: 0,
+      headers: [
+        {text: 'Id', value: 'id', align: 'center'},
+        {text: 'Customer', value: 'networkEntity.owner.firstName', align: 'center'},
+        {text: 'CC', value: 'networkEntity.owner.lastName', align: 'center'},
+        {text: 'Active', value: 'active', align: 'center'},
+        {text: 'Network Entity', value: 'networkEntity.networkIdentifier', align: 'left'},
+        {text: 'Plan', value: 'plan.name', align: 'center'},
+        {text: 'Device', value: 'device.deviceTemplate.model', align: 'center'},
+        {text: 'Start Date', value: 'startDate', align: 'right'},
+        {text: 'End Date', value: 'endDate', align: 'right'}
+      ]
     }
   },
-  mounted() {
-    this.getSubscriptions()
-  },
   methods: {
-    async getSubscriptions() {
+    async getSubscriptions({ page, itemsPerPage, sortBy }) {
+      this.loading = true;
       const config = {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
         },
       };
       try{
-        const response = await axios.get('http://localhost:8765/crm/subscriptions', config);
+        const response = await axios.get(`http://localhost:8765/crm/subscriptions?page=${page}&size=${itemsPerPage}`, config);
         if(response.data){
           console.log(response.data)
-          this.totalPages = response.data.totalPages;
-          this.currentPage = response.data.page;
+          this.totalItems = response.data.totalElements;
+          this.loading = false;
           this.subscriptions = response.data.content;
         }
-        // this.subscriptions = response.data;
       }catch(err){
         console.log(err)
       }
+    },
+    formatDateString(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+      return formattedDate;
     },
   },
 }
