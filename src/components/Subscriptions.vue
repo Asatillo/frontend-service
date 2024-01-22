@@ -18,20 +18,10 @@
         <v-icon v-if="item.active" color="green">mdi-check</v-icon>
         <v-icon v-else color="red">mdi-close</v-icon>
       </template>
-      <template v-slot:item.device.deviceTemplate.model="{ item }">
-        <span v-if="item.device">{{ item.device.deviceTemplate.model }}</span>
-        <span v-else>-</span>
-      </template>
-      <template v-slot:item.networkEntity.networkIdentifier="{ item }">
-        <v-icon v-if="item.networkEntity.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
+      <template v-slot:item.networkAdress="{ item }">
+        <v-icon v-if="item.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
         <v-icon v-else color="blue">mdi-router-wireless</v-icon>
-        <span>{{ item.networkEntity.networkIdentifier }}</span>
-      </template>
-      <template v-slot:item.startDate="{ item }">
-        <span>{{ formatDateString(item.startDate) }}</span>
-      </template>
-      <template v-slot:item.endDate="{ item }">
-        <span>{{ formatDateString(item.endDate) }}</span>
+        <span>{{ item.networkAdress }}</span>
       </template>
     </v-data-table-server>
 
@@ -39,32 +29,30 @@
 </template>
 
 <script>
+import { ref, reactive } from 'vue';
 import axios from 'axios';
+
 export default {
   name: 'Subscriptions',
-  data() {
-    return {
-      itemsPerPage: 10,
-      search: '',
-      subscriptions: [],
-      loading: false,
-      totalItems: 0,
-      headers: [
-        {text: 'Id', value: 'id', align: 'center'},
-        {text: 'Customer', value: 'networkEntity.owner.firstName', align: 'center'},
-        {text: 'CC', value: 'networkEntity.owner.lastName', align: 'center'},
-        {text: 'Active', value: 'active', align: 'center'},
-        {text: 'Network Entity', value: 'networkEntity.networkIdentifier', align: 'left'},
-        {text: 'Plan', value: 'plan.name', align: 'center'},
-        {text: 'Device', value: 'device.deviceTemplate.model', align: 'center'},
-        {text: 'Start Date', value: 'startDate', align: 'right'},
-        {text: 'End Date', value: 'endDate', align: 'right'}
-      ]
-    }
-  },
-  methods: {
-    async getSubscriptions({ page, itemsPerPage, sortBy }) {
-      this.loading = true;
+  setup() {
+    const itemsPerPage = ref(10);
+    const search = ref('');
+    const subscriptions = ref([]);
+    const loading = ref(false);
+    const totalItems = ref(0);
+    const headers = reactive([
+      {text: 'Id', value: 'id', align: 'center'},
+      {text: 'Customer', value: 'fullname', align: 'center'},
+      {text: 'Active', value: 'active', align: 'center'},
+      {text: 'Network Entity', value: 'networkAdress', align: 'left'},
+      {text: 'Device', value: 'deviceModel', align: 'center'},
+      {text: 'Plan', value: 'plan.name', align: 'center'},
+      {text: 'Start Date', value: 'startDate', align: 'right'},
+      {text: 'End Date', value: 'endDate', align: 'right'}
+    ]);
+
+    const getSubscriptions = async ({ page, itemsPerPage, sortBy }) => {
+      loading.value = true;
       const config = {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -74,19 +62,47 @@ export default {
         const response = await axios.get(`http://localhost:8765/crm/subscriptions?page=${page}&size=${itemsPerPage}`, config);
         if(response.data){
           console.log(response.data)
-          this.totalItems = response.data.totalElements;
-          this.loading = false;
-          this.subscriptions = response.data.content;
+          totalItems.value = response.data.totalElements;       
+          subscriptions.value = response.data.content;
+          subscriptions.value.forEach(element => {
+            if(element.networkEntity.owner != null){
+              element.fullname = element.networkEntity.owner.firstName + ' ' + element.networkEntity.owner.lastName;
+            }
+            element.networkAdress = element.networkEntity.networkIdentifier;
+            element.deviceType = element.networkEntity.deviceType;
+            if(element.device != null){
+              element.deviceModel = element.device.deviceTemplate.model;
+            }else{
+              element.deviceModel = '-';
+            }
+            element.startDate = formatDateString(element.startDate);
+            element.endDate = formatDateString(element.endDate);
+            
+          });
+          loading.value = false;
+          console.log(subscriptions.value)
         }
       }catch(err){
         console.log(err)
       }
-    },
-    formatDateString(dateString) {
+    };
+
+    const formatDateString = (dateString) => {
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
       const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
       return formattedDate;
-    },
+    };
+
+    return {
+      itemsPerPage,
+      search,
+      subscriptions,
+      loading,
+      totalItems,
+      headers,
+      getSubscriptions,
+      formatDateString
+    };
   },
 }
 </script>
