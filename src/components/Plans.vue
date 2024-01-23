@@ -6,10 +6,19 @@
     </v-container>
     <v-container>
         <v-row>
-            <v-col v-for="plan in plans" :key="plan.id" cols="12" sm="6" md="3">
-                <v-card>
-                    <v-card-title>{{ plan.name }}</v-card-title>
-                    <v-card-subtitle>{{ plan.description }}</v-card-subtitle>
+            <v-col style="max-width: 30%;">
+                <v-card class="elevation-2 rounded-xl" color="rgb(0, 150, 255)">
+                    <v-card-title class="text-center mt-1">New Plan</v-card-title>
+                    <v-card-text class="text-center">
+                        <v-icon size="100px">mdi-plus</v-icon>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        
+            <v-col v-for="plan in plans" :key="plan.id" style="max-width: 30%;">
+                <v-card class="elevation-2 hover-card rounded-xl">
+                    <v-card-title >{{ plan.name }}</v-card-title>
+                    <v-card-subtitle >{{ plan.description }}</v-card-subtitle>
                     <v-card-text>
                         <v-list-item prepend-icon="mdi-calendar-clock">
                             <v-list-item-title>Duration: {{ convertPeriodToDate(plan.duration) }}</v-list-item-title>
@@ -18,7 +27,7 @@
                             <v-list-item-title>Price: {{ plan.price }} HUF</v-list-item-title>
                         </v-list-item>
                         <v-divider></v-divider>
-                        <v-list dense>
+                        <v-list dense class="rounded-xl mt-2 pl-2">
                             <v-chip-group>
                                 <v-chip v-for="service in plan.services" :key="service.id">
                                     <v-icon>{{ icons[service.type] }}</v-icon>
@@ -28,7 +37,7 @@
                         </v-list>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="primary">Select</v-btn>
+                        <v-btn color="primary">Edit</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -58,7 +67,6 @@ export default {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                     },
                 });
-                console.log('Plans:', response.data);
                 plans.value = response.data.content;
             } catch (error) {
                 console.error('Error fetching plans:', error.message);
@@ -105,3 +113,10 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.hover-card:hover {
+    background-color: #f0f0f0; /* Change this to the color you want when hovered */
+}
+
+</style>
