@@ -58,6 +58,11 @@ const routes = [
     component: () => import('../views/MyProfileView.vue')
   },
   {
+    path: '/services',
+    name: 'Services',
+    component: () => import('../views/ServicesView.vue')
+  },
+  {
     path: '/:catchAll(.*)',
     name: 'NotFound',
     props: {
