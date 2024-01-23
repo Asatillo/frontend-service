@@ -30,6 +30,7 @@
 
 <script>
 import { ref, reactive } from 'vue';
+import { formatDateString } from '../services/date-formatting';
 import axios from 'axios';
 
 export default {
@@ -41,14 +42,14 @@ export default {
     const loading = ref(false);
     const totalItems = ref(0);
     const headers = reactive([
-      {text: 'Id', value: 'id', align: 'center'},
-      {text: 'Customer', value: 'fullname', align: 'center'},
-      {text: 'Active', value: 'active', align: 'center'},
-      {text: 'Network Entity', value: 'networkAdress', align: 'left'},
-      {text: 'Device', value: 'deviceModel', align: 'center'},
-      {text: 'Plan', value: 'plan.name', align: 'center'},
-      {text: 'Start Date', value: 'startDate', align: 'right'},
-      {text: 'End Date', value: 'endDate', align: 'right'}
+      {title: 'Id', key: 'id', align: 'center'},
+      {title: 'Customer', key: 'fullname', align: 'center'},
+      {title: 'Active', key: 'active', align: 'center'},
+      {title: 'Network Entity', key: 'networkAdress', align: 'left'},
+      {title: 'Device', key: 'deviceModel', align: 'center'},
+      {title: 'Plan', key: 'plan.name', align: 'center'},
+      {title: 'Start Date', key: 'startDate', align: 'right'},
+      {title: 'End Date', key: 'endDate', align: 'right'}
     ]);
 
     const getSubscriptions = async ({ page, itemsPerPage, sortBy }) => {
@@ -61,7 +62,6 @@ export default {
       try{
         const response = await axios.get(`http://localhost:8765/crm/subscriptions?page=${page}&size=${itemsPerPage}`, config);
         if(response.data){
-          console.log(response.data)
           totalItems.value = response.data.totalElements;       
           subscriptions.value = response.data.content;
           subscriptions.value.forEach(element => {
@@ -80,17 +80,10 @@ export default {
             
           });
           loading.value = false;
-          console.log(subscriptions.value)
         }
       }catch(err){
         console.log(err)
       }
-    };
-
-    const formatDateString = (dateString) => {
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
-      const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
-      return formattedDate;
     };
 
     return {
@@ -101,7 +94,6 @@ export default {
       totalItems,
       headers,
       getSubscriptions,
-      formatDateString
     };
   },
 }
