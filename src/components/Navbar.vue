@@ -22,11 +22,12 @@ export default {
         return {
             menuItems: [
                 { icon: 'mdi-view-dashboard', title: 'Home', value: '' },
+                { icon: 'mdi-account-multiple', title: 'Customers', value: 'customers' },
                 { icon: 'mdi-playlist-check', title: 'Subscriptions', value: 'subscriptions' },
                 { icon: 'mdi-currency-usd', title: 'Sales', value: 'sales' },
-                { icon: 'mdi-account-hard-hat', title: 'Users', value: 'users' },
-                { icon: 'mdi-account-multiple', title: 'Customers', value: 'customers' },
                 { icon: 'mdi-format-list-bulleted-type', title: 'Plans', value: 'plans' },
+                { icon: 'mdi-account-hard-hat', title: 'Users', value: 'users' },
+                { icon: 'mdi-floor-plan', title: 'Services', value: 'services'},
                 { icon: 'mdi-router-wireless', title: 'Devices', value: 'devices' },
                 { icon: 'mdi-cog', title: 'Settings', value: 'settings' },
             ],
