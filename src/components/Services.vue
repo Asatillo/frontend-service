@@ -32,7 +32,7 @@
 
 
             <template v-slot:top>
-                <v-toolbar >
+                <v-toolbar>
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" max-width="500px" @click:outside="handleOutsideClick">
                         <template v-slot:activator="{ props }">
@@ -53,20 +53,18 @@
                                             <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
                                         </v-col>
                                     </v-row>
-                                    <v-row>
-                                        <v-select v-model="editedItem.designatedDeviceType" label="Device type" cols="12" sm="6" md="6"
-                                            :items="['MOBILE', 'ROUTER']">
-                                        </v-select>
-                                        <v-select v-model="editedItem.type" label="Type" cols="12" sm="6" md="6"
-                                            :items="serviceTypesList"> 
-                                        </v-select>
-                                    </v-row>
+                                    <v-select v-model="editedItem.designatedDeviceType" label="Device type" cols="12"
+                                        sm="6" md="6" :items="['MOBILE', 'ROUTER']">
+                                    </v-select>
+                                    <v-select v-model="editedItem.type" label="Type" cols="12" sm="6" md="6"
+                                        :items="serviceTypesList">
+                                    </v-select>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="editedItem.amount" label="Amount"></v-text-field>
+                                            <v-text-field v-model="editedItem.amount" type="number" label="Amount"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+                                            <v-text-field v-model="editedItem.price" type="number" label="Price"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -176,27 +174,28 @@ export default {
             }
         };
 
-        function changeActive (item) {
+        function changeActive(item) {
             activeIndex.value = item.id;
             activeChangeMode.value = item.active ? 'deactivate' : 'activate';
             dialogChangeActive.value = true;
         };
 
-        function changeActiveConfirm () {
+        function changeActiveConfirm() {
             changeServiceActive(activeIndex.value, activeChangeMode.value);
+            activeIndex.value = -1;
             editedItem.value = Object.assign({}, defaultItem.value);
             activeChangeMode.value = '';
             changeActiveClose();
         };
 
-        function changeActiveClose () {
+        function changeActiveClose() {
             dialogChangeActive.value = false;
         };
 
-        var serviceTypesList = computed (() =>{
-            if(editedItem.value.designatedDeviceType == "MOBILE"){
+        var serviceTypesList = computed(() => {
+            if (editedItem.value.designatedDeviceType == "MOBILE") {
                 return ["DATA", "VOICE", "SMS"];
-            }else{
+            } else {
                 return ["DATA"];
             }
         });
@@ -218,28 +217,28 @@ export default {
             }
         };
 
-        function close () {
+        function close() {
             dialog.value = false;
             dialogPurpose.value = 'Create Service';
         };
 
-        function save (){
-            if (editedItem.value.id) { 
+        function save() {
+            if (editedItem.value.id) {
                 editService(editedItem.value);
             } else {
                 addService(editedItem.value);
             }
-            
+
             close();
         };
 
-        function editServiceDialog (item) {
+        function editServiceDialog(item) {
             dialogPurpose.value = 'Edit service';
             dialog.value = true;
             editedItem.value = Object.assign({}, item);
         };
 
-        const editService = async(item) => {
+        const editService = async (item) => {
             const config = {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -257,13 +256,13 @@ export default {
                     console.log(response.data);
                     getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
                 }
-                
+
             } catch (err) {
                 console.log(err);
             }
         }
 
-        const addService = async(item) =>  {
+        const addService = async (item) => {
             const config = {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -274,7 +273,7 @@ export default {
                 if (response.data) {
                     getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
                 }
-                
+
             } catch (err) {
                 console.log(err);
             }
