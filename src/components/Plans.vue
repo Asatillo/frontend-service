@@ -82,7 +82,9 @@
 
             <v-col v-for="plan in plans" :key="plan.id" style="max-width: 30%;">
                 <v-card class="elevation-2 hover-card rounded-xl">
-                    <v-card-title>{{ plan.name }}</v-card-title>
+                    <v-card-title >{{ plan.name }} 
+                    <v-icon size="smaller" :color="plan.active ? 'green' : 'red'">mdi-circle</v-icon>
+                    </v-card-title>
                     <v-card-subtitle>{{ plan.description }}</v-card-subtitle>
                     <v-card-text>
                         <v-list-item prepend-icon="mdi-calendar-clock">
@@ -103,7 +105,7 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-btn color="primary" @click="editPlan(plan)">Edit</v-btn>
-                        <v-btn :color="plan.active ? 'error' : 'green'">{{ plan.active ? 'Deactivate' : 'Activate'
+                        <v-btn :color="plan.active ? 'error' : 'green'"  @click=changeActive(plan)>{{ plan.active ? 'Deactivate' : 'Activate'
                         }}</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -123,6 +125,7 @@ export default {
         const dialog = ref(false);
         const plans = ref([]);
         const dialogChangeActive = ref(false);
+        const activeIndex = ref(-1);
         const services = ref({ "MOBILE": [], "ROUTER": [] });
         const activeChangeMode = ref('');
         const editedItem = ref({
@@ -270,6 +273,43 @@ export default {
             };
         }
 
+        function changeActive(plan) {
+            activeChangeMode.value = plan.active ? 'deactivate' : 'activate';
+            activeIndex.value = plan.id;
+            console.log(plan);
+            dialogChangeActive.value = true;
+        }
+
+        function changeActiveClose() {
+            dialogChangeActive.value = false;
+        };
+
+        const changePlanActive = async (id, mode) => {
+            try {
+                const response = await axios.patch(`/crm/plans/${id}/${mode}`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                });
+                console.log(response.data);
+                plans.value = plans.value.map((item) => {
+                    if (item.id === response.data.id) {
+                        return response.data;
+                    }
+                    return item;
+                });
+            } catch (error) {
+                console.error('Error updating plan:', error.message);
+            }
+        };
+
+        function changeActiveConfirm() {
+            changePlanActive(activeIndex.value, activeChangeMode.value);
+            activeIndex.value = -1;
+            activeChangeMode.value = '';
+            changeActiveClose();
+        };
+
         function handleOutsideClick() {
             dialog.value = false;
         }
@@ -298,11 +338,14 @@ export default {
             close,
             save,
             handleTypeSelect,
+            changeActive,
             editPlan,
             services,
             editedItem,
             dialogChangeActive,
-
+            activeChangeMode,
+            changeActiveClose,
+            changeActiveConfirm
         };
     },
 };
