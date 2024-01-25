@@ -5,9 +5,9 @@
         </v-row>
     </v-container>
     <v-container>
-        <v-row>
+        <v-row justify="center">
             <v-toolbar :elevation="2" density="compact">
-                <v-dialog v-model="dialog" max-width="500px" @click:outside="handleOutsideClick">
+                <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                     <template v-slot:activator="{ props }">
                         <v-btn color="primary" dark v-bind="props">
                             <v-icon left>mdi-plus</v-icon>
@@ -81,7 +81,7 @@
 
 
             <v-col v-for="plan in plans" :key="plan.id" style="max-width: 30%;">
-                <v-card class="elevation-2 hover-card rounded-xl">
+                <v-card class="elevation-1 hover-card rounded-xl">
                     <v-card-title >{{ plan.name }} 
                     <v-icon size="smaller" :color="plan.active ? 'green' : 'red'">mdi-circle</v-icon>
                     </v-card-title>
@@ -104,9 +104,12 @@
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
-                        <v-btn color="primary" @click="editPlan(plan)">Edit</v-btn>
-                        <v-btn :color="plan.active ? 'error' : 'green'"  @click=changeActive(plan)>{{ plan.active ? 'Deactivate' : 'Activate'
-                        }}</v-btn>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn color="primary" @click="editPlan(plan)">Edit</v-btn>
+                                <v-btn :color="plan.active ? 'error' : 'green'" @click=changeActive(plan)>{{ plan.active ? 'Deactivate' : 'Activate'}}</v-btn>
+                            </v-row>
+                        </v-container>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -291,13 +294,14 @@ export default {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                     },
                 });
-                console.log(response.data);
-                plans.value = plans.value.map((item) => {
-                    if (item.id === response.data.id) {
-                        return response.data;
-                    }
-                    return item;
-                });
+                if (response.data){
+                    plans.value = plans.value.map((item) => {
+                        if (item.id === response.data.id) {
+                            return response.data;
+                        }
+                        return item;
+                    });
+                }
             } catch (error) {
                 console.error('Error updating plan:', error.message);
             }
@@ -310,9 +314,6 @@ export default {
             changeActiveClose();
         };
 
-        function handleOutsideClick() {
-            dialog.value = false;
-        }
 
         function close() {
             editedItem.value = defaultItem.value;
@@ -334,7 +335,6 @@ export default {
             icons,
             convertPeriodToDate,
             dialog,
-            handleOutsideClick,
             close,
             save,
             handleTypeSelect,
@@ -353,6 +353,6 @@ export default {
 
 <style scoped>
 .hover-card:hover {
-    background-color: #f0f0f0;
+    background-color: #e6eef7;
 }
 </style>
