@@ -7,9 +7,9 @@
     <v-container>
         <v-row>
             <v-toolbar :elevation="2" density="compact">
-                <v-dialog v-model="dialog" max-width="500px" @click:outside="handleOutsideClick" >
+                <v-dialog v-model="dialog" max-width="500px" @click:outside="handleOutsideClick">
                     <template v-slot:activator="{ props }">
-                        <v-btn color="primary" dark  v-bind="props">
+                        <v-btn color="primary" dark v-bind="props">
                             <v-icon left>mdi-plus</v-icon>
                             <span value="New Plan">New Plan</span>
                         </v-btn>
@@ -24,8 +24,8 @@
                                 <v-row>
                                     <v-col>
                                         <v-text-field v-model="editedItem.name" label="Name" required></v-text-field>
-                                        <v-textarea v-model="editedItem.description" auto-grow label="Description"
-                                            required rows="3"></v-textarea>
+                                        <v-textarea v-model="editedItem.description" auto-grow label="Description" required
+                                            rows="3"></v-textarea>
                                         <v-row>
                                             <v-col cols="4">
                                                 <v-text-field v-model="editedItem.days" label="Days" required
@@ -46,8 +46,8 @@
                                             :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect"
                                             chips></v-select>
                                         <v-select v-model="editedItem.services" :disabled="!editedItem.designatedDeviceType"
-                                            label="Services" :items="services" multiple required chips item-title="name"
-                                            item-value="id"></v-select>
+                                            label="Services" :items="services[editedItem.designatedDeviceType]" multiple
+                                            required chips item-title="name" item-value="id"></v-select>
                                     </v-col>
                                 </v-row>
 
@@ -86,14 +86,14 @@
                     <v-card-subtitle>{{ plan.description }}</v-card-subtitle>
                     <v-card-text>
                         <v-list-item prepend-icon="mdi-calendar-clock">
-                            <v-list-item-title>Duration: {{ convertPeriodToDate(plan.duration) }}</v-list-item-title>
+                            <v-list-item-title>{{ convertPeriodToDate(plan.duration) }}</v-list-item-title>
                         </v-list-item>
                         <v-list-item prepend-icon="mdi-cash-multiple">
-                            <v-list-item-title>Price: {{ plan.price }} HUF</v-list-item-title>
+                            <v-list-item-title>{{ plan.price }} HUF</v-list-item-title>
                         </v-list-item>
                         <v-list dense class="rounded-xl mt-2 pl-2">
                             <v-chip-group>
-                                <v-chip v-for="service in plan.services" :key="service.id">
+                                <v-chip v-for="service in plan.services" :key="service.id" :value="service.name">
                                     <v-icon>{{ icons[service.type] }}</v-icon>
                                     <span> {{ service.name }}</span>
                                 </v-chip>
@@ -123,7 +123,7 @@ export default {
         const dialog = ref(false);
         const plans = ref([]);
         const dialogChangeActive = ref(false);
-        const services = ref([]);
+        const services = ref({ "MOBILE": [], "ROUTER": [] });
         const activeChangeMode = ref('');
         const editedItem = ref({
             id: null,
@@ -194,21 +194,28 @@ export default {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                     },
                 });
-                return response.data.content;
+                var itemList = [];
+                response.data.content.forEach((element) => {
+                    itemList.push({
+                        id: element.id,
+                        name: element.name,
+                    });
+                });
+                return itemList;
             } catch (error) {
                 console.error('Error fetching services:', error.message);
             }
         };
 
         const updatePlan = async (plan) => {
-            try{
+            try {
                 const response = await axios.put(`http://localhost:8765/crm/plans/${plan.id}`, {
                     name: plan.name,
                     description: plan.description,
                     duration: convertDateToPeriod(plan.days, plan.months, plan.years),
                     price: plan.price,
                     designatedDeviceType: plan.designatedDeviceType,
-                    services: plan.services.map(service => service.id)
+                    services: plan.services
                 }, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -227,21 +234,16 @@ export default {
 
         onMounted(() => {
             fetchPlans();
+            fetchServicesByType('MOBILE').then((response) => {
+                services.value['MOBILE'] = response;
+            });
+            fetchServicesByType('ROUTER').then((response) => {
+                services.value['ROUTER'] = response;
+            });
         })
 
         function handleTypeSelect() {
-            if (editedItem.value.designatedDeviceType) {
-                var itemList = [];
-                fetchServicesByType(editedItem.value.designatedDeviceType).then((response) => {
-                    response.forEach((element) => {
-                        itemList.push({
-                            id: element.id,
-                            name: element.name,
-                        });
-                    });
-                    services.value = itemList;
-                });
-            }
+            editedItem.value.services = [];
         }
 
         function editPlan(plan) {
@@ -251,7 +253,10 @@ export default {
 
         function mapPlanToEditedItem(plan) {
             var periodArray = periodToNumbers(plan.duration);
-            console.log(periodArray);
+            var servicesArray = [];
+            plan.services.forEach((element) => {
+                servicesArray.push(element.id);
+            });
             return {
                 id: plan.id,
                 name: plan.name,
@@ -261,7 +266,7 @@ export default {
                 years: periodArray['years'] ? periodArray['years'] : null,
                 price: plan.price,
                 designatedDeviceType: plan.designatedDeviceType,
-                services: plan.services,
+                services: servicesArray,
             };
         }
 
@@ -303,6 +308,8 @@ export default {
 };
 </script>
 
-<style scoped>.hover-card:hover {
+<style scoped>
+.hover-card:hover {
     background-color: #f0f0f0;
-}</style>
+}
+</style>
