@@ -32,18 +32,18 @@
 
 
             <template v-slot:top>
-                <v-toolbar>
+                <v-toolbar :elevation="2" density="compact">
                     <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="500px" @click:outside="handleOutsideClick">
+                    <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                         <template v-slot:activator="{ props }">
-                            <v-btn color="primary" dark class="mb-2" v-bind="props">
+                            <v-btn color="primary" dark  v-bind="props">
                                 <v-icon left>mdi-plus</v-icon>
                                 <span>New service</span>
                             </v-btn>
                         </template>
                         <v-card>
                             <v-card-title>
-                                <span class="text-h5">{{ dialogPurpose }}</span>
+                                <span class="text-h5">{{ editedItem.id != null ? "Edit Service" : "New Service" }}</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -209,9 +209,13 @@ export default {
             try {
                 const response = await axios.patch(`/crm/services/${id}/${mode}`, {}, config);
                 if (response.data) {
-                    loading.value = false;
+                    services.value = services.value.map((item) => {
+                        if (item.id == id) {
+                            return response.data;
+                        }
+                        return item;
+                    });
                 }
-                getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
             } catch (err) {
                 console.log(err);
             }
@@ -219,7 +223,7 @@ export default {
 
         function close() {
             dialog.value = false;
-            dialogPurpose.value = 'Create Service';
+            editedItem.value = Object.assign({}, defaultItem.value)
         };
 
         function save() {
@@ -279,11 +283,6 @@ export default {
             }
         };
 
-        function handleOutsideClick(e) {
-            editedItem.value = Object.assign({}, defaultItem.value);
-            dialogPurpose.value = 'Create Service';
-        }
-
         return {
             itemsPerPage,
             search,
@@ -296,8 +295,6 @@ export default {
             dialog,
             editedItem,
             serviceTypesList,
-            dialogPurpose,
-            handleOutsideClick,
             editServiceDialog,
             close,
             save,
