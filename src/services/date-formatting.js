@@ -14,9 +14,9 @@ export function convertPeriodToDate(period) {
 
     // Define time units
     const units = {
-        'Y': ' years',
-        'M': ' months',
-        'D': ' days'
+        'Y': ' year',
+        'M': ' month',
+        'D': ' day'
     };
 
     // Initialize result
@@ -27,7 +27,7 @@ export function convertPeriodToDate(period) {
         let index = period.indexOf(unit);
         if (index !== -1) {
             let value = period.substring(0, index);
-            result += value + units[unit] + ', ';
+            result += value + (value == 1 ? units[unit] : units[unit] + 's') + ', ';
             period = period.substring(index + 1);
         }
     }
@@ -55,7 +55,6 @@ export function convertDateToPeriod(days, months, years) {
     if (days > 0) {
         period += days + 'D';
     }
-    console.log(period);
     return period;
 }
 
