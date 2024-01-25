@@ -155,7 +155,7 @@ export default {
 
         const fetchPlans = async () => {
             try {
-                const response = await axios.get(`http://localhost:8765/crm/plans?size=50`, {
+                const response = await axios.get(`/crm/plans?size=50`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                     },
@@ -169,7 +169,7 @@ export default {
         const addPlan = async (plan) => {
             const period = convertDateToPeriod(plan.days, plan.months, plan.years);
             try {
-                const response = await axios.post(`http://localhost:8765/crm/plans`, {
+                const response = await axios.post(`/crm/plans`, {
                     name: plan.name,
                     description: plan.description,
                     duration: period,
@@ -189,7 +189,7 @@ export default {
 
         const fetchServicesByType = async (type) => {
             try {
-                const response = await axios.get(`http://localhost:8765/crm/services/device-type/${type}?size=50`, {
+                const response = await axios.get(`/crm/services/device-type/${type}?size=50`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                     },
@@ -209,7 +209,7 @@ export default {
 
         const updatePlan = async (plan) => {
             try {
-                const response = await axios.put(`http://localhost:8765/crm/plans/${plan.id}`, {
+                const response = await axios.put(`/crm/plans/${plan.id}`, {
                     name: plan.name,
                     description: plan.description,
                     duration: convertDateToPeriod(plan.days, plan.months, plan.years),

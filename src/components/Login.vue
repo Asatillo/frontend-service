@@ -67,7 +67,7 @@ function min(value) {
 
 async function login() {
   try {
-    const userData = await axios.post('http://localhost:8765/auth-service/auth/authenticate', {
+    const userData = await axios.post('auth-service/auth/authenticate', {
       username: username.value,
       password: password.value,
     });

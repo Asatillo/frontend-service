@@ -51,7 +51,7 @@ export default {
                 },
             };
             try {
-                const response = await axios.get(`http://localhost:8765/auth-service/users?size=${this.itemsPerPage}`, config);
+                const response = await axios.get(`/auth-service/users?size=${this.itemsPerPage}`, config);
                 if (response.data) {
                     this.totalPages = response.data.totalPages;
                     this.totalItems = response.data.totalElements;

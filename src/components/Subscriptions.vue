@@ -60,7 +60,7 @@ export default {
         },
       };
       try{
-        const response = await axios.get(`http://localhost:8765/crm/subscriptions?page=${page}&size=${itemsPerPage}`, config);
+        const response = await axios.get(`crm/subscriptions?page=${page}&size=${itemsPerPage}`, config);
         if(response.data){
           totalItems.value = response.data.totalElements;       
           subscriptions.value = response.data.content;

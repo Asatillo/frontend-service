@@ -117,7 +117,7 @@ async function handleSignup() {
   }
 
   try {
-    const userData = await axios.post('http://localhost:8765/auth-service/auth/register', {
+    const userData = await axios.post('/auth-service/auth/register', {
       username: username.value,
       firstName: firstName.value,
       lastName: lastName.value,

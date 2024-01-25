@@ -163,7 +163,7 @@ export default {
                 },
             };
             try {
-                const response = await axios.get(`http://localhost:8765/crm/services?page=${page}&size=${itemsPerPage}`, config);
+                const response = await axios.get(`/crm/services?page=${page}&size=${itemsPerPage}`, config);
                 if (response.data) {
                     totalItems.value = response.data.totalElements;
                     services.value = response.data.content;
@@ -207,7 +207,7 @@ export default {
                 },
             };
             try {
-                const response = await axios.patch(`http://localhost:8765/crm/services/${id}/${mode}`, {}, config);
+                const response = await axios.patch(`/crm/services/${id}/${mode}`, {}, config);
                 if (response.data) {
                     loading.value = false;
                 }
@@ -245,7 +245,7 @@ export default {
                 },
             };
             try {
-                const response = await axios.put(`http://localhost:8765/crm/services/${item.id}`, {
+                const response = await axios.put(`/crm/services/${item.id}`, {
                     name: item.name,
                     type: item.type,
                     amount: item.amount,
@@ -269,7 +269,7 @@ export default {
                 },
             };
             try {
-                const response = await axios.post(`http://localhost:8765/crm/services`, item, config);
+                const response = await axios.post(`/crm/services`, item, config);
                 if (response.data) {
                     getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
                 }
