@@ -80,8 +80,8 @@
 
 
 
-            <v-col v-for="plan in plans" :key="plan.id" style="max-width: 30%;">
-                <v-card class="elevation-1 hover-card rounded-xl">
+            <v-col v-for="plan in plans" :key="plan.id" cols="3">
+                <v-card class="hover-card " elevation="1" rounded="xl">
                     <v-card-title>{{ plan.name }}
                         <v-icon size="smaller" :color="plan.active ? 'green' : 'red'">mdi-circle</v-icon>
                     </v-card-title>
