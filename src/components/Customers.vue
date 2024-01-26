@@ -6,10 +6,7 @@
     </v-container>
 </template>
   
-<script>
-export default {
-    name: 'Customers',
-}
+<script setup>
 </script>
     
   

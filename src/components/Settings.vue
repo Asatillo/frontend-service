@@ -6,11 +6,5 @@
     </v-container>
 </template>
   
-<script>
-export default {
-    name: 'Settings',
-}
+<script setup>
 </script>
-    
-  
-<style></style>

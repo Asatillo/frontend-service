@@ -36,7 +36,7 @@
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                         <template v-slot:activator="{ props }">
-                            <v-btn color="primary" dark  v-bind="props">
+                            <v-btn color="primary" dark v-bind="props">
                                 <v-icon left>mdi-plus</v-icon>
                                 <span>New service</span>
                             </v-btn>
@@ -53,18 +53,20 @@
                                             <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
                                         </v-col>
                                     </v-row>
-                                    <v-select v-model="editedItem.designatedDeviceType" label="Device type" cols="12"
-                                        sm="6" md="6" :items="['MOBILE', 'ROUTER']">
+                                    <v-select v-model="editedItem.designatedDeviceType" label="Device type" cols="12" sm="6"
+                                        md="6" :items="['MOBILE', 'ROUTER']">
                                     </v-select>
                                     <v-select v-model="editedItem.type" label="Type" cols="12" sm="6" md="6"
                                         :items="serviceTypesList">
                                     </v-select>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="editedItem.amount" type="number" label="Amount"></v-text-field>
+                                            <v-text-field v-model="editedItem.amount" type="number"
+                                                label="Amount"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="editedItem.price" type="number" label="Price"></v-text-field>
+                                            <v-text-field v-model="editedItem.price" type="number"
+                                                label="Price"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -83,7 +85,8 @@
                     </v-dialog>
                     <v-dialog v-model="dialogChangeActive" max-width="500px">
                         <v-card>
-                            <v-card-title class="text-h6 text-center">Are you sure you want to {{ activeChangeMode }} this item?</v-card-title>
+                            <v-card-title class="text-h6 text-center">Are you sure you want to {{ activeChangeMode }} this
+                                item?</v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="blue-darken-1" variant="text" @click="changeActiveClose">Cancel</v-btn>
@@ -110,200 +113,174 @@
     </v-container>
 </template>
   
-<script>
-import { ref, reactive, computed, nextTick } from 'vue';
+<script setup>
+import { ref, reactive, computed } from 'vue';
 import axios from 'axios';
 
-export default {
-    name: 'Services',
-    setup() {
-        const dialog = ref(false)
-        const dialogChangeActive = ref(false)
-        const activeChangeMode = ref('');
-        const itemsPerPage = ref(10);
-        const search = ref('');
-        const activeIndex = ref(-1);
-        const services = ref([]);
-        const loading = ref(false);
-        const totalItems = ref(0);
-        const dialogPurpose = ref('New Service');
-        const editedItem = ref({
-            id: null,
-            name: "",
-            type: "",
-            amount: null,
-            designatedDeviceType: "",
-            price: null,
-            active: true
-        });
-        const defaultItem = ref({
-            id: null,
-            name: "",
-            type: "",
-            amount: null,
-            designatedDeviceType: "",
-            price: null,
-            active: true
-        });
-        const headers = reactive([
-            { title: 'Name', key: 'name', align: 'left', sortable: true },
-            { title: 'Active', key: 'active', align: 'center', sortable: false },
-            { title: 'Type', key: 'type', align: 'left', sortable: false },
-            { title: 'Amount', key: 'amount', align: 'left', sortable: false },
-            { title: 'Device type', key: 'designatedDeviceType', align: 'center', sortable: false },
-            { title: 'Price (HUF)', key: 'price', align: 'right', sortable: false },
-            { title: 'Actions', key: 'actions', sortable: false, sortable: false },
-        ]);
+const dialog = ref(false)
+const dialogChangeActive = ref(false)
+const activeChangeMode = ref('');
+const itemsPerPage = ref(10);
+const search = ref('');
+const activeIndex = ref(-1);
+const services = ref([]);
+const loading = ref(false);
+const totalItems = ref(0);
+const dialogPurpose = ref('New Service');
+const editedItem = ref({
+    id: null,
+    name: "",
+    type: "",
+    amount: null,
+    designatedDeviceType: "",
+    price: null,
+    active: true
+});
+const defaultItem = ref({
+    id: null,
+    name: "",
+    type: "",
+    amount: null,
+    designatedDeviceType: "",
+    price: null,
+    active: true
+});
+const headers = reactive([
+    { title: 'Name', key: 'name', align: 'left', sortable: true },
+    { title: 'Active', key: 'active', align: 'center', sortable: false },
+    { title: 'Type', key: 'type', align: 'left', sortable: false },
+    { title: 'Amount', key: 'amount', align: 'left', sortable: false },
+    { title: 'Device type', key: 'designatedDeviceType', align: 'center', sortable: false },
+    { title: 'Price (HUF)', key: 'price', align: 'right', sortable: false },
+    { title: 'Actions', key: 'actions', sortable: false, sortable: false },
+]);
 
-        const getServices = async ({ page, itemsPerPage, sortBy }) => {
-            loading.value = true;
-            const config = {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-                },
-            };
-            try {
-                const response = await axios.get(`/crm/services?page=${page}&size=${itemsPerPage}`, config);
-                if (response.data) {
-                    totalItems.value = response.data.totalElements;
-                    services.value = response.data.content;
-                    loading.value = false;
+const getServices = async ({ page, itemsPerPage, sortBy }) => {
+    loading.value = true;
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+    };
+    try {
+        const response = await axios.get(`/crm/services?page=${page}&size=${itemsPerPage}`, config);
+        if (response.data) {
+            totalItems.value = response.data.totalElements;
+            services.value = response.data.content;
+            loading.value = false;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+function changeActive(item) {
+    activeIndex.value = item.id;
+    activeChangeMode.value = item.active ? 'deactivate' : 'activate';
+    dialogChangeActive.value = true;
+};
+
+function changeActiveConfirm() {
+    changeServiceActive(activeIndex.value, activeChangeMode.value);
+    activeIndex.value = -1;
+    editedItem.value = Object.assign({}, defaultItem.value);
+    activeChangeMode.value = '';
+    changeActiveClose();
+};
+
+function changeActiveClose() {
+    dialogChangeActive.value = false;
+};
+
+var serviceTypesList = computed(() => {
+    if (editedItem.value.designatedDeviceType == "MOBILE") {
+        return ["DATA", "VOICE", "SMS"];
+    } else {
+        return ["DATA"];
+    }
+});
+
+const changeServiceActive = async (id, mode) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+    };
+    try {
+        const response = await axios.patch(`/crm/services/${id}/${mode}`, {}, config);
+        if (response.data) {
+            services.value = services.value.map((item) => {
+                if (item.id == id) {
+                    return response.data;
                 }
-            } catch (err) {
-                console.log(err);
-            }
-        };
+                return item;
+            });
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
 
-        function changeActive(item) {
-            activeIndex.value = item.id;
-            activeChangeMode.value = item.active ? 'deactivate' : 'activate';
-            dialogChangeActive.value = true;
-        };
+function close() {
+    dialog.value = false;
+    editedItem.value = Object.assign({}, defaultItem.value)
+};
 
-        function changeActiveConfirm() {
-            changeServiceActive(activeIndex.value, activeChangeMode.value);
-            activeIndex.value = -1;
-            editedItem.value = Object.assign({}, defaultItem.value);
-            activeChangeMode.value = '';
-            changeActiveClose();
-        };
+function save() {
+    if (editedItem.value.id) {
+        editService(editedItem.value);
+    } else {
+        addService(editedItem.value);
+    }
 
-        function changeActiveClose() {
-            dialogChangeActive.value = false;
-        };
+    close();
+};
 
-        var serviceTypesList = computed(() => {
-            if (editedItem.value.designatedDeviceType == "MOBILE") {
-                return ["DATA", "VOICE", "SMS"];
-            } else {
-                return ["DATA"];
-            }
-        });
+function editServiceDialog(item) {
+    dialogPurpose.value = 'Edit service';
+    dialog.value = true;
+    editedItem.value = Object.assign({}, item);
+};
 
-        const changeServiceActive = async (id, mode) => {
-            const config = {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-                },
-            };
-            try {
-                const response = await axios.patch(`/crm/services/${id}/${mode}`, {}, config);
-                if (response.data) {
-                    services.value = services.value.map((item) => {
-                        if (item.id == id) {
-                            return response.data;
-                        }
-                        return item;
-                    });
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-        function close() {
-            dialog.value = false;
-            editedItem.value = Object.assign({}, defaultItem.value)
-        };
-
-        function save() {
-            if (editedItem.value.id) {
-                editService(editedItem.value);
-            } else {
-                addService(editedItem.value);
-            }
-
-            close();
-        };
-
-        function editServiceDialog(item) {
-            dialogPurpose.value = 'Edit service';
-            dialog.value = true;
-            editedItem.value = Object.assign({}, item);
-        };
-
-        const editService = async (item) => {
-            const config = {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-                },
-            };
-            try {
-                const response = await axios.put(`/crm/services/${item.id}`, {
-                    name: item.name,
-                    type: item.type,
-                    amount: item.amount,
-                    designatedDeviceType: item.designatedDeviceType,
-                    price: item.price,
-                }, config);
-                if (response.data) {
-                    console.log(response.data);
-                    getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
-                }
-
-            } catch (err) {
-                console.log(err);
-            }
+const editService = async (item) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+    };
+    try {
+        const response = await axios.put(`/crm/services/${item.id}`, {
+            name: item.name,
+            type: item.type,
+            amount: item.amount,
+            designatedDeviceType: item.designatedDeviceType,
+            price: item.price,
+        }, config);
+        if (response.data) {
+            console.log(response.data);
+            getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
         }
 
-        const addService = async (item) => {
-            const config = {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-                },
-            };
-            try {
-                const response = await axios.post(`/crm/services`, item, config);
-                if (response.data) {
-                    getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
-                }
-
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-        return {
-            itemsPerPage,
-            search,
-            services,
-            loading,
-            totalItems,
-            headers,
-            dialogChangeActive,
-            activeChangeMode,
-            dialog,
-            editedItem,
-            serviceTypesList,
-            editServiceDialog,
-            close,
-            save,
-            getServices,
-            changeActive,
-            changeActiveConfirm,
-            changeActiveClose,
-        };
-    },
+    } catch (err) {
+        console.log(err);
+    }
 }
+
+const addService = async (item) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+    };
+    try {
+        const response = await axios.post(`/crm/services`, item, config);
+        if (response.data) {
+            getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+};
 </script>
   

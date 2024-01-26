@@ -5,49 +5,29 @@
         <v-img src="../assets/logo1.png" width="200"></v-img>
       </v-container>
       <v-form @submit.prevent="handleSignup">
-        
-        <v-text-field 
-          v-model="username" 
-          label="Username" 
-          :rules="usernameRules">
+
+        <v-text-field v-model="firstName" label="First name" :rules="nameRules">
         </v-text-field>
 
-        <v-text-field 
-          v-model="firstName" 
-          label="First name" 
-          :rules="nameRules">
+        <v-text-field v-model="lastName" label="Last name" :rules="nameRules">
         </v-text-field>
-        
-        <v-text-field 
-          v-model="lastName" 
-          label="Last name" 
-          :rules="nameRules">
+
+        <v-text-field v-model="username" label="Username" :rules="usernameRules">
         </v-text-field>
-        
-        <v-text-field 
-          v-model="email" 
-          label="Email" 
-          :rules="emailRules">
+
+        <v-text-field v-model="email" label="Email" :rules="emailRules">
         </v-text-field>
-        
-        <v-text-field 
-          v-model="password" 
-          label="Password" 
-          :rules="passwordRules"
-          :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show1 ? 'text' : 'password'"
+
+        <v-text-field v-model="password" label="Password" :rules="passwordRules"
+          :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :type="show1 ? 'text' : 'password'"
           @click:append-inner="show1 = !show1">
         </v-text-field>
-        
-        <v-text-field 
-          v-model="password2" 
-          label="Confirm password" 
-          :rules="confirmPasswordRules"
-          :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show2 ? 'text' : 'password'"
+
+        <v-text-field v-model="password2" label="Confirm password" :rules="confirmPasswordRules"
+          :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'" :type="show2 ? 'text' : 'password'"
           @click:append-inner="show2 = !show2">
         </v-text-field>
-        
+
         <v-btn type="submit" color="primary" block class="mt-2" :disabled="!areAllRulesMet"> Sign up </v-btn>
       </v-form>
       <div class="mt-2">
@@ -125,8 +105,7 @@ async function handleSignup() {
       email: email.value,
     });
 
-    console.log(userData);
-    if (userData.data.token){
+    if (userData.data.token) {
       localStorage.setItem('accessToken', userData.data.token);
       localStorage.setItem('user', JSON.stringify(userData.data.user));
       router.push('/');
