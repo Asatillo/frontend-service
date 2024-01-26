@@ -2,7 +2,7 @@
     <v-navigation-drawer expand-on-hover rail :elevation="2" style="color: azure;"
         image="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
         <v-list>
-            <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/3.jpg" :title="fullname" :subtitle="email"
+            <v-list-item :prepend-avatar="image" :title="fullname" :subtitle="email"
                 @click="redirectToRoute('my-profile')"></v-list-item>
         </v-list>
 
@@ -18,7 +18,6 @@
 
 <script setup>
 import { ref, onMounted, } from 'vue'
-
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -33,6 +32,8 @@ const menuItems = ref([
     { icon: 'mdi-floor-plan', title: 'Services', value: 'services' },
     { icon: 'mdi-router-wireless', title: 'Devices', value: 'devices' },
     { icon: 'mdi-cog', title: 'Settings', value: 'settings' },])
+const user = ref(null)
+const image = ref('')
 const username = ref('')
 const email = ref('')
 const fullname = ref('')
@@ -52,10 +53,11 @@ onMounted(() => {
     }
 
     if (localStorage.getItem('user')) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        username.value = user.username;
-        fullname.value = user.firstName + ' ' + user.lastName;
-        email.value = user.email;
+        user.value = JSON.parse(localStorage.getItem('user'));
+        image.value = user.value.imageUrl;
+        username.value = user.value.username;
+        fullname.value = user.value.firstName + ' ' + user.value.lastName;
+        email.value = user.value.email;
     }
 });
 </script>
