@@ -9,6 +9,14 @@
             :itemsPerPageOptions="[10, 15, 20]" :items-length="totalItems" :items="users" item-key="id" :loading="loading"
             single-select @update:options="getUsers" :headers="headers" loading-text="Loading... Please wait"
             @click:row="router.push({ name: 'User', params: { id: item.internalItem.raw.id } })">
+            <template v-slot:item.imageUrl="{ item }">
+                <v-avatar size="50">
+                    <v-img :src="item.imageUrl" />
+                </v-avatar>
+            </template>
+            <template v-slot:item.fullname ="{ item }">
+                    <span>{{ item.firstName }} {{ item.lastName }}</span>
+            </template>
         </v-data-table-server>
     </v-container>
 </template>
@@ -24,14 +32,13 @@ const users = ref([])
 const totalItems = ref(0)
 const loading = ref(true)
 const options = ref({})
-const itemsPerPage = ref(2)
+const itemsPerPage = ref(10)
 const headers = ref([
-    { title: 'Id', value: 'id' },
+    { title: 'Image', value: 'imageUrl' },
     { title: 'Username', value: 'username' },
+    { title: 'Name', value: 'fullname'},
     { title: 'Role', value: 'role' },
     { title: 'Email', value: 'email' },
-    { title: 'First Name', value: 'firstName' },
-    { title: 'Last Name', value: 'lastName' },
 ])
 const getUsers = async ({ page, itemsPerPage, sortBy }) => {
     loading.value = true;
