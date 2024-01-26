@@ -5,19 +5,20 @@
                 <h2 class="text-h2">Users</h2>
             </v-col>
         </v-row>
-        <v-data-table-server class="elevation-1 mt-4 border rounded" v-model:items-per-page="itemsPerPage"
-            :itemsPerPageOptions="[10, 15, 20]" :items-length="totalItems" :items="users" item-key="id" :loading="loading"
-            single-select @update:options="getUsers" :headers="headers" loading-text="Loading... Please wait"
-            @click:row="router.push({ name: 'User', params: { id: item.internalItem.raw.id } })">
-            <template v-slot:item.imageUrl="{ item }">
-                <v-avatar size="50">
-                    <v-img :src="item.imageUrl" />
-                </v-avatar>
-            </template>
-            <template v-slot:item.fullname ="{ item }">
-                    <span>{{ item.firstName }} {{ item.lastName }}</span>
-            </template>
-        </v-data-table-server>
+        <v-row>
+            <v-col v-for="user in users" :key="user.id" cols="4">
+                <v-card class="pa-2 d-flex align-center" :elevation="2" rounded="xl">
+                    <v-avatar size="80" class="mx-3" :image="user.imageUrl"></v-avatar>
+                    <v-container>
+                        <v-card-title class="text-h5">{{ user.firstName }} {{ user.lastName }}</v-card-title>
+                        <v-card-subtitle class="text-muted">{{ user.email }}</v-card-subtitle>
+                        <v-card-subtitle class="text-muted">{{ user.username }}</v-card-subtitle>
+                        <v-card-subtitle class="text-muted">{{ user.role }}</v-card-subtitle>
+                    </v-container>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-pagination class="pt-6" v-model="currentPage" :length="totalPages" v-on:update:model-value="getUsers"></v-pagination>
     </v-container>
 </template>
   
@@ -25,22 +26,18 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 
 const router = useRouter()
 
 const users = ref([])
 const totalItems = ref(0)
 const loading = ref(true)
+const currentPage = ref(1)
+const totalPages = ref(0)
 const options = ref({})
-const itemsPerPage = ref(10)
-const headers = ref([
-    { title: 'Image', value: 'imageUrl' },
-    { title: 'Username', value: 'username' },
-    { title: 'Name', value: 'fullname'},
-    { title: 'Role', value: 'role' },
-    { title: 'Email', value: 'email' },
-])
-const getUsers = async ({ page, itemsPerPage, sortBy }) => {
+const itemsPerPage = ref(9)
+const getUsers = async () => {
     loading.value = true;
     const config = {
         headers: {
@@ -48,9 +45,10 @@ const getUsers = async ({ page, itemsPerPage, sortBy }) => {
         },
     };
     try {
-        const response = await axios.get(`/auth-service/users?page=${page}&size=${itemsPerPage}`, config);
+        const response = await axios.get(`/auth-service/users?page=${currentPage.value}&size=${itemsPerPage.value}`, config);
         if (response.data) {
             totalItems.value = response.data.totalElements;
+            totalPages.value = response.data.totalPages;
             loading.value = false;
             users.value = response.data.content;
         }
@@ -58,4 +56,8 @@ const getUsers = async ({ page, itemsPerPage, sortBy }) => {
         console.log(err)
     }
 }
+
+onMounted(() => {
+    getUsers()
+})
 </script>
