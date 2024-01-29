@@ -101,7 +101,6 @@ const getUsers = async (tab) => {
     try {
         const response = await axios.get(`/auth-service/users?page=${tab.pagination.currentPage}&size=${itemsPerPage.value}&role=${tab.role}`, config);
         if (response.data) {
-            tab.pagination.totalItems = response.data.totalElements;
             tab.pagination.totalPages = response.data.totalPages;
             tab.users = response.data.content;
         }
