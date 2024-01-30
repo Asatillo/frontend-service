@@ -4,6 +4,9 @@
       <h2 class="text-h2 text-center">Dashboard</h2>
     </v-row>
   </v-container>
+  <v-container>
+    
+  </v-container>
 </template>
 
 <script setup>
@@ -13,7 +16,7 @@ const actions = ref([
     "action": "User Management",
     "features": [
       "Add, modify, or remove user accounts",
-      "Implement role-based access control (RBAC)"
+      "Modify access control"
     ]
   },
   {
@@ -31,13 +34,6 @@ const actions = ref([
     ]
   },
   {
-    "action": "Service Requests",
-    "features": [
-      "Submit and track service requests",
-      "Assign and manage service tickets"
-    ]
-  },
-  {
     "action": "Network Analytics",
     "features": [
       "Show real-time analytics and performance metrics",
@@ -47,7 +43,7 @@ const actions = ref([
   {
     "action": "Customer Support",
     "features": [
-      "Integrate customer support module",
+      "Customer support",
       "Ticketing system for tracking and resolving concerns"
     ]
   },
@@ -61,8 +57,7 @@ const actions = ref([
   {
     "action": "Notifications and Alerts",
     "features": [
-      "Implement notification system for critical updates",
-      "Customization of alert preferences"
+      "Notifications"    
     ]
   },
   {
@@ -75,7 +70,7 @@ const actions = ref([
   {
     "action": "System Settings",
     "features": [
-      "Allow administrators to configure system settings",
+      "Configure system settings",
       "Customization options like themes or language preferences"
     ]
   }
