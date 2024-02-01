@@ -130,17 +130,6 @@ const dialogChangeActive = ref(false);
 const activeIndex = ref(-1);
 const services = ref({ "MOBILE": [], "ROUTER": [] });
 const activeChangeMode = ref('');
-const editedItem = ref({
-    id: null,
-    name: '',
-    description: '',
-    days: null,
-    months: null,
-    years: null,
-    price: null,
-    designatedDeviceType: null,
-    services: [],
-});
 const defaultItem = ref({
     id: null,
     name: '',
@@ -152,6 +141,7 @@ const defaultItem = ref({
     designatedDeviceType: null,
     services: [],
 });
+const editedItem = ref(Object.assign({}, defaultItem.value));
 const icons = ref({
     'SMS': 'mdi-message-text',
     'VOICE': 'mdi-phone',
