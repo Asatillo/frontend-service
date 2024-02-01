@@ -34,13 +34,11 @@
             <template v-slot:top>
                 <v-toolbar :elevation="2" density="compact">
                     <v-spacer></v-spacer>
+                    <v-btn color="primary" dark @click="createNewServiceDialog">
+                        <v-icon left>mdi-plus</v-icon>
+                        <span>New service</span>
+                    </v-btn>
                     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-                        <template v-slot:activator="{ props }">
-                            <v-btn color="primary" dark v-bind="props">
-                                <v-icon left>mdi-plus</v-icon>
-                                <span>New service</span>
-                            </v-btn>
-                        </template>
                         <v-card>
                             <v-card-title>
                                 <span class="text-h5">{{ editedItem.id != null ? "Edit Service" : "New Service" }}</span>
@@ -257,6 +255,12 @@ const editService = async (item) => {
         console.log(err);
     }
 }
+
+function createNewServiceDialog() {
+    dialogPurpose.value = 'New service';
+    dialog.value = true;
+    editedItem.value = Object.assign({}, defaultItem.value);
+};
 
 const addService = async (item) => {
     const config = {
