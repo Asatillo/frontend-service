@@ -30,7 +30,7 @@
             <v-window-item v-for="value, key in tabs" :key="key" :value="value.name">
                 <v-row v-if="value.devices.length">
                     <v-col cols="5" md="4" lg="3" v-for="device in value.devices" :key="device.id">
-                        <v-card>
+                        <v-card class="rounded-xl">
                             <v-img class="mt-3" :src="device.deviceTemplate.imageUrl" height="200px"></v-img>
                             <v-card-title class="d-flex justify-space-between ">
                                 <p class="ma-2 mp-2 text-truncate">{{ device.deviceTemplate.brand + ' ' +
