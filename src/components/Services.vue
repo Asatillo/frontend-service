@@ -127,15 +127,6 @@ const services = ref([]);
 const loading = ref(false);
 const totalItems = ref(0);
 const dialogPurpose = ref('New Service');
-const editedItem = ref({
-    id: null,
-    name: "",
-    type: "",
-    amount: null,
-    designatedDeviceType: "",
-    price: null,
-    active: true
-});
 const defaultItem = ref({
     id: null,
     name: "",
@@ -145,6 +136,7 @@ const defaultItem = ref({
     price: null,
     active: true
 });
+const editedItem = ref(Object.assign({}, defaultItem.value));
 const headers = reactive([
     { title: 'Name', key: 'name', align: 'left', sortable: true },
     { title: 'Active', key: 'active', align: 'center', sortable: false },
