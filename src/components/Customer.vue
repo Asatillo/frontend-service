@@ -5,11 +5,11 @@
                 <v-row class="mx-1">
                     <v-icon color="blue" size="40">mdi-account</v-icon>
                     <span class="text-h4 font-weight-bold">{{ customer.firstName }} {{ customer.lastName }}</span>
-                    
+
                     <v-chip :color="customer.active ? 'green' : 'red'" class="mt-1 ml-1">{{ customer.active ? 'active' :
                         'inactive' }}</v-chip>
                     <v-spacer></v-spacer>
-                    
+
                     <v-menu class="ma-2 mp-2">
                         <template v-slot:activator="{ props }">
                             <v-btn icon="mdi-dots-vertical" variant="plain" v-bind="props">
@@ -30,7 +30,11 @@
                     </v-menu>
                 </v-row>
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="pb-1">
+                <b>Member since:</b> {{ formatDateString(customer.accCreationDate) }}
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-text class="pt-0">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-list dense>
@@ -54,14 +58,10 @@
                                 {{ formatDateString(customer.dob) }}
                             </v-list-item>
                             <v-list-item>
-                                <v-icon  :color="customer.wiredInternetAvailable ? 'green' : 'red'">mdi-router-wireless</v-icon>
+                                <v-icon
+                                    :color="customer.wiredInternetAvailable ? 'green' : 'red'">mdi-router-wireless</v-icon>
                                 {{ customer.wiredInternetAvailable ? 'Available' : 'Unavailable' }}
                             </v-list-item>
-                            <v-list-item>
-                                <b>Member Since:</b> 
-                                {{ formatDateString(customer.accCreationDate) }}
-                            </v-list-item>
-
                         </v-list>
                     </v-col>
                 </v-row>
@@ -73,13 +73,19 @@
                 <v-tab value="devices">Devices</v-tab>
                 <v-tab value="phone_numbers">Phone numbers</v-tab>
                 <v-tab value="invoices">Invoices</v-tab>
-                <v-tab value="offers">Offers</v-tab> 
+                <v-tab value="offers">Offers</v-tab>
             </v-tabs>
 
             <v-card-text>
                 <v-window v-model="tab">
                     <v-window-item value="subscriptions">
-                        <v-data-table :items="subscriptions.items" :loading="subscriptions.loading" :headers="subscriptions.headers">
+                        <v-data-table-server :items="subscriptions.items"
+                            :headers="subscriptions.headers"
+                            v-model:itemsPerPage="subscriptions.pagination.itemsPerPage"
+                            item-value="id"
+                            :items-length="subscriptions.pagination.totalItems"
+                            @update:options="getCustomerSubscriptions"
+                            :items-per-page-options="[15, 20, 25]">
                             <template v-slot:item.startDate="{ item }">
                                 {{ formatDateString(item.startDate) }}
                             </template>
@@ -87,11 +93,11 @@
                                 {{ formatDateString(item.endDate) }}
                             </template>
                             <template v-slot:item.number="{ item }">
-                                <v-icon v-if="item.networkEntity.deviceType=='MOBILE'" color="green">mdi-phone</v-icon> 
+                                <v-icon v-if="item.networkEntity.deviceType == 'MOBILE'" color="green">mdi-phone</v-icon>
                                 <v-icon v-else color="blue">mdi-router-wireless</v-icon>
                                 {{ item.networkEntity.networkIdentifier }}
                             </template>
-                        </v-data-table>
+                        </v-data-table-server>
                     </v-window-item>
 
                     <v-window-item value="devices">
@@ -128,24 +134,22 @@ const tab = ref('subscriptions');
 const customer = ref({});
 const subscriptions = ref({
     items: [],
-    loading: true,
     headers: [
-        {title: 'ID', key: 'id'},
-        {title: 'Plan', key: 'plan.name'},
-        {title: 'Number', key: 'number'},
-        {title: 'Tag', key: 'networkEntity.tag'},
-        {title: 'Price (HUF)', key: 'plan.price'},
-        {title: 'Start date', key: 'startDate'},
-        {title: 'End date', key: 'endDate'},
+        { title: 'ID', key: 'id' },
+        { title: 'Plan', key: 'plan.name' },
+        { title: 'Number', key: 'number', sortable: false},
+        { title: 'Tag', key: 'networkEntity.tag', sortable: false},
+        { title: 'Start date', key: 'startDate' },
+        { title: 'End date', key: 'endDate' },
+        { title: 'Price (HUF)', key: 'plan.price', align: 'end'},
     ],
     pagination: {
-        rowsPerPage: 10
+        itemsPerPage: 15,
     }
 });
 
 onMounted(() => {
     getCustomer(route.params.id);
-    getCustomerSubscriptions(route.params.id);
 });
 
 const getCustomer = async (id) => {
@@ -162,17 +166,16 @@ const getCustomer = async (id) => {
     }
 };
 
-const getCustomerSubscriptions = async (id) => {
-    subscriptions.value.loading = true;
+const getCustomerSubscriptions = async ({page, itemsPerPage}) => {
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
     };
     try {
-        const response = await axios.get(`crm/subscriptions/customers/${id}`, config);
+        const response = await axios.get(`crm/subscriptions/customers/${route.params.id}?page=${page}&size=${itemsPerPage}`, config);
         subscriptions.value.items = response.data.content;
-        subscriptions.value.loading = false;
+        subscriptions.value.pagination.totalItems = response.data.totalElements;
     } catch (error) {
         console.error(error);
     }
