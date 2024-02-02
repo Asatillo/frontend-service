@@ -7,7 +7,8 @@
     <v-container>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :items="customers" item-value="id"
             :items-length="totalItems" :items-per-page-options="[15, 20, 25]" :loading="loading"
-            @update:options="getCustomers" :headers="headers" :search="search">
+            @update:options="getCustomers" :headers="headers" :search="search" @click:row="handleRowClick"
+            item-class="row-class">
             <template v-slot:item.active="{ item }">
                 <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close' }}</v-icon>
             </template>
@@ -28,7 +29,7 @@
             <template v-slot:item.adress="{ item }">
                 {{ item.address }}, {{ item.city }}
             </template>
-            <template v-slot:item.createdAt="{ item }">
+            <template v-slot:item.accCreationDate="{ item }">
                 {{ formatDateString(item.accCreationDate) }}
             </template>
             <template v-slot:top>
@@ -101,6 +102,7 @@
 import { ref } from 'vue';
 import { formatDateString } from '../services/date-formatting'
 import axios from 'axios';
+import router from '@/router';
 
 const itemsPerPage = ref(15);
 const dialogChangeActive = ref(false);
@@ -127,12 +129,12 @@ const headers = ref([
     { title: "Active", key: 'active', sortable: false },
     { title: 'First name', key: 'firstName', sortable: true },
     { title: 'Last name', key: 'lastName', sortable: true },
-    { title: 'Birth date', key: 'dob', sortable: false },
+    { title: 'Birth date', key: 'dob', sortable: true },
     { title: 'Email', key: 'email', sortable: true },
     { title: 'Adress', key: 'adress', sortable: false },
     { title: 'Segment', key: 'segment', sortable: true },
-    { title: "Account created", key: 'createdAt', sortable: true },
-    { title: "Wired internet", key: "wiredInternetAvailable", sortable: true },
+    { title: "Account created", key: 'accCreationDate', sortable: true },
+    { title: "Wired internet", key: "wiredInternetAvailable", sortable: false },
     { title: "Actions", key: "actions", sortable: false }
 
 ])
@@ -141,7 +143,6 @@ const customers = ref([]);
 const loading = ref(false);
 
 const getCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) => {
-    console.log({ page, itemsPerPage, sortBy, groupBy, search});
     loading.value = true;
     const config = {
         headers: {
@@ -251,7 +252,7 @@ const editCustomer = async (item) => {
     }
 };
 
-function createNewCustomerDialog(){
+function createNewCustomerDialog() {
     dialogPurpose.value = 'New Customer';
     editedItem.value = Object.assign({}, defaultItem.value);
     dialog.value = true;
@@ -280,7 +281,17 @@ const addCustomer = async (item) => {
         console.log(err);
     }
 };
+
+function handleRowClick(event, customer) {
+    router.push({ name: 'Customer', params: { id: customer.item.id } });
+}
+
 </script>
     
   
-<style></style>
+<style scoped>
+.row-class:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+</style>
