@@ -9,7 +9,7 @@
         <v-divider></v-divider>
 
         <v-list density="compact" nav>
-            <v-list-item @click="redirectToRoute(item.value)" v-for="item in menuItems" :key="item.value"
+            <v-list-item @click="redirectToRoute(item.title)" v-for="item in menuItems" :key="item.value"
                 :prepend-icon="item.icon" :title="item.title" :value="item.value"></v-list-item>
             <v-list-item @click="handleLogout" prepend-icon="mdi-logout" title="Logout"></v-list-item>
         </v-list>
@@ -18,9 +18,7 @@
 
 <script setup>
 import { ref, onMounted, } from 'vue'
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
+import router from '@/router';
 
 const menuItems = ref([
     { icon: 'mdi-view-dashboard', title: 'Home', value: '' },
@@ -39,17 +37,17 @@ const email = ref('')
 const fullname = ref('')
 
 function redirectToRoute(routeValue) {
-    router.push('/' + routeValue);
+    router.push({ name: routeValue });
 };
 function handleLogout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-    router.push('/login');
+    router.push({ name: 'Login' });
 }
 
 onMounted(() => {
     if (!localStorage.getItem('accessToken')) {
-        router.push('/login');
+        router.push({ name: 'Login' });
     }
 
     if (localStorage.getItem('user')) {

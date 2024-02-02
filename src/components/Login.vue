@@ -40,9 +40,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
+import router from '@/router';
 
 const show1 = ref(false);
 const username = ref('');
@@ -74,7 +72,7 @@ async function login() {
     if (userData.data.token) {
       localStorage.setItem('accessToken', userData.data.token);
       localStorage.setItem('user', JSON.stringify(userData.data.user));
-      router.push('/');
+      router.push({ name: 'Home' });
     } else {
       error.value = 'Authentication failed';
     }

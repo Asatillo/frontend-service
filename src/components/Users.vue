@@ -43,11 +43,10 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import router from '@/router';
 import { onMounted } from 'vue';
 import { watch } from 'vue';
 
-const router = useRouter()
 const tab = ref(null)
 const search = ref(null)
 
