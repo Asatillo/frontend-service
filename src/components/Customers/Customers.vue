@@ -13,11 +13,9 @@
                 <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close' }}</v-icon>
             </template>
             <template v-slot:item.actions="{ item }">
-                <v-icon color="blue" small class="mr-2" @click="editCustomerDialog(item)">mdi-pencil</v-icon>
-                <span @click="changeActive(item)">
-                    <v-icon v-if="item.active" color="red" size="small">mdi-bell-off-outline</v-icon>
-                    <v-icon v-else color="green" size="small">mdi-bell-outline</v-icon>
-                </span>
+                <v-btn color="blue" size="small" icon="mdi-pencil" class="mr-2" @click.stop="editCustomerDialog(item)"></v-btn>
+                <v-btn v-if="item.active" color="red" size="small" icon="mdi-bell-off-outline" @click.stop="changeActive(item)"></v-btn>
+                <v-btn v-else color="green" size="small" icon="mdi-bell-outline" @click.stop="changeActive(item)"></v-btn>
             </template>
             <template v-slot:item.wiredInternetAvailable="{ item }">
                 <v-icon :color="item.wiredInternetAvailable ? 'green' : 'red'" dark>{{ item.wiredInternetAvailable ?
@@ -31,6 +29,9 @@
             </template>
             <template v-slot:item.accCreationDate="{ item }">
                 {{ formatDateString(item.accCreationDate) }}
+            </template>
+            <template v-slot:item.name="{ item }">
+                {{ item.firstName }} {{ item.lastName }}
             </template>
             <template v-slot:top>
                 <v-toolbar flat>
@@ -128,15 +129,14 @@ const search = ref('');
 const dialogPurpose = ref('New Customer');
 const headers = ref([
     { title: "Active", key: 'active', sortable: false },
-    { title: 'First name', key: 'firstName', sortable: true },
-    { title: 'Last name', key: 'lastName', sortable: true },
+    { title: 'Name', key: 'name', sortable: true },
     { title: 'Birth date', key: 'dob', sortable: true },
     { title: 'Email', key: 'email', sortable: true },
     { title: 'Adress', key: 'adress', sortable: false },
     { title: 'Segment', key: 'segment', sortable: true },
     { title: "Account created", key: 'accCreationDate', sortable: true },
-    { title: "Wired internet", key: "wiredInternetAvailable", sortable: false },
-    { title: "Actions", key: "actions", sortable: false }
+    { title: "Wired internet", key: "wiredInternetAvailable", sortable: false, align: "center"},
+    { title: "Actions", key: "actions", sortable: false, align: "center"}
 
 ])
 const totalItems = ref(0);
