@@ -1,38 +1,30 @@
 <template>
-  <v-container fluid>
-    <v-row justify="center">
-      <h2 class="text-h2 text-center">Subscriptions</h2>
-    </v-row>
-  </v-container>
-  <v-container>
     <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
-      :items="subscriptions" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading"
-      @update:options="getSubscriptions">
-      <template v-slot:item.active="{ item }">
-        <v-icon v-if="item.active" color="green">mdi-check</v-icon>
-        <v-icon v-else color="red">mdi-close</v-icon>
-      </template>
-      <template v-slot:item.networkAdress="{ item }">
-        <v-icon v-if="item.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
-        <v-icon v-else color="blue">mdi-router-wireless</v-icon>
-        <span>{{ item.networkAdress }}</span>
-      </template>
+        :items="subscriptions" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading"
+        @update:options="requestServerItems">
+        <template v-slot:item.active="{ item }">
+            <v-icon v-if="item.active" color="green">mdi-check</v-icon>
+            <v-icon v-else color="red">mdi-close</v-icon>
+        </template>
+        <template v-slot:item.networkAdress="{ item }">
+            <v-icon v-if="item.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
+            <v-icon v-else color="blue">mdi-router-wireless</v-icon>
+            <span>{{ item.networkAdress }}</span>
+        </template>
     </v-data-table-server>
-
-  </v-container>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-import { formatDateString } from '../services/date-formatting';
+import { ref } from 'vue';
+import { formatDateString } from '@/services/date-formatting';
 import axios from 'axios';
 
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(15);
 const search = ref('');
-const subscriptions = ref([]);
 const loading = ref(false);
+const subscriptions = ref([]);
 const totalItems = ref(0);
-const headers = reactive([
+const headers = ref([
   { title: 'Id', key: 'id', align: 'center' },
   { title: 'Customer', key: 'fullname', align: 'center' },
   { title: 'Active', key: 'active', align: 'center' },
@@ -43,8 +35,13 @@ const headers = reactive([
   { title: 'End Date', key: 'endDate', align: 'right' }
 ]);
 
-const getSubscriptions = async ({ page, itemsPerPage, sortBy }) => {
-  loading.value = true;
+function requestServerItems({ page, itemsPerPage }) {
+    loading.value = true;
+    getSubscriptions({ page, itemsPerPage });
+    loading.value = false;
+}
+
+const getSubscriptions = async ({ page, itemsPerPage }) => {
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
