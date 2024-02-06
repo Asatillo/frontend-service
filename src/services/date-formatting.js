@@ -5,8 +5,8 @@ export function formatDateString(dateString) {
 }
 
 export function convertPeriodToDate(period) {
-    if(period === 'ZERO') {
-        return 'No duration';
+    if(period === 'P0D') {
+        return 'None';
     }
 
     // Remove the 'P' prefix

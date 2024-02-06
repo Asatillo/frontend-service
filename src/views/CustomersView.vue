@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Customers from '../components/Customers.vue';
+import Customers from '@/components/Customers/Customers.vue';
 import Layout from '@/components/Layout.vue';
 
 export default defineComponent({

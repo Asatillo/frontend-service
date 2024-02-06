@@ -137,7 +137,7 @@
                     </v-window-item>
 
                     <v-window-item value="devices">
-                        devices
+                        <CustomerDevices v-bind:id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="phone_numbers">
@@ -162,9 +162,10 @@ import { onMounted } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { formatDateString } from '../services/date-formatting'
-import CustomerNetworkEntities from './tables/CustomerNetworkEntities.vue';
-import CustomerSubscriptions from './tables/CustomerSubscriptions.vue';
+import { formatDateString } from '@/services/date-formatting'
+import CustomerNetworkEntities from '@/components/Customers/tables/CustomerNetworkEntities.vue';
+import CustomerSubscriptions from '@/components/Customers/tables/CustomerSubscriptions.vue';
+import CustomerDevices from '@/components/Customers/tables/CustomerDevices.vue';
 
 const route = useRoute();
 const tab = ref('subscriptions');
@@ -174,7 +175,7 @@ const activeId = ref(null);
 const dialogChangeActive = ref(false);
 const dialogEditCustomer = ref(false);
 
-const hu_cities = ref(require('../assets/hu_cities.json'));
+const hu_cities = ref(require('@/assets/hu_cities.json'));
 
 const defaultItem = ref({
     id: 0,

@@ -100,16 +100,17 @@
   
 <script setup>
 import { ref } from 'vue';
-import { formatDateString } from '../services/date-formatting'
+import { formatDateString } from '@/services/date-formatting'
 import axios from 'axios';
 import router from '@/router';
+const hu_cities = ref(require('@/assets/hu_cities.json'));
 
 const itemsPerPage = ref(15);
 const dialogChangeActive = ref(false);
 const activeChangeMode = ref('');
 const activeIndex = ref(-1);
 const dialog = ref(false);
-const hu_cities = ref(require('../assets/hu_cities.json'));
+
 const defaultItem = ref({
     id: 0,
     firstName: null,
