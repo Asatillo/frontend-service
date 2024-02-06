@@ -133,22 +133,7 @@
             <v-card-text>
                 <v-window v-model="tab">
                     <v-window-item value="subscriptions">
-                        <v-data-table-server :items="subscriptions.items" :headers="subscriptions.headers"
-                            v-model:itemsPerPage="subscriptions.pagination.itemsPerPage" item-value="id"
-                            :items-length="subscriptions.pagination.totalItems" @update:options="getCustomerSubscriptions"
-                            :items-per-page-options="[15, 20, 25]">
-                            <template v-slot:item.startDate="{ item }">
-                                {{ formatDateString(item.startDate) }}
-                            </template>
-                            <template v-slot:item.endDate="{ item }">
-                                {{ formatDateString(item.endDate) }}
-                            </template>
-                            <template v-slot:item.number="{ item }">
-                                <v-icon v-if="item.networkEntity.deviceType == 'MOBILE'" color="green">mdi-phone</v-icon>
-                                <v-icon v-else color="blue">mdi-router-wireless</v-icon>
-                                {{ item.networkEntity.networkIdentifier }}
-                            </template>
-                        </v-data-table-server>
+                        <CustomerSubscriptions v-bind:id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="devices">
@@ -178,7 +163,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { formatDateString } from '../services/date-formatting'
-import CustomerNetworkEntities from './tables/CustomersNetworkEntities.vue';
+import CustomerNetworkEntities from './tables/CustomerNetworkEntities.vue';
+import CustomerSubscriptions from './tables/CustomerSubscriptions.vue';
 
 const route = useRoute();
 const tab = ref('subscriptions');
@@ -203,22 +189,6 @@ const defaultItem = ref({
     active: null,
 });
 const editedItem = ref(Object.assign({}, defaultItem.value));
-const subscriptions = ref({
-    items: [],
-    headers: [
-        { title: 'ID', key: 'id' },
-        { title: 'Plan', key: 'plan.name' },
-        { title: 'Number', key: 'number', sortable: false },
-        { title: 'Tag', key: 'networkEntity.tag', sortable: false },
-        { title: 'Start date', key: 'startDate' },
-        { title: 'End date', key: 'endDate' },
-        { title: 'Price (HUF)', key: 'plan.price', align: 'end' },
-    ],
-    pagination: {
-        itemsPerPage: 15,
-        totalItems: 0,
-    }
-});
 
 onMounted(() => {
     var id = route.params.id;
@@ -300,22 +270,4 @@ const changeServiceActive = async (id, mode) => {
         console.log(err);
     }
 };
-
-const getCustomerSubscriptions = async ({ page, itemsPerPage }) => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    };
-    try {
-        const response = await axios.get(`crm/subscriptions/customers/${route.params.id}?page=${page}&size=${itemsPerPage}`, config);
-        if (response.data) {
-            subscriptions.value.items = response.data.content;
-            subscriptions.value.pagination.totalItems = response.data.totalElements;
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 </script>
