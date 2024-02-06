@@ -163,9 +163,9 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { formatDateString } from '@/services/date-formatting'
-import CustomerNetworkEntities from '@/components/Customers/tables/CustomerNetworkEntities.vue';
-import CustomerSubscriptions from '@/components/Customers/tables/CustomerSubscriptions.vue';
-import CustomerDevices from '@/components/Customers/tables/CustomerDevices.vue';
+import CustomerNetworkEntities from '@/components/customers/tables/CustomerNetworkEntities.vue';
+import CustomerSubscriptions from '@/components/customers/tables/CustomerSubscriptions.vue';
+import CustomerDevices from '@/components/customers/tables/CustomerDevices.vue';
 
 const route = useRoute();
 const tab = ref('subscriptions');

@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Subscriptions from '../components/Subscriptions.vue';
+import Subscriptions from '@/components/subscriptions/Subscriptions.vue';
 import Layout from '@/components/Layout.vue';
 
 export default defineComponent({
