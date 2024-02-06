@@ -1,5 +1,59 @@
 <template>
     <v-container fluid>
+        <v-dialog v-model="dialogChangeActive" max-width="500px">
+            <v-card>
+                <v-card-title class="text-h6 text-center">Are you sure you want to {{
+                    customer.active ? 'deactivate' : 'activate' }} this
+                    customer?</v-card-title>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue-darken-1" variant="text" @click="dialogChangeActive = false">Cancel</v-btn>
+                    <v-btn color="blue-darken-1" variant="text" @click="changeActiveConfirm">Confirm</v-btn>
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogEditCustomer" max-width="500px" @click:outside="close">
+            <v-card>
+                <v-card-title>
+                    <span class="text-h5">Edit Customer</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.firstName" label="First name"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.lastName" label="Last name"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-autocomplete v-model="editedItem.city" :items="hu_cities" label="City"></v-autocomplete>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.dob" label="Birth date" type="date"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-select v-model="editedItem.segment" label="Segment"
+                                    :items="['PREMIUM', 'GOLD', 'SILVER', 'BRONZE', 'EXPLORE']"></v-select>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue-darken-1" variant="text" @click="close">Cancel</v-btn>
+                    <v-btn color="blue-darken-1" variant="text" @click="save">Save</v-btn>
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-card flat tile class="mx-auto">
             <v-card-title class="justify-center align-center">
                 <v-row class="mx-1">
@@ -16,12 +70,12 @@
                             </v-btn>
                         </template>
                         <v-list>
-                            <v-list-item class="pa-0">
+                            <v-list-item class="pa-0" @click="openEditDialog">
                                 <v-btn variant="text">
                                     Edit
                                 </v-btn>
                             </v-list-item>
-                            <v-list-item class="pa-0">
+                            <v-list-item class="pa-0" @click="dialogChangeActive = true">
                                 <v-btn variant="text">
                                     {{ customer.active ? 'Deactivate' : 'Activate' }}
                                 </v-btn>
@@ -79,12 +133,9 @@
             <v-card-text>
                 <v-window v-model="tab">
                     <v-window-item value="subscriptions">
-                        <v-data-table-server :items="subscriptions.items"
-                            :headers="subscriptions.headers"
-                            v-model:itemsPerPage="subscriptions.pagination.itemsPerPage"
-                            item-value="id"
-                            :items-length="subscriptions.pagination.totalItems"
-                            @update:options="getCustomerSubscriptions"
+                        <v-data-table-server :items="subscriptions.items" :headers="subscriptions.headers"
+                            v-model:itemsPerPage="subscriptions.pagination.itemsPerPage" item-value="id"
+                            :items-length="subscriptions.pagination.totalItems" @update:options="getCustomerSubscriptions"
                             :items-per-page-options="[15, 20, 25]">
                             <template v-slot:item.startDate="{ item }">
                                 {{ formatDateString(item.startDate) }}
@@ -105,7 +156,7 @@
                     </v-window-item>
 
                     <v-window-item value="phone_numbers">
-                        phone_numbers
+                        <CustomerNetworkEntities v-bind:id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="invoices">
@@ -127,29 +178,52 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { formatDateString } from '../services/date-formatting'
+import CustomerNetworkEntities from './tables/CustomersNetworkEntities.vue';
 
 const route = useRoute();
 const tab = ref('subscriptions');
 
 const customer = ref({});
+const activeId = ref(null);
+const dialogChangeActive = ref(false);
+const dialogEditCustomer = ref(false);
+
+const hu_cities = ref(require('../assets/hu_cities.json'));
+
+const defaultItem = ref({
+    id: 0,
+    firstName: null,
+    lastName: null,
+    email: null,
+    address: null,
+    city: null,
+    dob: null,
+    segment: null,
+    accCreationDate: null,
+    active: null,
+});
+const editedItem = ref(Object.assign({}, defaultItem.value));
 const subscriptions = ref({
     items: [],
     headers: [
         { title: 'ID', key: 'id' },
         { title: 'Plan', key: 'plan.name' },
-        { title: 'Number', key: 'number', sortable: false},
-        { title: 'Tag', key: 'networkEntity.tag', sortable: false},
+        { title: 'Number', key: 'number', sortable: false },
+        { title: 'Tag', key: 'networkEntity.tag', sortable: false },
         { title: 'Start date', key: 'startDate' },
         { title: 'End date', key: 'endDate' },
-        { title: 'Price (HUF)', key: 'plan.price', align: 'end'},
+        { title: 'Price (HUF)', key: 'plan.price', align: 'end' },
     ],
     pagination: {
         itemsPerPage: 15,
+        totalItems: 0,
     }
 });
 
 onMounted(() => {
-    getCustomer(route.params.id);
+    var id = route.params.id;
+    activeId.value = id;
+    getCustomer(id);
 });
 
 const getCustomer = async (id) => {
@@ -166,7 +240,68 @@ const getCustomer = async (id) => {
     }
 };
 
-const getCustomerSubscriptions = async ({page, itemsPerPage}) => {
+
+function openEditDialog() {
+    dialogEditCustomer.value = true;
+    editedItem.value = { ...customer.value };
+}
+
+function changeActiveConfirm() {
+    changeServiceActive(activeId.value, customer.value.active ? 'deactivate' : 'activate');
+    dialogChangeActive.value = false;;
+}
+
+function save() {
+    editCustomer(editedItem.value);
+    close();
+}
+
+function close() {
+    dialogEditCustomer.value = false;
+    editedItem.value = Object.assign({}, defaultItem.value);
+}
+
+const editCustomer = async (item) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+    };
+    try {
+        const response = await axios.put(`/crm/customers/${item.id}`, {
+            firstName: item.firstName,
+            lastName: item.lastName,
+            email: item.email,
+            address: item.address,
+            city: item.city,
+            dob: item.dob,
+            segment: item.segment,
+        }, config);
+        if (response.data) {
+            customer.value = response.data;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const changeServiceActive = async (id, mode) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+    };
+    try {
+        const response = await axios.patch(`/crm/customers/${id}/${mode}`, {}, config);
+        if (response.data) {
+            customer.value = response.data;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const getCustomerSubscriptions = async ({ page, itemsPerPage }) => {
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`
@@ -174,8 +309,10 @@ const getCustomerSubscriptions = async ({page, itemsPerPage}) => {
     };
     try {
         const response = await axios.get(`crm/subscriptions/customers/${route.params.id}?page=${page}&size=${itemsPerPage}`, config);
-        subscriptions.value.items = response.data.content;
-        subscriptions.value.pagination.totalItems = response.data.totalElements;
+        if (response.data) {
+            subscriptions.value.items = response.data.content;
+            subscriptions.value.pagination.totalItems = response.data.totalElements;
+        }
     } catch (error) {
         console.error(error);
     }
