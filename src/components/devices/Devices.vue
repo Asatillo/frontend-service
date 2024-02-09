@@ -4,13 +4,13 @@
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"></v-text-field>
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                 <template v-slot:activator="{ props }">
-                    <v-btn color="primary" @click="addNewDevice" v-bind="props">
+                    <v-btn color="primary" @click="openNewDeviceDialog" v-bind="props">
                         <v-icon left>mdi-plus</v-icon>
                         <span>New device</span>
                     </v-btn>
                 </template>
                 <v-card>
-                    <v-card-title class="text-h5">Add new device</v-card-title>
+                    <v-card-title class="text-h5">New device</v-card-title>
                     <v-card-text>
                         <v-select v-model="newDeviceTemplate" label="Device template" :items="deviceTemplates" required
                         chips item-title="name" item-value="id"></v-select>
@@ -37,13 +37,11 @@
                     <v-container class="pa-2 text-center">
                         <v-container class="pl-0 py-2" style="max-width: inherit;">
                             <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
-                            <v-card-title class="pb-0" prepend-icon="">No {{ value.name.toLowerCase() }} so
-                                far...</v-card-title>
+                            <v-card-title class="pb-0" prepend-icon="">No {{ value.name.toLowerCase() }} so far...</v-card-title>
                         </v-container>
                     </v-container>
                 </v-row>
-                <v-pagination v-if="value.devices.length" class="pt-6" v-model="value.pagination.currentPage"
-                    :length="value.pagination.totalPages" v-on:update:model-value="getDevices(value)">
+                <v-pagination v-if="value.devices.length" class="pt-6" :length="value.pagination.totalPages" v-on:update:model-value="loadDevices">
                 </v-pagination>
             </v-window-item>
         </v-window>
@@ -84,15 +82,26 @@ const tabs = ref({
 onMounted(() => {
     for (const [key, value] of Object.entries(tabs.value)) {
         getDevices(value.name, value.pagination.itemsPerPage, value.pagination.currentPage).then(response => {
-            var tab = tabs.value[key]
-            tab.devices = response.devices
-            tab.pagination.totalPages = response.totalPages
-            tab.pagination.currentPage = response.currentPage
+            var currentTab = tabs.value[key]
+            currentTab.devices = response.devices
+            currentTab.pagination.totalPages = response.totalPages
+            currentTab.pagination.currentPage = response.currentPage
         })
     }
 })
 
-const addNewDevice = async () => {
+function loadDevices (page) {
+    console.log(page)
+    var currentTab = tabs.value[tab.value.toLowerCase() + 's']
+    getDevices(tab.value, currentTab.pagination.itemsPerPage, page).then(response => {
+        console.log(currentTab)
+        currentTab.devices = response.devices
+        currentTab.pagination.totalPages = response.totalPages
+        currentTab.pagination.currentPage = response.currentPage
+    })
+}
+
+const openNewDeviceDialog = async () => {
     // the dialog window to add a new device
     dialog.value = true
     getDeviceTemplates(false).then(response => {
@@ -100,7 +109,7 @@ const addNewDevice = async () => {
     })
 }
 
-function createDevice (deviceTemplateId) {
+function createDevice(deviceTemplateId) {
     addDevice(deviceTemplateId).then(response => {
         dialog.value = false
         tab.value = response.deviceTemplate.deviceType
@@ -109,6 +118,7 @@ function createDevice (deviceTemplateId) {
         } else {
             tabs.value.routers.devices.push(response)
         }
+        newDeviceTemplate.value = null
     });
 }
 
