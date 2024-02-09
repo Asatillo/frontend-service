@@ -13,9 +13,15 @@
                 <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close' }}</v-icon>
             </template>
             <template v-slot:item.actions="{ item }">
-                <v-btn color="blue" size="small" icon="mdi-pencil" class="mr-2" @click.stop="editCustomerDialog(item)"></v-btn>
-                <v-btn v-if="item.active" color="red" size="small" icon="mdi-bell-off-outline" @click.stop="changeActive(item)"></v-btn>
-                <v-btn v-else color="green" size="small" icon="mdi-bell-outline" @click.stop="changeActive(item)"></v-btn>
+                <v-row>
+                    <v-btn color="blue" size="30" icon class="mr-2" @click.stop="editCustomerDialog(item)">
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn v-if="item.active" size="30" icon @click.stop="changeActive(item)">
+                        <v-icon v-if="item.active" color="red">mdi-bell-off-outline</v-icon>
+                        <v-icon v-else color="green">mdi-bell-outline</v-icon>
+                    </v-btn>
+                </v-row>
             </template>
             <template v-slot:item.wiredInternetAvailable="{ item }">
                 <v-icon :color="item.wiredInternetAvailable ? 'green' : 'red'" dark>{{ item.wiredInternetAvailable ?
@@ -39,7 +45,8 @@
                         @keyup.enter="getCustomers" class="ml-3"></v-text-field>
                     <v-divider class="mx-4" inset vertical></v-divider>
                     <v-spacer></v-spacer>
-                    <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="createNewCustomerDialog">New customer</v-btn>
+                    <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="createNewCustomerDialog">New
+                        customer</v-btn>
                 </v-toolbar>
             </template>
         </v-data-table-server>
@@ -135,8 +142,8 @@ const headers = ref([
     { title: 'Adress', key: 'adress', sortable: false },
     { title: 'Segment', key: 'segment', sortable: true },
     { title: "Account created", key: 'accCreationDate', sortable: true },
-    { title: "Wired internet", key: "wiredInternetAvailable", sortable: false, align: "center"},
-    { title: "Actions", key: "actions", sortable: false, align: "center"}
+    { title: "Wired internet", key: "wiredInternetAvailable", sortable: false, align: "center" },
+    { title: "Actions", key: "actions", sortable: false, align: "center" }
 
 ])
 const totalItems = ref(0);
