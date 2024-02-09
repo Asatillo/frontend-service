@@ -1,10 +1,10 @@
 <template>
     <v-container fluid>
         <v-tabs v-model="tab" class="mb-6">
-            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"></v-text-field>
+            
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                 <template v-slot:activator="{ props }">
-                    <v-btn color="primary" @click="openNewDeviceDialog" v-bind="props">
+                    <v-btn color="primary" class="my-auto" @click="openNewDeviceDialog" v-bind="props">
                         <v-icon left>mdi-plus</v-icon>
                         <span>New device</span>
                     </v-btn>
@@ -22,12 +22,12 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-
             <v-spacer></v-spacer>
-            <v-tab v-for="value, key in tabs" :key="key" :value="value.name">{{ key }}</v-tab>
+            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line hide-details></v-text-field>
+            <v-tab v-for="value, key in tabs" :key="key" :value="key">{{ key }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
-            <v-window-item v-for="value, key in tabs" :key="key" :value="value.name">
+            <v-window-item v-for="value, key in tabs" :key="key" :value="key">
                 <v-row v-if="value.devices.length">
                     <v-col cols="5" md="4" lg="3" v-for="device in value.devices" :key="device.id">
                         <DeviceCard :device=device />
@@ -37,7 +37,7 @@
                     <v-container class="pa-2 text-center">
                         <v-container class="pl-0 py-2" style="max-width: inherit;">
                             <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
-                            <v-card-title class="pb-0" prepend-icon="">No {{ value.name.toLowerCase() }} so far...</v-card-title>
+                            <v-card-title class="pb-0" prepend-icon="">No {{ key.toLowerCase()}}s so far...</v-card-title>
                         </v-container>
                     </v-container>
                 </v-row>
@@ -62,18 +62,16 @@ const deviceTemplates = ref([])
 const defaultPagination = {
     currentPage: 1,
     totalPages: 0,
-    itemsPerPage: 12
+    itemsPerPage: 16
 }
 
 const tab = ref(null)
 const tabs = ref({
-    'mobiles': {
-        name: 'MOBILE',
+    'MOBILE': {
         devices: {},
         pagination: Object.assign({}, defaultPagination)
     },
-    'routers': {
-        name: 'ROUTER',
+    'ROUTER': {
         devices: {},
         pagination: Object.assign({}, defaultPagination)
     },
@@ -81,7 +79,7 @@ const tabs = ref({
 
 onMounted(() => {
     for (const [key, value] of Object.entries(tabs.value)) {
-        getDevices(value.name, value.pagination.itemsPerPage, value.pagination.currentPage).then(response => {
+        getDevices(key, value.pagination.itemsPerPage, value.pagination.currentPage).then(response => {
             var currentTab = tabs.value[key]
             currentTab.devices = response.devices
             currentTab.pagination.totalPages = response.totalPages
@@ -91,14 +89,13 @@ onMounted(() => {
 })
 
 function loadDevices (page) {
-    console.log(page)
-    var currentTab = tabs.value[tab.value.toLowerCase() + 's']
+    var currentTab = tabs.value[tab.value]
     getDevices(tab.value, currentTab.pagination.itemsPerPage, page).then(response => {
-        console.log(currentTab)
         currentTab.devices = response.devices
         currentTab.pagination.totalPages = response.totalPages
         currentTab.pagination.currentPage = response.currentPage
     })
+    
 }
 
 const openNewDeviceDialog = async () => {
@@ -111,15 +108,10 @@ const openNewDeviceDialog = async () => {
 
 function createDevice(deviceTemplateId) {
     addDevice(deviceTemplateId).then(response => {
-        dialog.value = false
         tab.value = response.deviceTemplate.deviceType
-        if( response.deviceTemplate.deviceType == 'MOBILE' ){
-            tabs.value.mobiles.devices.push(response)
-        } else {
-            tabs.value.routers.devices.push(response)
-        }
-        newDeviceTemplate.value = null
+        loadDevices(tabs.value[response.deviceTemplate.deviceType].pagination.currentPage)
     });
+    close()
 }
 
 function sellDeviceToCustomer() {
@@ -134,6 +126,7 @@ function assignRouterToCustomer() {
 
 function close() {
     // close the dialog window
+    newDeviceTemplate.value = null
     dialog.value = false
 }
 

@@ -12,7 +12,7 @@ export const getDevices = async (type, itemsPerPage, currentPage) => {
         return {
             devices: response.data.content,
             totalPages: response.data.totalPages,
-            currentPage: response.data.currentPage,
+            currentPage: response.data.page,
         }
     }).catch(err => {
         console.log(err);
