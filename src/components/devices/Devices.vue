@@ -12,13 +12,13 @@
                 <v-card>
                     <v-card-title class="text-h5">Add new device</v-card-title>
                     <v-card-text>
-                        <v-select v-model="newDevice" label="Device template" :items="deviceTemplates" required
+                        <v-select v-model="newDeviceTemplate" label="Device template" :items="deviceTemplates" required
                         chips item-title="name" item-value="id"></v-select>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" text @click="close">Cancel</v-btn>
-                        <v-btn color="primary" text @click="close">Save</v-btn>
+                        <v-btn color="primary" text @click="createDevice(newDeviceTemplate)">Create</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -30,7 +30,6 @@
             <v-window-item v-for="value, key in tabs" :key="key" :value="value.name">
                 <v-row v-if="value.devices.length">
                     <v-col cols="5" md="4" lg="3" v-for="device in value.devices" :key="device.id">
-                        
                         <DeviceCard :device=device />
                     </v-col>
                 </v-row>
@@ -52,13 +51,13 @@
 </template>
   
 <script setup>
-import { getDevices } from '@/services/rest/devices-api'
+import { addDevice, getDevices } from '@/services/rest/devices-api'
 import { getDeviceTemplates } from '@/services/rest/device-templates-api'
 import DeviceCard from './DeviceCard.vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
 
-const newDevice = ref(null)
+const newDeviceTemplate = ref(null)
 const search = ref(null)
 const dialog = ref(false)
 const deviceTemplates = ref([])
@@ -99,6 +98,18 @@ const addNewDevice = async () => {
     getDeviceTemplates(false).then(response => {
         deviceTemplates.value = response
     })
+}
+
+function createDevice (deviceTemplateId) {
+    addDevice(deviceTemplateId).then(response => {
+        dialog.value = false
+        tab.value = response.deviceTemplate.deviceType
+        if( response.deviceTemplate.deviceType == 'MOBILE' ){
+            tabs.value.mobiles.devices.push(response)
+        } else {
+            tabs.value.routers.devices.push(response)
+        }
+    });
 }
 
 function sellDeviceToCustomer() {

@@ -18,3 +18,15 @@ export const getDevices = async (type, itemsPerPage, currentPage) => {
         console.log(err);
     })
 }
+
+export const addDevice = async (deviceTemplateId) => {
+    return await axios.post('/crm/devices', {
+        deviceTemplateId: deviceTemplateId,
+    }, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
