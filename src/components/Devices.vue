@@ -12,7 +12,7 @@
                 <v-card>
                     <v-card-title class="text-h5">Add new device</v-card-title>
                     <v-card-text>
-                        <v-select v-model="newDevice" label="Device template" :items="[]" required
+                        <v-select v-model="newDevice" label="Device template" :items="deviceTemplates" required
                         chips item-title="name" item-value="id"></v-select>
                     </v-card-text>
                     <v-card-actions>
@@ -32,7 +32,7 @@
                     <v-col cols="5" md="4" lg="3" v-for="device in value.devices" :key="device.id">
                         <v-card class="rounded-xl">
                             <v-img class="mt-3" :src="device.deviceTemplate.imageUrl" height="200px"></v-img>
-                            <v-card-title class="d-flex justify-space-between ">
+                            <v-card-title class="pr-0 d-flex justify-space-between ">
                                 <p class="ma-2 mp-2 text-truncate">{{ device.deviceTemplate.brand + ' ' +
                                     device.deviceTemplate.model }}</p>
 
@@ -97,7 +97,8 @@
 </template>
   
 <script setup>
-import axios from 'axios';
+import { getDevices } from '@/services/rest/devices-api'
+import { getDeviceTemplates } from '@/services/rest/device-templates-api'
 import { onMounted } from 'vue';
 import { ref } from 'vue'
 import { convertPeriodToDate } from '../services/date-formatting'
@@ -127,55 +128,23 @@ const tabs = ref({
     },
 })
 
-
-const getDevices = async (type) => {
-    try {
-        const response = await axios.get(`/crm/devices/type/${type.name}?size=${type.pagination.itemsPerPage}&page=${type.pagination.currentPage}`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        })
-        type.devices = response.data.content
-        type.pagination.totalPages = response.data.totalPages
-        type.pagination.currentPage = response.data.number + 1
-
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 onMounted(() => {
     for (const [key, value] of Object.entries(tabs.value)) {
-        getDevices(value)
+        getDevices(value.name, value.pagination.itemsPerPage, value.pagination.currentPage).then(response => {
+            var tab = tabs.value[key]
+            tab.devices = response.devices
+            tab.pagination.totalPages = response.totalPages
+            tab.pagination.currentPage = response.currentPage
+        })
     }
 })
 
-function addNewDevice() {
+const addNewDevice = async () => {
     // the dialog window to add a new device
     dialog.value = true
-    deviceTemplates.value = updateDeviceTemplates()
-}
-
-const updateDeviceTemplates = async () => {
-    try {
-        const response = await axios.get('/crm/device-templates?paginate=false', {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        })
-        var deviceTemplatesList = [];
-
-        response.data.content.forEach(deviceTemplate => {
-            deviceTemplatesList.push({
-                id: deviceTemplate.id,
-                name: deviceTemplate.brand + ' ' + deviceTemplate.model + ' ' + deviceTemplate.storage + 'GB',
-            })
-        })
-        console.log(deviceTemplatesList)
-        return deviceTemplatesList
-    } catch (err) {
-        console.log(err)
-    }
+    getDeviceTemplates(false).then(response => {
+        deviceTemplates.value = response
+    })
 }
 
 function sellDeviceToCustomer() {
