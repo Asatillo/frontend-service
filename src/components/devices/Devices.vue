@@ -30,53 +30,8 @@
             <v-window-item v-for="value, key in tabs" :key="key" :value="value.name">
                 <v-row v-if="value.devices.length">
                     <v-col cols="5" md="4" lg="3" v-for="device in value.devices" :key="device.id">
-                        <v-card class="rounded-xl">
-                            <v-img class="mt-3" :src="device.deviceTemplate.imageUrl" height="200px"></v-img>
-                            <v-card-title class="pr-0 d-flex justify-space-between ">
-                                <p class="ma-2 mp-2 text-truncate">{{ device.deviceTemplate.brand + ' ' +
-                                    device.deviceTemplate.model }}</p>
-
-                                <v-menu class="ma-2 mp-2">
-                                    <template v-slot:activator="{ props }">
-                                        <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props">
-                                        </v-btn>
-                                    </template>
-                                    <v-list>
-                                        <v-list-item class="pa-0">
-                                            <v-btn variant="text">
-                                                Edit
-                                            </v-btn>
-                                        </v-list-item>
-                                        <v-list-item class="pa-0">
-                                            <v-btn variant="text">
-                                                Delete
-                                            </v-btn>
-                                        </v-list-item>
-                                        <v-list-item class="pa-0">
-                                            <v-btn variant="text">
-                                                Sell
-                                            </v-btn>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
-                            </v-card-title>
-
-                            <v-container v-if="device.deviceTemplate.deviceType == 'MOBILE'" class="pt-0">
-                                <v-card-subtitle>
-                                    Warranty period of {{ convertPeriodToDate(device.deviceTemplate.warrantyDuration) }}
-                                </v-card-subtitle>
-                                <v-card-text class="py-3">
-                                    <v-icon>mdi-sd</v-icon>
-                                    {{ device.deviceTemplate.storage }} GB
-                                </v-card-text>
-                                <v-card-text class="py-0">
-                                    <v-icon color="green">mdi-cash</v-icon>
-                                    {{ addCommasToPrice(device.deviceTemplate.price) }} HUF
-                                </v-card-text>
-                            </v-container>
-
-
-                        </v-card>
+                        
+                        <DeviceCard :device=device />
                     </v-col>
                 </v-row>
                 <v-row v-else>
@@ -99,10 +54,9 @@
 <script setup>
 import { getDevices } from '@/services/rest/devices-api'
 import { getDeviceTemplates } from '@/services/rest/device-templates-api'
-import { onMounted } from 'vue';
+import DeviceCard from './DeviceCard.vue'
+import { onMounted } from 'vue'
 import { ref } from 'vue'
-import { convertPeriodToDate } from '../services/date-formatting'
-import { addCommasToPrice } from '../services/number-formatting'
 
 const newDevice = ref(null)
 const search = ref(null)

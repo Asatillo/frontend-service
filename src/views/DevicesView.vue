@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Devices from '../components/Devices.vue';
+import Devices from '@/components/devices/Devices.vue';
 import Layout from '@/components/Layout.vue';
 
 export default defineComponent({
