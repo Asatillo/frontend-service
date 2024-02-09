@@ -3,7 +3,7 @@
         image="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
         <v-list>
             <v-list-item :prepend-avatar="image" :title="fullname" :subtitle="email"
-                @click="redirectToRoute('my-profile')"></v-list-item>
+                @click="redirectToRoute('MyProfile')"></v-list-item>
         </v-list>
 
         <v-divider></v-divider>
