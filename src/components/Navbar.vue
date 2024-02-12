@@ -11,13 +11,18 @@
         <v-list density="compact" nav>
             <v-list-item @click="redirectToRoute(item.title)" v-for="item in menuItems" :key="item.value"
                 :prepend-icon="item.icon" :title="item.title" :value="item.value"></v-list-item>
+            <v-divider></v-divider>
+            <v-list-item @click="handleChangeTheme" prepend-icon="mdi-theme-light-dark" :title="isDark ? 'Light mode' : 'Dark mode' "
+                v-model="$vuetify.theme.dark"></v-list-item>
             <v-list-item @click="handleLogout" prepend-icon="mdi-logout" title="Logout"></v-list-item>
+
         </v-list>
     </v-navigation-drawer>
 </template>
 
 <script setup>
 import { ref, onMounted, } from 'vue'
+import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 
 const menuItems = ref([
@@ -35,17 +40,26 @@ const image = ref('')
 const username = ref('')
 const email = ref('')
 const fullname = ref('')
+const isDark = ref(null)
 
 function redirectToRoute(routeValue) {
     router.push({ name: routeValue });
 };
+
 function handleLogout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
     router.push({ name: 'Login' });
-}
+};
+
+function handleChangeTheme() {
+    vuetify.theme.global.name.value = isDark.value ? 'light' : 'dark'
+    isDark.value = !isDark.value
+};
 
 onMounted(() => {
+    isDark.value = vuetify.theme.global.name.value == 'dark'
+
     if (!localStorage.getItem('accessToken')) {
         router.push({ name: 'Login' });
     }
