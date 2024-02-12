@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex justify-center" style="height: 100vh">
-    <v-sheet width="400" class="mx-6">
+  <div class="d-flex justify-center" style="height: fit-content">
+    <v-sheet width="400" class="px-6">
       <v-container class="d-flex justify-center" style="max-width: 200px ">
         <v-img src="../assets/logo1.png" width="200"></v-img>
       </v-container>
