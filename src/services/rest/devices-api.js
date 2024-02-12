@@ -30,3 +30,16 @@ export const addDevice = async (deviceTemplateId) => {
         console.log(err);
     })
 }
+
+// Stoped here
+export const sellDevice = async (customerId, deviceId) => {
+    return await axios.post(`/crm/devices/${deviceId}/sell`, {
+        customerId: customerId,
+    }, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}

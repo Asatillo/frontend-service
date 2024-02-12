@@ -13,16 +13,11 @@
                 <v-list>
                     <v-list-item class="pa-0">
                         <v-btn variant="text">
-                            Edit
-                        </v-btn>
-                    </v-list-item>
-                    <v-list-item class="pa-0">
-                        <v-btn variant="text">
                             Delete
                         </v-btn>
                     </v-list-item>
                     <v-list-item class="pa-0">
-                        <v-btn variant="text">
+                        <v-btn variant="text" @click="$emit('sell', device)">
                             Sell
                         </v-btn>
                     </v-list-item>
