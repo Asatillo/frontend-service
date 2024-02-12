@@ -8,15 +8,20 @@
 
         <v-divider></v-divider>
 
-        <v-list density="compact" nav>
+        <v-list >
             <v-list-item @click="redirectToRoute(item.title)" v-for="item in menuItems" :key="item.value"
                 :prepend-icon="item.icon" :title="item.title" :value="item.value"></v-list-item>
-            <v-divider></v-divider>
-            <v-list-item @click="handleChangeTheme" prepend-icon="mdi-theme-light-dark" :title="isDark ? 'Light mode' : 'Dark mode' "
-                v-model="$vuetify.theme.dark"></v-list-item>
-            <v-list-item @click="handleLogout" prepend-icon="mdi-logout" title="Logout"></v-list-item>
 
         </v-list>
+
+        <template v-slot:append>
+            <v-list>
+                <v-divider></v-divider>
+                <v-list-item @click="handleChangeTheme" prepend-icon="mdi-theme-light-dark"
+                    :title="isDark ? 'Light mode' : 'Dark mode'"></v-list-item>
+                <v-list-item @click="handleLogout" prepend-icon="mdi-logout" title="Logout"></v-list-item>
+            </v-list>
+        </template>
     </v-navigation-drawer>
 </template>
 
@@ -73,3 +78,10 @@ onMounted(() => {
     }
 });
 </script>
+
+<style>
+.bottom-drawer-items {
+    position: absolute;
+    bottom: 0;
+}
+</style>
