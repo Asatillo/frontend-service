@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer expand-on-hover rail :elevation="2" style="color: azure;"
+    <v-navigation-drawer expand-on-hover rail style="color: azure;"
         image="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
         <v-list>
             <v-list-item :prepend-avatar="image" :title="fullname" :subtitle="email"
@@ -8,7 +8,7 @@
 
         <v-divider></v-divider>
 
-        <v-list >
+        <v-list>
             <v-list-item @click="redirectToRoute(item.title)" v-for="item in menuItems" :key="item.value"
                 :prepend-icon="item.icon" :title="item.title" :value="item.value"></v-list-item>
 
@@ -19,6 +19,7 @@
                 <v-divider></v-divider>
                 <v-list-item @click="handleChangeTheme" prepend-icon="mdi-theme-light-dark"
                     :title="isDark ? 'Light mode' : 'Dark mode'"></v-list-item>
+                <v-list-item @click="redirectToRoute('Settings')" prepend-icon="mdi-cog" title="Settings"></v-list-item>
                 <v-list-item @click="handleLogout" prepend-icon="mdi-logout" title="Logout"></v-list-item>
             </v-list>
         </template>
@@ -38,8 +39,7 @@ const menuItems = ref([
     { icon: 'mdi-format-list-bulleted-type', title: 'Plans', value: 'plans' },
     { icon: 'mdi-account-hard-hat', title: 'Users', value: 'users' },
     { icon: 'mdi-floor-plan', title: 'Services', value: 'services' },
-    { icon: 'mdi-router-wireless', title: 'Devices', value: 'devices' },
-    { icon: 'mdi-cog', title: 'Settings', value: 'settings' },])
+    { icon: 'mdi-router-wireless', title: 'Devices', value: 'devices' },])
 const user = ref(null)
 const image = ref('')
 const username = ref('')
