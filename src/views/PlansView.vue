@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Plans from '../components/Plans.vue';
+import Plans from '@/components/plans/Plans.vue';
 import Layout from '@/components/Layout.vue';
 
 export default defineComponent({
