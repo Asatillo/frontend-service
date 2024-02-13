@@ -1,6 +1,6 @@
 <template>
     <v-card class="rounded-xl">
-        <v-img class="mt-3" :src="device.deviceTemplate.imageUrl" height="200px"></v-img>
+        <v-img class="mt-3" :src="device.deviceTemplate.imageUrl" height="250px" rounded-lg></v-img>
         <v-card-title class="pr-0 d-flex justify-space-between ">
             <p class="ma-2 mp-2 text-truncate">{{ device.deviceTemplate.brand + ' ' +
                 device.deviceTemplate.model }}</p>
