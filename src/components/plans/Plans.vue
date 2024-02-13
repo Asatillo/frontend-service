@@ -1,4 +1,56 @@
 <template>
+    <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
+        <v-card>
+            <v-card-title>
+                <span class="text-h5">{{ editedItem.id != null ? "Edit Plan" : "New Plan" }}</span>
+            </v-card-title>
+            <v-card-text class="pb-0">
+                <v-container class="pa-0">
+                    <v-text-field v-model="editedItem.name" label="Name" required></v-text-field>
+                    <v-textarea v-model="editedItem.description" auto-grow label="Description" required
+                        rows="3"></v-textarea>
+                    <v-row>
+                        <v-col cols="4">
+                            <v-text-field v-model="editedItem.days" label="Days" required type="number"></v-text-field>
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field v-model="editedItem.months" label="Months" required type="number"></v-text-field>
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field v-model="editedItem.years" label="Years" required type="number"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-text-field v-model="editedItem.price" type="number" label="Price" required></v-text-field>
+                    <v-select v-model="editedItem.designatedDeviceType" label="Designated device type"
+                        :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect" chips></v-select>
+                    <v-select v-model="editedItem.services" :disabled="!editedItem.designatedDeviceType" label="Services"
+                        :items="services[editedItem.designatedDeviceType]" multiple required chips item-title="name"
+                        item-value="id"></v-select>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" @click="close">
+                    Cancel
+                </v-btn>
+                <v-btn color="blue-darken-1" @click="save">
+                    Save
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogChangeActive" max-width="500px">
+        <v-card>
+            <v-card-title class="text-h6 text-center">Are you sure you want to {{ activeChangeMode }} this
+                item?</v-card-title>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="changeActiveDialogClose">Cancel</v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="changeActiveConfirm">Confirm</v-btn>
+                <v-spacer></v-spacer>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     <v-container fluid>
         <v-row justify="center">
             <h2 class="text-h2 text-center">Plans</h2>
@@ -7,84 +59,17 @@
     <v-container>
         <v-row justify="center">
             <v-toolbar :elevation="2" density="compact">
-                <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-                    <template v-slot:activator="{ props }">
-                        <v-btn color="primary" dark v-bind="props">
-                            <v-icon left>mdi-plus</v-icon>
-                            <span value="New Plan">New Plan</span>
-                        </v-btn>
-                    </template>
-                    <v-card>
-                        <v-card-title>
-                            <span class="text-h5">{{ editedItem.id != null ? "Edit Plan" : "New Plan" }}</span>
-                        </v-card-title>
-
-                        <v-card-text class="pt-0">
-                            <v-container>
-                                <v-row>
-                                    <v-col>
-                                        <v-text-field v-model="editedItem.name" label="Name" required></v-text-field>
-                                        <v-textarea v-model="editedItem.description" auto-grow label="Description" required
-                                            rows="3"></v-textarea>
-                                        <v-row>
-                                            <v-col cols="4">
-                                                <v-text-field v-model="editedItem.days" label="Days" required
-                                                    type="number"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="4">
-                                                <v-text-field v-model="editedItem.months" label="Months" required
-                                                    type="number"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="4">
-                                                <v-text-field v-model="editedItem.years" label="Years" required
-                                                    type="number"></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-text-field v-model="editedItem.price" type="number" label="Price"
-                                            required></v-text-field>
-                                        <v-select v-model="editedItem.designatedDeviceType" label="Designated device type"
-                                            :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect"
-                                            chips></v-select>
-                                        <v-select v-model="editedItem.services" :disabled="!editedItem.designatedDeviceType"
-                                            label="Services" :items="services[editedItem.designatedDeviceType]" multiple
-                                            required chips item-title="name" item-value="id"></v-select>
-                                    </v-col>
-                                </v-row>
-
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue-darken-1" @click="close">
-                                Cancel
-                            </v-btn>
-                            <v-btn color="blue-darken-1" @click="save">
-                                Save
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialogChangeActive" max-width="500px">
-                    <v-card>
-                        <v-card-title class="text-h6 text-center">Are you sure you want to {{ activeChangeMode }} this
-                            item?</v-card-title>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue-darken-1" variant="text" @click="changeActiveClose">Cancel</v-btn>
-                            <v-btn color="blue-darken-1" variant="text" @click="changeActiveConfirm">Confirm</v-btn>
-                            <v-spacer></v-spacer>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
+                <v-btn color="primary" @click="openNewPlanDialog">
+                    <v-icon left>mdi-plus</v-icon>
+                    <span value="New Plan">New Plan</span>
+                </v-btn>
             </v-toolbar>
         </v-row>
-
         <v-row>
             <v-col v-for="plan in plans" :key="plan.id" cols="3">
-                <PlanCard :plan="plan" @edit="editPlan" @changeActive="changeActive"/>
+                <PlanCard :plan="plan" @edit="openEditPlanDialog" @changeActive="openChangeActiveDialog" />
             </v-col>
         </v-row>
-
     </v-container>
 </template>
 
@@ -93,6 +78,8 @@
 import { ref, onMounted } from 'vue';
 import PlanCard from '@/components/plans/PlanCard.vue';
 import { convertDateToPeriod, periodToNumbers } from '@/services/date-formatting';
+import { addPlan, getPlans, updatePlan, changePlanStatus } from '@/services/rest/plans-api';
+import { getServicesByDeviceType } from '@/services/rest/services-api';
 import axios from 'axios';
 
 const dialog = ref(false);
@@ -114,87 +101,35 @@ const defaultItem = ref({
 });
 const editedItem = ref(Object.assign({}, defaultItem.value));
 
-const fetchPlans = async () => {
-    try {
-        const response = await axios.get(`/crm/plans?size=50`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
-        plans.value = response.data.content;
-    } catch (error) {
-        console.error('Error fetching plans:', error.message);
-    }
-};
-
-const addPlan = async (plan) => {
-    const period = convertDateToPeriod(plan.days, plan.months, plan.years);
-    try {
-        const response = await axios.post(`/crm/plans`, {
-            name: plan.name,
-            description: plan.description,
-            duration: period,
-            price: plan.price,
-            designatedDeviceType: plan.designatedDeviceType,
-            services: plan.services
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
-        plans.value.push(response.data);
-    } catch (error) {
-        console.error('Error adding plan:', error.message);
-    }
-};
-
-const fetchServicesByType = async (type) => {
-    try {
-        const response = await axios.get(`/crm/services/device-type/${type}?size=50`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
+function fetchServicesByType(type) {
+    return getServicesByDeviceType(type).then((response) => {
         var itemList = [];
-        response.data.content.forEach((element) => {
+        response.forEach((element) => {
             itemList.push({
                 id: element.id,
                 name: element.name,
             });
         });
         return itemList;
-    } catch (error) {
-        console.error('Error fetching services:', error.message);
-    }
+    });
 };
 
-const updatePlan = async (plan) => {
-    try {
-        const response = await axios.put(`/crm/plans/${plan.id}`, {
-            name: plan.name,
-            description: plan.description,
-            duration: convertDateToPeriod(plan.days, plan.months, plan.years),
-            price: plan.price,
-            designatedDeviceType: plan.designatedDeviceType,
-            services: plan.services
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
+function editPlan(plan) {
+    plan.duration = convertDateToPeriod(plan.days, plan.months, plan.years);
+    updatePlan(plan).then((response) => {
         plans.value = plans.value.map((item) => {
-            if (item.id === response.data.id) {
-                return response.data;
+            if (item.id === response.id) {
+                return response;
             }
             return item;
         });
-    } catch (error) {
-        console.error('Error updating plan:', error.message);
-    }
+    });
 }
 
 onMounted(() => {
-    fetchPlans();
+    getPlans().then((response) => {
+        plans.value = response;
+    });
     fetchServicesByType('MOBILE').then((response) => {
         services.value['MOBILE'] = response;
     });
@@ -207,7 +142,7 @@ function handleTypeSelect() {
     editedItem.value.services = [];
 }
 
-function editPlan(plan) {
+function openEditPlanDialog(plan) {
     editedItem.value = mapPlanToEditedItem(plan);
     dialog.value = true;
 }
@@ -231,41 +166,37 @@ function mapPlanToEditedItem(plan) {
     };
 }
 
-function changeActive(plan) {
+function openNewPlanDialog() {
+    editedItem.value = defaultItem.value;
+    dialog.value = true;
+}
+
+function openChangeActiveDialog(plan) {
     activeChangeMode.value = plan.active ? 'deactivate' : 'activate';
     activeIndex.value = plan.id;
     dialogChangeActive.value = true;
 }
 
-function changeActiveClose() {
+function changeActiveDialogClose() {
     dialogChangeActive.value = false;
 };
 
-const changePlanActive = async (id, mode) => {
-    try {
-        const response = await axios.patch(`/crm/plans/${id}/${mode}`, {}, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
+function changePlanActive(id, mode) {
+    changePlanStatus(id, mode).then((response) => {
+        plans.value = plans.value.map((item) => {
+            if (item.id === response.id) {
+                return response;
+            }
+            return item;
         });
-        if (response.data) {
-            plans.value = plans.value.map((item) => {
-                if (item.id === response.data.id) {
-                    return response.data;
-                }
-                return item;
-            });
-        }
-    } catch (error) {
-        console.error('Error updating plan:', error.message);
-    }
+    });
 };
 
 function changeActiveConfirm() {
     changePlanActive(activeIndex.value, activeChangeMode.value);
     activeIndex.value = -1;
     activeChangeMode.value = '';
-    changeActiveClose();
+    changeActiveDialogClose();
 };
 
 
@@ -276,9 +207,13 @@ function close() {
 
 function save() {
     if (editedItem.value.id) {
-        updatePlan(editedItem.value);
+        editPlan(editedItem.value);
     } else {
-        addPlan(editedItem.value);
+        var plan = editedItem.value;
+        editedItem.value.period = convertDateToPeriod(plan.days, plan.months, plan.years);
+        addPlan(editedItem.value).then((response) => {
+            plans.value.push(response);
+        })
     }
     editedItem.value = defaultItem.value;
     dialog.value = false;
