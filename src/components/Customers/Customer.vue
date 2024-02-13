@@ -56,7 +56,7 @@
         </v-dialog>
         <v-card flat tile class="mx-auto">
             <v-card-title class="justify-center align-center">
-                <v-row class="mx-1">
+                <v-row class="px-1 mt-1">
                     <v-icon color="blue" size="40">mdi-account</v-icon>
                     <span class="text-h4 font-weight-bold">{{ customer.firstName }} {{ customer.lastName }}</span>
 
@@ -88,7 +88,7 @@
                 <b>Member since:</b> {{ formatDateString(customer.accCreationDate) }}
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-text class="pt-0">
+            <v-card-text class="py-0">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-list dense>
