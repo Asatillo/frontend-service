@@ -3,8 +3,7 @@
         <v-dialog v-model="dialogChangeActive" max-width="500px">
             <v-card>
                 <v-card-title class="text-h6 text-center">Are you sure you want to {{
-                    customer.active ? 'deactivate' : 'activate' }} this
-                    customer?</v-card-title>
+                    customer.active ? 'deactivate' : 'activate' }} this customer?</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue-darken-1" variant="text" @click="dialogChangeActive = false">Cancel</v-btn>
@@ -149,7 +148,7 @@
                     </v-window-item>
 
                     <v-window-item value="offers">
-                        offers
+                        <CustomerOfferedPromotions v-bind:id=route.params.id />
                     </v-window-item>
                 </v-window>
             </v-card-text>
@@ -166,6 +165,7 @@ import { formatDateString } from '@/services/date-formatting'
 import CustomerNetworkEntities from '@/components/customers/tables/CustomerNetworkEntities.vue';
 import CustomerSubscriptions from '@/components/customers/tables/CustomerSubscriptions.vue';
 import CustomerDevices from '@/components/customers/tables/CustomerDevices.vue';
+import CustomerOfferedPromotions from '@/components/customers/tables/CustomerOfferedPromotions.vue';
 
 const route = useRoute();
 const tab = ref('subscriptions');
