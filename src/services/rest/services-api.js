@@ -14,3 +14,13 @@ export const getServicesByDeviceType = async (deviceType) => {
         console.error('Error getting services:', error.message);
     });
 }
+
+export const getServiceById = async (serviceId) => {
+    return await axios.get(`/crm/services/${serviceId}`, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(error => {
+        console.error('Error getting service:', error.message);
+    });
+}

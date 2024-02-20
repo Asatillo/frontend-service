@@ -60,3 +60,13 @@ export const changePlanStatus = async (planId, mode) => {
         console.error('Error changing plan status:', error.message);
     });
 };
+
+export const getPlanById = async (planId) => {
+    return await axios.get(`/crm/plans/${planId}`, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(error => {
+        console.error('Error getting plan by id:', error.message);
+    });
+}
