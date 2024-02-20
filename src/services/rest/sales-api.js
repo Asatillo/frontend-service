@@ -14,3 +14,13 @@ export const getSalesByCustomerId = async (id, page, size) => {
         console.log(err);
     })
 }
+
+export const getSales = async (page, size) => {
+    return await axios.get(`/sales/orders?page=${page}&size=${size}`, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
