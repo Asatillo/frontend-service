@@ -17,7 +17,7 @@
                     <v-btn color="blue" size="30" icon class="mr-2" @click.stop="editCustomerDialog(item)">
                         <v-icon>mdi-pencil</v-icon>
                     </v-btn>
-                    <v-btn v-if="item.active" size="30" icon @click.stop="changeActive(item)">
+                    <v-btn size="30" icon @click.stop="changeActive(item)">
                         <v-icon v-if="item.active" color="red">mdi-bell-off-outline</v-icon>
                         <v-icon v-else color="green">mdi-bell-outline</v-icon>
                     </v-btn>
