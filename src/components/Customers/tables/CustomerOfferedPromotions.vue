@@ -21,7 +21,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getOfferedPromotionsByCustomerId } from '@/services/rest/offered-promotions'
+import { getOfferedPromotionsByCustomerId } from '@/services/rest/offered-promotions-api'
 import { formatDateString } from '@/services/date-formatting'
 
 const props = defineProps(['id'])

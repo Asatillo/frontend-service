@@ -125,7 +125,7 @@
                 <v-tab value="subscriptions">Subscriptions</v-tab>
                 <v-tab value="devices">Devices</v-tab>
                 <v-tab value="phone_numbers">Phone numbers</v-tab>
-                <v-tab value="invoices">Invoices</v-tab>
+                <v-tab value="sales">Sales</v-tab>
                 <v-tab value="offers">Offers</v-tab>
             </v-tabs>
 
@@ -143,8 +143,8 @@
                         <CustomerNetworkEntities v-bind:id=route.params.id />
                     </v-window-item>
 
-                    <v-window-item value="invoices">
-                        invoices
+                    <v-window-item value="sales">
+                        <CustomerSales v-bind:id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="offers">
@@ -166,6 +166,7 @@ import CustomerNetworkEntities from '@/components/customers/tables/CustomerNetwo
 import CustomerSubscriptions from '@/components/customers/tables/CustomerSubscriptions.vue';
 import CustomerDevices from '@/components/customers/tables/CustomerDevices.vue';
 import CustomerOfferedPromotions from '@/components/customers/tables/CustomerOfferedPromotions.vue';
+import CustomerSales from '@/components/customers/tables/CustomerSales.vue';
 
 const route = useRoute();
 const tab = ref('subscriptions');
