@@ -32,10 +32,12 @@ import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 
 const menuItems = ref([
-    { icon: 'mdi-view-dashboard', title: 'Home', value: '' },
+    // { icon: 'mdi-view-dashboard', title: 'Home', value: '' },
     { icon: 'mdi-account-multiple', title: 'Customers', value: 'customers' },
     { icon: 'mdi-playlist-check', title: 'Subscriptions', value: 'subscriptions' },
     { icon: 'mdi-currency-usd', title: 'Sales', value: 'sales' },
+    { icon: 'mdi-gift', title: 'Promotions', value: 'promotions'},
+    { icon: 'mdi-account-question', title: 'OfferedPromotions', value: 'offered-promotions'},
     { icon: 'mdi-format-list-bulleted-type', title: 'Plans', value: 'plans' },
     { icon: 'mdi-account-hard-hat', title: 'Users', value: 'users' },
     { icon: 'mdi-floor-plan', title: 'Services', value: 'services' },

@@ -68,6 +68,16 @@ const routes = [
     component: () => import('../views/ServicesView.vue')
   },
   {
+    path: '/promotions',
+    name: 'Promotions',
+    component: () => import('../views/PromotionsView.vue')
+  },
+  {
+    path: '/offered-promotions',
+    name: 'OfferedPromotions',
+    component: () => import('../views/OfferedPromotionsView.vue')
+  },
+  {
     path: '/:catchAll(.*)',
     name: 'NotFound',
     props: {

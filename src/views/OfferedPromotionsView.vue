@@ -1,6 +1,6 @@
 <template>
     <Layout>
-      <Sales />
+      <OfferedPromotions />
     </Layout>
 </template>
 
@@ -8,15 +8,15 @@
 import { defineComponent } from 'vue';
 
 // Components
+import OfferedPromotions from '@/components/offered-promotions/OfferedPromotions.vue';
 import Layout from '@/components/Layout.vue';
-import Sales from '@/components/sales/Sales.vue';
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'OfferedPromotionsView',
 
   components: {
-    Sales,
+    OfferedPromotions,
     Layout
-  },
+},
 });
 </script>
