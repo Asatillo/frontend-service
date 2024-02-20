@@ -8,9 +8,20 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   theme: {
     defaultTheme: 'light',
-    light: {
-      background: '#000000'
-    },
+    themes: {
+      options: {customProperties: true},
+      light: {
+        colors: {
+          background: '#F7F7F7',
+        }
+      },
+      dark: {
+        colors: {
+          background: '#121212',
+        }
+      }
+    }
+
   }
 }
 )
