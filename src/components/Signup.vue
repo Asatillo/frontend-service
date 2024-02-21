@@ -42,6 +42,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { signUpUser } from '@/services/rest/auth-api';
 import axios from 'axios';
 import router from '@/router';
 
@@ -94,23 +95,23 @@ async function handleSignup() {
     return;
   }
 
-  try {
-    const userData = await axios.post('/auth-service/auth/register', {
+  var userData = {
       username: username.value,
       firstName: firstName.value,
       lastName: lastName.value,
       password: password.value,
       email: email.value,
-    });
-
-    if (userData.data.token) {
-      localStorage.setItem('accessToken', userData.data.token);
-      localStorage.setItem('user', JSON.stringify(userData.data.user));
-      router.push({ name: 'Home' });
     }
-  } catch (err) {
-    console.log(err);
-    error.value = err.response?.data?.message || 'An error occurred during registration.';
-  }
+  signUpUser(userData).then(response => {
+    if (response.token) {
+      localStorage.setItem('accessToken', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+      router.push({ name: 'Home' });
+    } else {
+      error.value = 'Authentication failed';
+    }
+  }).catch(error => {
+    console.log(error);
+  });
 }
 </script>

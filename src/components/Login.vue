@@ -7,20 +7,10 @@
 
       <v-form fast-fail @submit.prevent="login">
 
-        <v-text-field 
-          v-model="username" 
-          label="Username" 
-          :rules="usernameRules"
-        ></v-text-field>
+        <v-text-field v-model="username" label="Username" :rules="usernameRules"></v-text-field>
 
-        <v-text-field 
-          v-model="password" 
-          label="Password" 
-          :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="passwordRules" 
-          :type="show1 ? 'text' : 'password'"
-          @click:append-inner="show1 = !show1"
-        ></v-text-field>
+        <v-text-field v-model="password" label="Password" :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :rules="passwordRules" :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1"></v-text-field>
 
         <a href="#" class="text-body-2 font-weight-regular"> Forgot Password? </a>
 
@@ -39,7 +29,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import axios from 'axios';
+import { authorizeUser } from '@/services/rest/auth-api';
 import router from '@/router';
 
 const show1 = ref(false);
@@ -52,7 +42,7 @@ const passwordRules = computed(() => [required(password.value), min(password.val
 
 const areAllRulesMet = computed(() => {
   return usernameRules.value.every(result => result === true) &&
-         passwordRules.value.every(result => result === true);
+    passwordRules.value.every(result => result === true);
 });
 
 function required(value) {
@@ -64,22 +54,16 @@ function min(value) {
 }
 
 async function login() {
-  try {
-    const userData = await axios.post('auth-service/auth/authenticate', {
-      username: username.value,
-      password: password.value,
-    });
-    if (userData.data.token) {
-      localStorage.setItem('accessToken', userData.data.token);
-      localStorage.setItem('user', JSON.stringify(userData.data.user));
+  authorizeUser(username.value, password.value).then(response => {
+    if (response.token) {
+      localStorage.setItem('accessToken', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
       router.push({ name: 'Home' });
     } else {
       error.value = 'Authentication failed';
     }
-  } catch (err) {
-    if (err.response) {
-      error.value = err.response.data.message;
-    }
-  }
+  }).catch(error => {
+    console.log(error);
+  });
 }
 </script>
