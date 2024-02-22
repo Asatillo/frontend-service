@@ -5,20 +5,36 @@
                 <template v-slot:activator="{ props }">
                     <v-btn color="primary" class="my-auto" @click="openNewDeviceDialog" v-bind="props">
                         <v-icon left>mdi-plus</v-icon>
-                        <span>New device</span>
+                        <span>New Devices</span>
                     </v-btn>
                 </template>
                 <v-card>
-                    <v-card-title class="text-h5">New device</v-card-title>
+                    <v-card-title class="text-h5">Add New Devices</v-card-title>
                     <v-card-text>
-                        <v-select v-model="newDeviceTemplate" label="Device template" :items="deviceTemplates" required
-                            chips item-title="name" item-value="id"></v-select>
+                        <v-window v-model="step">
+                            <v-window-item :value="1">
+                                <v-select v-model="newDeviceTemplate" label="Device template" :items="deviceTemplates"
+                                    required chips item-title="name" item-value="id"></v-select>
+                                <v-text-field v-model="newDeviceAmount" label="Amount" required
+                                    type="number"></v-text-field>
+                            </v-window-item>
+                            <v-window-item :value="2">
+                                <div v-if="!responseObj.loading" class="pa-4 text-center">
+                                    <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
+                                    <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :
+                                        'Something went wrong' }}!</h3>
+                                    <span class="text-caption text-grey">{{ responseObj.message }}</span>
+                                </div>
+                                <v-progress-linear v-else indeterminate color="primary"></v-progress-linear>
+                            </v-window-item>
+                        </v-window>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="close">Cancel</v-btn>
-                        <v-btn color="primary" text @click="createDevice(newDeviceTemplate)"
-                            :disabled="!newDeviceTemplate">Create</v-btn>
+                        <v-btn color="primary" text @click="close">Close</v-btn>
+                        <v-btn v-if="step == 1" color="primary" text
+                            @click="createDevice(newDeviceTemplate, newDeviceAmount)"
+                            :disabled="!newDeviceTemplate || !newDeviceAmount || newDeviceAmount < 1">Create</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -76,11 +92,19 @@ import { onMounted } from 'vue'
 import { ref } from 'vue'
 
 const newDeviceTemplate = ref(null)
+const newDeviceAmount = ref(null)
 const sellDialog = ref(false)
 const selectedCustomer = ref(null)
 const customers = ref([])
 const deviceToSell = ref(null)
-const search = ref(null)
+const search = ref('')
+const loading = ref(false)
+const responseObj = ref({
+    loading: false,
+    success: false,
+    message: ''
+})
+const step = ref(1)
 const dialog = ref(false)
 const deviceTemplates = ref([])
 const defaultPagination = {
@@ -118,6 +142,9 @@ onMounted(() => {
 })
 
 function loadDevices(page, search) {
+    if (search == null) {
+        search = ''
+    }
     var currentTab = tabs.value[tab.value]
     getDevices(tab.value, currentTab.pagination.itemsPerPage, page, search).then(response => {
         currentTab.devices = response.content
@@ -133,16 +160,29 @@ const openNewDeviceDialog = async () => {
     })
 }
 
-function createDevice(deviceTemplateId) {
-    addDevice(deviceTemplateId).then(response => {
-        tab.value = response.deviceTemplate.deviceType
-        loadDevices(tabs.value[response.deviceTemplate.deviceType].pagination.currentPage, search.value)
+function createDevice(deviceTemplateId, amount) {
+    responseObj.value.loading = true
+    step.value = 2
+
+    addDevice(deviceTemplateId, amount).then(response => {
+        console.log(response)
+
+        if (response.success) {
+            responseObj.value.loading = false
+            responseObj.value.success = response.success
+            responseObj.value.message = response.message
+            loadDevices(tabs.value[tab.value].pagination.currentPage, search.value)
+        }
     });
-    close()
 }
 
 function close() {
     newDeviceTemplate.value = null
+    newDeviceAmount.value = null
+    step.value = 1
+    responseObj.value.loading = false
+    responseObj.value.success = false
+    responseObj.value.message = ''
     dialog.value = false
 }
 
@@ -158,7 +198,6 @@ function closeSellDialog() {
 }
 
 function sellDevice(deviceId, customerId) {
-    console.log(deviceId, customerId)
     closeSellDialog()
 }
 

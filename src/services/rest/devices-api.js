@@ -25,9 +25,10 @@ export const getDeviceById = async (deviceId) => {
     })
 }
 
-export const addDevice = async (deviceTemplateId) => {
+export const addDevice = async (deviceTemplateId, amount) => {
     return await axios.post('/crm/devices', {
         deviceTemplateId: deviceTemplateId,
+        amount: amount,
     }, {
         headers: headers,
     }).then(response => {
