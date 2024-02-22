@@ -11,7 +11,7 @@
     <v-container>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
             :items="services" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading"
-            @update:options="getServices">
+            @update:options="getAllServices">
             <template v-slot:item.active="{ item }">
                 <v-icon v-if="item.active" color="green">mdi-check</v-icon>
                 <v-icon v-else color="red">mdi-close</v-icon>
@@ -113,7 +113,7 @@
   
 <script setup>
 import { ref, reactive, computed } from 'vue';
-import axios from 'axios';
+import { getServices, changeServiceStatus, updateService, createService } from '@/services/rest/services-api';
 
 const dialog = ref(false)
 const dialogChangeActive = ref(false)
@@ -145,23 +145,13 @@ const headers = reactive([
     { title: 'Actions', key: 'actions', sortable: false, sortable: false },
 ]);
 
-const getServices = async ({ page, itemsPerPage, sortBy }) => {
+const getAllServices = async ({ page, itemsPerPage, sortBy }) => {
     loading.value = true;
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.get(`/crm/services?page=${page}&size=${itemsPerPage}`, config);
-        if (response.data) {
-            totalItems.value = response.data.totalElements;
-            services.value = response.data.content;
-            loading.value = false;
-        }
-    } catch (err) {
-        console.log(err);
-    }
+    getServices({ page, itemsPerPage, sortBy }).then(response => {
+        loading.value = false;
+        totalItems.value = response.totalElements;
+        services.value = response.content;
+    });
 };
 
 function changeActive(item) {
@@ -191,24 +181,15 @@ var serviceTypesList = computed(() => {
 });
 
 const changeServiceActive = async (id, mode) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.patch(`/crm/services/${id}/${mode}`, {}, config);
-        if (response.data) {
-            services.value = services.value.map((item) => {
-                if (item.id == id) {
-                    return response.data;
-                }
+    changeServiceStatus(id, mode).then(() => {
+        services.value = services.value.map((item) => {
+            if (item.id == id) {
+                item.active = !item.active;
                 return item;
-            });
-        }
-    } catch (err) {
-        console.log(err);
-    }
+            }
+            return item;
+        });
+    });
 };
 
 function close() {
@@ -233,27 +214,16 @@ function editServiceDialog(item) {
 };
 
 const editService = async (item) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
+    var service = {
+        name: item.name,
+        type: item.type,
+        amount: item.amount,
+        designatedDeviceType: item.designatedDeviceType,
+        price: item.price,
     };
-    try {
-        const response = await axios.put(`/crm/services/${item.id}`, {
-            name: item.name,
-            type: item.type,
-            amount: item.amount,
-            designatedDeviceType: item.designatedDeviceType,
-            price: item.price,
-        }, config);
-        if (response.data) {
-            console.log(response.data);
-            getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
-        }
-
-    } catch (err) {
-        console.log(err);
-    }
+    updateService(item.id, service).then(() => {
+        getAllServices({ page: 1, itemsPerPage: 10, sortBy: [] });
+    });
 }
 
 function createNewServiceDialog() {
@@ -263,20 +233,11 @@ function createNewServiceDialog() {
 };
 
 const addService = async (item) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.post(`/crm/services`, item, config);
-        if (response.data) {
-            getServices({ page: 1, itemsPerPage: 10, sortBy: [] });
-        }
-
-    } catch (err) {
+    createService(item).then(() => {
+        getAllServices({ page: 1, itemsPerPage: 10, sortBy: [] });
+    }).catch(err => {
         console.log(err);
-    }
+    });
 };
 </script>
   

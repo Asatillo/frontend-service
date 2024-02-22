@@ -16,7 +16,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { ref } from 'vue'
-import axios from 'axios'
+import { getNetworkEntitiesByCustomer } from '@/services/rest/network-entities-api'
 
 const props = defineProps(['id'])
 
@@ -36,23 +36,11 @@ function requestServerItems({ page, itemsPerPage }) {
 }
 
 const getCustomerEntities = async ({ page, itemsPerPage }, id) => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    };
-    try {
-        const response = await axios.get(
-            `crm/network-entities/customer/${id}?page=${page}&size=${itemsPerPage}`,
-            config
-        );
-        if (response.data) {
-            totalItems.value = response.data.totalElements;
-            entities.value = response.data.content;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
+    getNetworkEntitiesByCustomer(id, { page, itemsPerPage }).then(response => {
+        totalItems.value = response.totalElements
+        entities.value = response.content
+    }).catch(error => {
+        console.log(error)
+    })
 }
 </script>

@@ -17,7 +17,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { getDevicesByCustomer } from '@/services/rest/devices-api'
 import { formatDateString, convertPeriodToDate } from '@/services/date-formatting.js'
 
 const props = defineProps(['id'])
@@ -28,7 +28,7 @@ const totalItems = ref(0)
 const headers = ref([
     { title: 'ID', value: 'id' },
     { title: 'Name', value: 'name' },
-    { title: 'Purchase Date', value: 'purchaseDate'},
+    { title: 'Purchase Date', value: 'purchaseDate' },
     { title: 'Warranty period', value: 'warrantyPeriod' },
     { title: 'Warranty ends', value: 'WarrantyEndDate' },
 ])
@@ -38,24 +38,12 @@ function requestServerItems({ page, itemsPerPage }) {
 }
 
 const getCustomerDevices = async ({ page, itemsPerPage }, customerId) => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    };
-    try {
-        const response = await axios.get(
-            `crm/customers/${customerId}/devices?page=${page}&size=${itemsPerPage}`,
-            config
-        );
-        if (response.data) {
-            totalItems.value = response.data.totalElements;
-            devices.value = response.data.content;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
+    getDevicesByCustomer(customerId, { page, itemsPerPage }).then(response => {
+        totalItems.value = response.totalElements
+        devices.value = response.content
+    }).catch(error => {
+        console.log(error)
+    })
 }
 
 </script>

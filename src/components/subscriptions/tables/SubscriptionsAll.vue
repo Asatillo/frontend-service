@@ -1,23 +1,36 @@
 <template>
-    <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
-        :items="subscriptions" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading"
-        @update:options="requestServerItems">
-        <template v-slot:item.active="{ item }">
-            <v-icon v-if="item.active" color="green">mdi-check</v-icon>
-            <v-icon v-else color="red">mdi-close</v-icon>
-        </template>
-        <template v-slot:item.networkAdress="{ item }">
-            <v-icon v-if="item.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
-            <v-icon v-else color="blue">mdi-router-wireless</v-icon>
-            <span>{{ item.networkAdress }}</span>
-        </template>
-    </v-data-table-server>
+  <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
+    :items="subscriptions" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading"
+    @update:options="requestServerItems">
+    <template v-slot:item.active="{ item }">
+      <v-icon v-if="item.active" color="green">mdi-check</v-icon>
+      <v-icon v-else color="red">mdi-close</v-icon>
+    </template>
+    <template v-slot:item.networkEntity.networkIdentifier="{ item }">
+      <v-icon v-if="item.networkEntity.deviceType == 'MOBILE'" color="green">mdi-sim</v-icon>
+      <v-icon v-else color="blue">mdi-router-wireless</v-icon>
+      <span>{{ item.networkEntity.networkIdentifier }}</span>
+    </template>
+    <template v-slot:item.customer="{ item }">
+      <span v-if="item.networkEntity.owner">{{ item.networkEntity.owner.firstName + ' ' +  item.networkEntity.owner.lastName }}</span>
+    </template>
+    <template v-slot:item.deviceModel="{ item }">
+      <span v-if="item.device">{{ item.device.deviceTemplate.model }}</span>
+      <span v-else>-</span>
+    </template>
+    <template v-slot:item.startDate="{ item }">
+      <span>{{ formatDateString(item.startDate) }}</span>
+    </template>
+    <template v-slot:item.endDate="{ item }">
+      <span>{{ formatDateString(item.endDate) }}</span>
+    </template>
+  </v-data-table-server>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { formatDateString } from '@/services/date-formatting';
-import axios from 'axios';
+import { getSubscriptions } from '@/services/rest/subscriptions-api';
 
 const itemsPerPage = ref(15);
 const search = ref('');
@@ -25,52 +38,23 @@ const loading = ref(false);
 const subscriptions = ref([]);
 const totalItems = ref(0);
 const headers = ref([
-  { title: 'Id', key: 'id', align: 'center' },
-  { title: 'Customer', key: 'fullname', align: 'center' },
-  { title: 'Active', key: 'active', align: 'center' },
-  { title: 'Network Entity', key: 'networkAdress', align: 'left' },
-  { title: 'Device', key: 'deviceModel', align: 'center' },
-  { title: 'Plan', key: 'plan.name', align: 'center' },
-  { title: 'Start Date', key: 'startDate', align: 'right' },
-  { title: 'End Date', key: 'endDate', align: 'right' }
+  { title: 'Id', value: 'id', align: 'center' },
+  { title: 'Customer', value: 'customer', align: 'center' },
+  { title: 'Active', value: 'active', align: 'center' },
+  { title: 'Network Entity', value: 'networkEntity.networkIdentifier', align: 'left' },
+  { title: 'Device', value: 'deviceModel', align: 'center' },
+  { title: 'Plan', value: 'plan.name', align: 'center' },
+  { title: 'Start Date', value: 'startDate', align: 'right' },
+  { title: 'End Date', value: 'endDate', align: 'right' }
 ]);
 
 function requestServerItems({ page, itemsPerPage }) {
-    loading.value = true;
-    getSubscriptions({ page, itemsPerPage });
+  loading.value = true;
+  getSubscriptions({ page, itemsPerPage }).then(response => {
     loading.value = false;
+    totalItems.value = response.totalElements;
+    subscriptions.value = response.content;
+  });
+  loading.value = false;
 }
-
-const getSubscriptions = async ({ page, itemsPerPage }) => {
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-    },
-  };
-  try {
-    const response = await axios.get(`crm/subscriptions?page=${page}&size=${itemsPerPage}`, config);
-    if (response.data) {
-      totalItems.value = response.data.totalElements;
-      subscriptions.value = response.data.content;
-      subscriptions.value.forEach(element => {
-        if (element.networkEntity.owner != null) {
-          element.fullname = element.networkEntity.owner.firstName + ' ' + element.networkEntity.owner.lastName;
-        }
-        element.networkAdress = element.networkEntity.networkIdentifier;
-        element.deviceType = element.networkEntity.deviceType;
-        if (element.device != null) {
-          element.deviceModel = element.device.deviceTemplate.model;
-        } else {
-          element.deviceModel = '-';
-        }
-        element.startDate = formatDateString(element.startDate);
-        element.endDate = formatDateString(element.endDate);
-
-      });
-      loading.value = false;
-    }
-  } catch (err) {
-    console.log(err)
-  }
-};
 </script>

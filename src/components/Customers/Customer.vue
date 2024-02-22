@@ -159,7 +159,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { ref } from 'vue';
-import axios from 'axios';
+import { getCustomerById, editCustomer, changeCustomerStatus } from '@/services/rest/customers-api';
 import { useRoute } from 'vue-router';
 import { formatDateString } from '@/services/date-formatting'
 import CustomerNetworkEntities from '@/components/customers/tables/CustomerNetworkEntities.vue';
@@ -199,17 +199,11 @@ onMounted(() => {
 });
 
 const getCustomer = async (id) => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    };
-    try {
-        const response = await axios.get(`crm/customers/${id}`, config);
-        customer.value = response.data;
-    } catch (error) {
-        console.error(error);
-    }
+    getCustomerById(id).then(response => {
+        customer.value = response;
+    }).catch(error => {
+        console.log(error);
+    });
 };
 
 
@@ -219,12 +213,12 @@ function openEditDialog() {
 }
 
 function changeActiveConfirm() {
-    changeServiceActive(activeId.value, customer.value.active ? 'deactivate' : 'activate');
+    changeCustomerActive(activeId.value, customer.value.active ? 'deactivate' : 'activate');
     dialogChangeActive.value = false;;
 }
 
 function save() {
-    editCustomer(editedItem.value);
+    changeCustomer(editedItem.value);
     close();
 }
 
@@ -233,43 +227,28 @@ function close() {
     editedItem.value = Object.assign({}, defaultItem.value);
 }
 
-const editCustomer = async (item) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.put(`/crm/customers/${item.id}`, {
-            firstName: item.firstName,
-            lastName: item.lastName,
-            email: item.email,
-            address: item.address,
-            city: item.city,
-            dob: item.dob,
-            segment: item.segment,
-        }, config);
-        if (response.data) {
-            customer.value = response.data;
-        }
-    } catch (err) {
-        console.log(err);
+const changeCustomer = async (item) => {
+    var customerData = {
+        firstName: item.firstName,
+        lastName: item.lastName,
+        email: item.email,
+        address: item.address,
+        city: item.city,
+        dob: item.dob,
+        segment: item.segment,
     }
+    editCustomer(item.id, customerData).then(response => {
+        customer.value = response;
+    }).catch(error => {
+        console.log(error);
+    });
 };
 
-const changeServiceActive = async (id, mode) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.patch(`/crm/customers/${id}/${mode}`, {}, config);
-        if (response.data) {
-            customer.value = response.data;
-        }
-    } catch (err) {
-        console.log(err);
-    }
+const changeCustomerActive = async (id, mode) => {
+    changeCustomerStatus(id, mode).then(response => {
+        customer.value = response;
+    }).catch(error => {
+        console.log(error);
+    });
 };
 </script>

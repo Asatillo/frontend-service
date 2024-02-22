@@ -18,7 +18,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { ref } from 'vue'
-import axios from 'axios'
+import { getSubscriptionsByCustomer } from '@/services/rest/subscriptions-api'
 import { formatDateString } from '@/services/date-formatting.js'
 
 const props = defineProps(['id'])
@@ -41,19 +41,11 @@ function requestServerItems({ page, itemsPerPage }) {
 }
 
 const getCustomerSubscriptions = async ({ page, itemsPerPage }, id) => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    };
-    try {
-        const response = await axios.get(`crm/subscriptions/customers/${id}?page=${page}&size=${itemsPerPage}`, config);
-        if (response.data) {
-            subscriptions.value = response.data.content;
-            totalItems.value = response.data.totalElements;
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    getSubscriptionsByCustomer(id, { page, itemsPerPage }).then(response => {
+        totalItems.value = response.totalElements
+        subscriptions.value = response.content
+    }).catch(error => {
+        console.log(error)
+    })
 }
 </script>

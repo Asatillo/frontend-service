@@ -29,3 +29,17 @@ export const signUpUser = async (userData) => {
         }
     }
 }
+
+// const response = await axios.get(`/auth-service/users?page=${tab.pagination.currentPage}&size=${itemsPerPage.value}&role=${tab.role}`, config);
+export const getUsersByRole = async ({ page, itemsPerPage}, role) => {
+    try {
+        const response = await axios.get(`/auth-service/users?page=${page}&size=${itemsPerPage}&role=${role}`, {
+            headers: headers,
+        });
+        return response.data
+    } catch (err) {
+        if (err.response) {
+            return err.response.data
+        }
+    }
+}

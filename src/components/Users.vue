@@ -44,7 +44,7 @@
                     </v-container>
                 </v-row>
                 <v-pagination v-if="value.users.length" class="pt-6" v-model="value.pagination.currentPage"
-                    :length="value.pagination.totalPages" v-on:update:model-value="getUsers(value)"></v-pagination>
+                    :length="value.pagination.totalPages" v-on:update:model-value="getAllUsers(value)"></v-pagination>
             </v-window-item>
         </v-window>
 
@@ -54,7 +54,7 @@
   
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import { getUsersByRole } from '@/services/rest/auth-api';
 import router from '@/router';
 import { onMounted } from 'vue';
 import { watch } from 'vue';
@@ -65,7 +65,6 @@ const search = ref(null)
 const defaultPagination = {
     currentPage: 1,
     totalPages: 0,
-    itemsPerPage: 12
 }
 
 const tabs = ref({
@@ -94,30 +93,23 @@ const tabs = ref({
         pagination: Object.assign({}, defaultPagination)
     }
 })
-const options = ref({})
-const itemsPerPage = ref(12)
+const itemsPerPage = 12
 
 onMounted(() => {
     for (const [key, value] of Object.entries(tabs.value)) {
-        getUsers(value)
+        getAllUsers(value)
     }
 })
 
-const getUsers = async (tab) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.get(`/auth-service/users?page=${tab.pagination.currentPage}&size=${itemsPerPage.value}&role=${tab.role}`, config);
-        if (response.data) {
-            tab.pagination.totalPages = response.data.totalPages;
-            tab.users = response.data.content;
-        }
-    } catch (err) {
-        console.log(err)
-    }
+const getAllUsers = async (tab) => {
+    var page = tab.pagination.currentPage;
+    var role = tab.role;
+    getUsersByRole({page, itemsPerPage}, role).then(response => {
+        tab.pagination.totalPages = response.totalPages;
+        tab.users = response.content;
+    }).catch(error => {
+        console.log(error)
+    });
 }
 
 watch(search, (newValue, oldValue) => {

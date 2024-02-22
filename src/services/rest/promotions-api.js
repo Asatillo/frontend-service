@@ -33,4 +33,14 @@ export const changePromotionStatus = async (id, status) => {
     }).catch(error => {
         console.error('Error changing status promotion:', error.message);
     });
+};
+
+export const editPromotion = async (promotion) => {
+    return await axios.put(`/sales/promotions/${promotion.id}`, promotion, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(error => {
+        console.error('Error editing promotion:', error.message);
+    });
 }

@@ -43,7 +43,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { signUpUser } from '@/services/rest/auth-api';
-import axios from 'axios';
 import router from '@/router';
 
 const show1 = ref(false);

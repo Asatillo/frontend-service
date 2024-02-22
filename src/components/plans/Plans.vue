@@ -80,7 +80,6 @@ import PlanCard from '@/components/plans/PlanCard.vue';
 import { convertDateToPeriod, periodToNumbers } from '@/services/date-formatting';
 import { addPlan, getPlans, updatePlan, changePlanStatus } from '@/services/rest/plans-api';
 import { getServicesByDeviceType } from '@/services/rest/services-api';
-import axios from 'axios';
 
 const dialog = ref(false);
 const plans = ref([]);

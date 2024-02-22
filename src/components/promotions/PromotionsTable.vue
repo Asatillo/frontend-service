@@ -31,7 +31,7 @@
         </template>
         <template v-slot:item.actions="{ item }">
             <v-row>
-                <v-btn color="blue" size="30" icon class="mr-2" @click.stop="editPromotionDialog(item)">
+                <v-btn color="blue" size="30" icon class="mr-2" @click.stop="$emit('editPromotionFromChild', item)">
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn size="30" icon @click.stop="changeActive(item)">

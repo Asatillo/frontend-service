@@ -7,7 +7,7 @@
     <v-container>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :items="customers" item-value="id"
             :items-length="totalItems" :items-per-page-options="[15, 20, 25]" :loading="loading"
-            @update:options="getCustomers" :headers="headers" :search="search" @click:row="handleRowClick"
+            @update:options="getAllCustomers" :headers="headers" :search="search" @click:row="handleRowClick"
             item-class="row-class">
             <template v-slot:item.active="{ item }">
                 <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close' }}</v-icon>
@@ -109,7 +109,7 @@
 <script setup>
 import { ref } from 'vue';
 import { formatDateString } from '@/services/date-formatting'
-import axios from 'axios';
+import { getCustomers, changeCustomerStatus, editCustomer, addCustomer } from '@/services/rest/customers-api';
 import router from '@/router';
 const hu_cities = ref(require('@/assets/hu_cities.json'));
 
@@ -150,25 +150,15 @@ const totalItems = ref(0);
 const customers = ref([]);
 const loading = ref(false);
 
-const getCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) => {
+const getAllCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) => {
     loading.value = true;
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        var sort = sortBy.length ? sortBy[0].key : 'id';
-
-        const response = await axios.get(`crm/customers?page=${page}&size=${itemsPerPage}&sort=${sort}&search=${search}`, config);
-        if (response.data) {
-            totalItems.value = response.data.totalElements;
-            customers.value = response.data.content;
-            loading.value = false;
-        }
-    } catch (err) {
-        console.log(err)
-    }
+    getCustomers({ page, itemsPerPage, sortBy, groupBy, search }).then(response => {
+        totalItems.value = response.totalElements;
+        customers.value = response.content;
+        loading.value = false;
+    }).catch(error => {
+        console.log(error)
+    })
 };
 
 function changeActive(item) {
@@ -178,32 +168,24 @@ function changeActive(item) {
 };
 
 function changeActiveConfirm() {
-    changeServiceActive(activeIndex.value, activeChangeMode.value);
+    changeCustomerActive(activeIndex.value, activeChangeMode.value);
     activeIndex.value = -1;
     editedItem.value = Object.assign({}, defaultItem.value);
     activeChangeMode.value = '';
     changeActiveClose();
 };
 
-const changeServiceActive = async (id, mode) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.patch(`/crm/customers/${id}/${mode}`, {}, config);
-        if (response.data) {
-            customers.value = customers.value.map((item) => {
-                if (item.id == id) {
-                    return response.data;
-                }
-                return item;
-            });
-        }
-    } catch (err) {
-        console.log(err);
-    }
+const changeCustomerActive = async (id, mode) => {
+    changeCustomerStatus(id, mode).then(response => {
+        customers.value = customers.value.map((item) => {
+            if (item.id == id) {
+                return response;
+            }
+            return item;
+        });
+    }).catch(error => {
+        console.log(error)
+    })
 };
 
 function changeActiveClose() {
@@ -223,41 +205,34 @@ function close() {
 
 function save() {
     if (editedItem.value.id) {
-        editCustomer(editedItem.value);
+        changeCustomer(editedItem.value);
     } else {
-        addCustomer(editedItem.value);
+        addNewCustomer(editedItem.value);
     }
 
     close();
 };
 
-const editCustomer = async (item) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.put(`/crm/customers/${item.id}`, {
-            firstName: item.firstName,
-            lastName: item.lastName,
-            email: item.email,
-            address: item.address,
-            city: item.city,
-            dob: item.dob,
-            segment: item.segment,
-        }, config);
-        if (response.data) {
-            customers.value = customers.value.map((item) => {
-                if (item.id == response.data.id) {
-                    return response.data;
-                }
-                return item;
-            });
-        }
-    } catch (err) {
-        console.log(err);
+const changeCustomer = async (item) => {
+    var customerData = {
+        firstName: item.firstName,
+        lastName: item.lastName,
+        email: item.email,
+        address: item.address,
+        city: item.city,
+        dob: item.dob,
+        segment: item.segment,
     }
+    editCustomer(item.id, customerData).then(response => {
+        customers.value = customers.value.map((item) => {
+            if (item.id == response.id) {
+                return response;
+            }
+            return item;
+        });
+    }).catch(error => {
+        console.log(error)
+    })
 };
 
 function createNewCustomerDialog() {
@@ -266,28 +241,21 @@ function createNewCustomerDialog() {
     dialog.value = true;
 }
 
-const addCustomer = async (item) => {
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-    };
-    try {
-        const response = await axios.post(`/crm/customers`, {
-            firstName: item.firstName,
-            lastName: item.lastName,
-            email: item.email,
-            address: item.address,
-            city: item.city,
-            dob: item.dob,
-            segment: item.segment,
-        }, config);
-        if (response.data) {
-            getCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
-        }
-    } catch (err) {
-        console.log(err);
+const addNewCustomer = async (item) => {
+    var newCustomer = {
+        firstName: item.firstName,
+        lastName: item.lastName,
+        email: item.email,
+        address: item.address,
+        city: item.city,
+        dob: item.dob,
+        segment: item.segment,
     }
+    addCustomer(newCustomer).then(() => {
+        getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
+    }).catch(error => {
+        console.log(error)
+    })
 };
 
 function handleRowClick(event, customer) {
