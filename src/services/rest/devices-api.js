@@ -5,15 +5,11 @@ const headers = {
     'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
 }
 
-export const getDevices = async (type, itemsPerPage, currentPage) => {
-    return await axios.get(`/crm/devices/type/${type}?size=${itemsPerPage}&page=${currentPage}`, {
+export const getDevices = async (type, itemsPerPage, currentPage, search) => {
+    return await axios.get(`/crm/devices/type/${type}?size=${itemsPerPage}&page=${currentPage}&search=${search}`, {
         headers: headers,
     }).then(response => {
-        return {
-            devices: response.data.content,
-            totalPages: response.data.totalPages,
-            currentPage: response.data.page,
-        }
+        return response.data;
     }).catch(err => {
         console.log(err);
     })
