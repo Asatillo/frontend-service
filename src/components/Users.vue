@@ -2,7 +2,7 @@
     <v-container class="pb-0">
         <div class="text-h5">Users</div>
     </v-container>
-    <v-container fluid>
+    <v-container >
         <v-tabs v-model="tab" class="mb-6">
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"></v-text-field>
             <v-spacer></v-spacer>
@@ -41,8 +41,7 @@
                 <v-row v-else>
                     <v-container class="pa-2 text-center">
                         <v-container class="pl-0 py-2" style="max-width: inherit;">
-                            <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
-                            <v-card-title class="pb-0" prepend-icon="">No {{ value.name.toLowerCase() }} so
+                            <v-card-title class="pb-0">No {{ value.name.toLowerCase() }} so
                                 far...</v-card-title>
                         </v-container>
                     </v-container>
@@ -97,7 +96,7 @@ const tabs = ref({
         pagination: Object.assign({}, defaultPagination)
     }
 })
-const itemsPerPage = 12
+const itemsPerPage = 24
 
 onMounted(() => {
     for (const [key, value] of Object.entries(tabs.value)) {
