@@ -13,12 +13,12 @@
             <v-window-item v-for="value, key in tabs" :key="key" :value="value.name">
                 <v-row v-if="value.users.length">
                     <v-col v-for="user in value.users" :key="user.id" cols="4">
-                        <v-card class="pa-2 d-flex align-center" :elevation="2" rounded="xl">
+                        <v-card class="px-2 d-flex align-center" :elevation="1" rounded="lg">
                             <v-avatar size="80" class="ml-1" :image="user.imageUrl"></v-avatar>
                             <v-container class="px-0 py-2 text-truncate" style="max-width: inherit;">
-                                <v-card-title class="pr-0 d-flex justify-space-between">
-                                    <p class="ma-2 mp-2 text-truncate">{{ user.firstName }} {{ user.lastName }}</p>
-                                    <v-menu class="ma-2 mp-2">
+                                <v-card-title class="pr-0 pb-0 d-flex justify-space-between">
+                                    <p class="mt-2 text-truncate">{{ user.firstName }} {{ user.lastName }}</p>
+                                    <v-menu>
                                         <template v-slot:activator="{ props }">
                                             <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
                                         </template>
@@ -29,9 +29,11 @@
                                         </v-list>
                                     </v-menu>
                                 </v-card-title>
-                                <v-card-subtitle>#{{ user.username }}</v-card-subtitle>
-                                <v-card-subtitle>{{ user.email }}</v-card-subtitle>
-                                <v-card-subtitle v-if="!value.role">{{ user.role }}</v-card-subtitle>
+                                <v-container class="pt-0 pl-0">
+                                    <v-card-subtitle>#{{ user.username }}</v-card-subtitle>
+                                    <v-card-subtitle>{{ user.email }}</v-card-subtitle>
+                                    <v-card-subtitle v-if="!value.role">{{ user.role }}</v-card-subtitle>
+                                </v-container>
                             </v-container>
                         </v-card>
                     </v-col>
