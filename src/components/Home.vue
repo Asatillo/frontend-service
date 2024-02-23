@@ -1,9 +1,7 @@
 <template>
-  <v-container fluid>
-    <v-row justify="center">
-      <h2 class="text-h2 text-center">Dashboard</h2>
-    </v-row>
-  </v-container>
+  <v-container class="pb-0">
+        <div class="text-h5">Dashboard</div>
+    </v-container>
   <v-container>
     
   </v-container>

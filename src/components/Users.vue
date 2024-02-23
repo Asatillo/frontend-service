@@ -1,6 +1,8 @@
 <template>
+    <v-container class="pb-0">
+        <div class="text-h5">Users</div>
+    </v-container>
     <v-container fluid>
-
         <v-tabs v-model="tab" class="mb-6">
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"></v-text-field>
             <v-spacer></v-spacer>
@@ -104,7 +106,7 @@ onMounted(() => {
 const getAllUsers = async (tab) => {
     var page = tab.pagination.currentPage;
     var role = tab.role;
-    getUsersByRole({page, itemsPerPage}, role).then(response => {
+    getUsersByRole({ page, itemsPerPage }, role).then(response => {
         tab.pagination.totalPages = response.totalPages;
         tab.users = response.content;
     }).catch(error => {

@@ -1,8 +1,6 @@
 <template>
-    <v-container fluid>
-        <v-row justify="center">
-            <h2 class="text-h2 text-center">Customers</h2>
-        </v-row>
+    <v-container class="pb-0">
+        <div class="text-h5">Customers</div>
     </v-container>
     <v-container>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :items="customers" item-value="id"

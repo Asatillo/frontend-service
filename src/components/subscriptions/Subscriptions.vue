@@ -1,8 +1,6 @@
 <template>
-  <v-container fluid>
-    <v-row justify="center">
-      <h2 class="text-h2 text-center">Subscriptions</h2>
-    </v-row>
+  <v-container class="pb-0">
+    <div class="text-h5">Subscriptions</div>
   </v-container>
   <v-container>
     <SubscriptionsAll />

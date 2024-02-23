@@ -1,12 +1,10 @@
 <template>
-    <v-container fluid>
-        <v-row justify="center">
-            <h2 class="text-h2 text-center">Services</h2>
-        </v-row>
-        <p class="text-subtitle-1 text-center mt-4">
+    <v-container class="pb-0">
+        <div class="text-h5">Services</div>
+        <div class="text-subtitle-1 mt-2">
             Services are the entities that form a plan. They can be of three types: DATA, VOICE, SMS.
             Default quanities are: GB for DATA, minutes for VOICE, and SMS for SMS services.
-        </p>
+        </div>
     </v-container>
     <v-container>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"

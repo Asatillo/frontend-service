@@ -1,4 +1,7 @@
 <template>
+    <v-container class="pb-0">
+        <div class="text-h5">Devices</div>
+    </v-container>
     <v-container fluid>
         <v-tabs fixed-tabs v-model="mainTab">
             <v-tab>

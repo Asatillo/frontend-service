@@ -51,10 +51,8 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-container fluid>
-        <v-row justify="center">
-            <h2 class="text-h2 text-center">Plans</h2>
-        </v-row>
+    <v-container class="pb-0">
+        <div class="text-h5">Plans</div>
     </v-container>
     <v-container>
         <v-row justify="center">

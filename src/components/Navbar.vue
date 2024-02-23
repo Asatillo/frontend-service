@@ -1,26 +1,44 @@
 <template>
-    <v-navigation-drawer expand-on-hover rail style="color: azure;"
-        image="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
-        <v-list>
-            <v-list-item :prepend-avatar="image" :title="fullname" :subtitle="email"
-                @click="redirectToRoute('MyProfile')"></v-list-item>
+    <v-navigation-drawer v-model="drawer" permanent style="color: azure; background-color: rgb(58, 58, 58);" elevation="1"
+        :rail="rail" @click="rail = false">
+        <v-list density="compact">
+            <v-list-item v-if="user" :prepend-avatar="user.imageUrl" :title="fullname" :subtitle="email"
+                @click="redirectToRoute('MyProfile')">
+                <template v-slot:append>
+                    <v-btn variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
+                </template>
+            </v-list-item>
         </v-list>
 
         <v-divider></v-divider>
 
-        <v-list>
+        <v-list :lines="false" density="compact" nav>
             <v-list-item @click="redirectToRoute(item.title)" v-for="item in menuItems" :key="item.value"
-                :prepend-icon="item.icon" :title="item.title" :value="item.value"></v-list-item>
-
+                :title="item.title" :value="item.value">
+                <template v-slot:prepend>
+                    <v-icon :icon="item.icon" size="18"></v-icon>
+                </template>
+            </v-list-item>
         </v-list>
 
         <template v-slot:append>
-            <v-list>
+            <v-list :lines="false" density="compact" nav>
                 <v-divider></v-divider>
-                <v-list-item @click="handleChangeTheme" prepend-icon="mdi-theme-light-dark"
-                    :title="isDark ? 'Light mode' : 'Dark mode'"></v-list-item>
-                <v-list-item @click="redirectToRoute('Settings')" prepend-icon="mdi-cog" title="Settings"></v-list-item>
-                <v-list-item @click="handleLogout" prepend-icon="mdi-logout" title="Logout"></v-list-item>
+                <v-list-item @click="handleChangeTheme" :title="isDark ? 'Light mode' : 'Dark mode'">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-theme-light-dark" size="18"></v-icon>
+                    </template>
+                </v-list-item>
+                <v-list-item @click="redirectToRoute('Settings')" title="Settings">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-cog" size="18"></v-icon>
+                    </template>
+                </v-list-item>
+                <v-list-item @click="handleLogout" title="Logout">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-logout" size="18"></v-icon>
+                    </template>
+                </v-list-item>
             </v-list>
         </template>
     </v-navigation-drawer>
@@ -31,13 +49,15 @@ import { ref, onMounted, } from 'vue'
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 
+const drawer = ref(true)
+const rail = ref(false)
 const menuItems = ref([
     // { icon: 'mdi-view-dashboard', title: 'Home', value: '' },
     { icon: 'mdi-account-multiple', title: 'Customers', value: 'customers' },
     { icon: 'mdi-playlist-check', title: 'Subscriptions', value: 'subscriptions' },
     { icon: 'mdi-currency-usd', title: 'Sales', value: 'sales' },
-    { icon: 'mdi-gift', title: 'Promotions', value: 'promotions'},
-    { icon: 'mdi-account-question', title: 'OfferedPromotions', value: 'offered-promotions'},
+    { icon: 'mdi-gift', title: 'Promotions', value: 'promotions' },
+    { icon: 'mdi-account-question', title: 'OfferedPromotions' },
     { icon: 'mdi-format-list-bulleted-type', title: 'Plans', value: 'plans' },
     { icon: 'mdi-account-hard-hat', title: 'Users', value: 'users' },
     { icon: 'mdi-floor-plan', title: 'Services', value: 'services' },

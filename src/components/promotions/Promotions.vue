@@ -1,8 +1,6 @@
 <template>
-    <v-container fluid>
-        <v-row justify="center">
-            <h2 class="text-h2 text-center">Promotions</h2>
-        </v-row>
+    <v-container class="pb-0">
+        <div class="text-h5">Promotions</div>
     </v-container>
     <v-container>
         <v-toolbar flat>

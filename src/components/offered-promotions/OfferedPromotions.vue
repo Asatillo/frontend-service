@@ -1,8 +1,6 @@
 <template>
-    <v-container fluid>
-        <v-row justify="center">
-            <h2 class="text-h2 text-center">Offered promotions</h2>
-        </v-row>
+    <v-container class="pb-0">
+        <div class="text-h5">Offered promotions</div>
     </v-container>
 </template>
 
