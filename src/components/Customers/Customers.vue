@@ -38,12 +38,12 @@
                 {{ item.firstName }} {{ item.lastName }}
             </template>
             <template v-slot:top>
-                <v-toolbar flat>
+                <v-toolbar>
                     <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details
                         class="ml-3"></v-text-field>
                     <v-divider class="mx-4" inset vertical></v-divider>
                     <v-spacer></v-spacer>
-                    <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="createNewCustomerDialog">New
+                    <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
                         customer</v-btn>
                 </v-toolbar>
             </template>
