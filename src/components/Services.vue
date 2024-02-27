@@ -32,14 +32,13 @@
             <template v-slot:top>
                 <v-toolbar :elevation="2" density="compact">
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" dark @click="createNewServiceDialog">
-                        <v-icon left>mdi-plus</v-icon>
-                        <span>New service</span>
+                    <v-btn prepend-icon="mdi-plus" color="primary" dark @click="createNewServiceDialog">
+                        New service
                     </v-btn>
                     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                         <v-card>
                             <v-card-title>
-                                <span class="text-h5">{{ editedItem.id != null ? "Edit Service" : "New Service" }}</span>
+                                <span class="text-h6">{{ editedItem.id != null ? "Edit Service" : "New Service" }}</span>
                             </v-card-title>
 
                             <v-card-text>

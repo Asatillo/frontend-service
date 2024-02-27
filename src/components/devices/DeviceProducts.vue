@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container>
         <v-tabs v-model="tab" class="mb-6" @update:model-value="handleTabChange">
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                 <template v-slot:activator="{ props }">
@@ -9,7 +9,7 @@
                     </v-btn>
                 </template>
                 <v-card>
-                    <v-card-title class="text-h5">Add New Devices</v-card-title>
+                    <v-card-title class="text-h6">Add New Devices</v-card-title>
                     <v-card-text>
                         <v-window v-model="step">
                             <v-window-item :value="1">
@@ -20,7 +20,7 @@
                             </v-window-item>
                             <v-window-item :value="2">
                                 <div v-if="!responseObj.loading" class="pa-4 text-center">
-                                    <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
+                                    <v-icon size="80" color="green">mdi-check</v-icon>
                                     <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :
                                         'Something went wrong' }}!</h3>
                                     <span class="text-caption text-grey">{{ responseObj.message }}</span>
@@ -53,7 +53,7 @@
                 <v-row v-else>
                     <v-container class="pa-2 text-center">
                         <v-container class="pl-0 py-2" style="max-width: inherit;">
-                            <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
+                            <v-icon size="80" color="blue">mdi-google-downasaur</v-icon>
                             <v-card-title class="pb-0" prepend-icon="">No {{ key.toLowerCase() }}s so far...</v-card-title>
                         </v-container>
                     </v-container>
@@ -65,7 +65,7 @@
         </v-window>
         <v-dialog v-model="sellDialog" max-width="500px">
             <v-card v-if="deviceToSell">
-                <v-card-title class="text-h5">Sell {{ deviceToSell.deviceTemplate.model }}</v-card-title>
+                <v-card-title class="text-h6">Sell {{ deviceToSell.deviceTemplate.model }}</v-card-title>
                 <v-card-text>
                     <v-autocomplete v-model="selectedCustomer" label="To Customer" :items="customers" required chips
                         item-title="name" item-value="id" @update:search="updateCustomers"

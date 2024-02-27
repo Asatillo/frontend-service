@@ -15,7 +15,7 @@
         <v-dialog v-model="dialogEditCustomer" max-width="500px" @click:outside="close">
             <v-card>
                 <v-card-title>
-                    <span class="text-h5">Edit Customer</span>
+                    <span class="text-h6">Edit Customer</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>

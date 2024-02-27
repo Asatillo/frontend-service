@@ -63,7 +63,7 @@
         <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
             <v-card>
                 <v-card-title>
-                    <span class="text-h5">{{ dialogPurpose }}</span>
+                    <span class="text-h6">{{ dialogPurpose }}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>

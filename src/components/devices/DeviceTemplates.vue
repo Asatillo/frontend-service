@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container>
         <v-tabs v-model="tab" class="mb-6" @update:model-value="handleTabChange">
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                 <template v-slot:activator="{ props }">
@@ -9,7 +9,7 @@
                     </v-btn>
                 </template>
                 <v-card>
-                    <v-card-title class="text-h5">New Template</v-card-title>
+                    <v-card-title class="text-h6">New Template</v-card-title>
                     <v-card-text>
                         <v-row>
                             <v-col class="py-0" cols="12">
@@ -73,7 +73,7 @@
                 <v-row v-else>
                     <v-container class="pa-2 text-center">
                         <v-container class="pl-0 py-2" style="max-width: inherit;">
-                            <v-icon size="80" color="blue">mdi-emoticon-happy-outline</v-icon>
+                            <v-icon size="80" color="blue">mdi-google-downasaur</v-icon>
                             <v-card-title class="pb-0" prepend-icon="">No {{ key.toLowerCase() }}s so far...</v-card-title>
                         </v-container>
                     </v-container>
