@@ -13,11 +13,13 @@ export default createVuetify({
       light: {
         colors: {
           background: '#F7F7F7',
+          surface: '#FFFFFF',
         }
       },
       dark: {
         colors: {
-          background: '#121212',
+          background: '#18181c',
+          surface: '#44444c',
         }
       }
     }
