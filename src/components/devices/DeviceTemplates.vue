@@ -3,7 +3,7 @@
         <v-tabs v-model="tab" class="mb-6" @update:model-value="handleTabChange">
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
                 <template v-slot:activator="{ props }">
-                    <v-btn color="primary" class="my-auto" @click="openNewTemplateDialog" v-bind="props">
+                    <v-btn color="primary" class="mt-3" @click="openNewTemplateDialog" v-bind="props">
                         <v-icon left>mdi-plus</v-icon>
                         <span>New Template</span>
                     </v-btn>
@@ -58,9 +58,8 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-spacer></v-spacer>
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
-                hide-details v-on:update:model-value="fetchBySearch"></v-text-field>
+                hide-details v-on:update:model-value="fetchBySearch" variant="underlined"></v-text-field>
             <v-tab v-for="value, key in tabs" :key="key" :value="key">{{ key }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
