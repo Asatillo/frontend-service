@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { ref } from 'vue'
 import { getSalesByCustomerId } from '@/services/rest/sales-api'
 import { getPlanById } from '@/services/rest/plans-api'

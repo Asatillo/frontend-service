@@ -45,7 +45,6 @@
 <script setup>
 import { convertPeriodToDate } from '@/services/date-formatting'
 import { addCommasToPrice } from '@/services/number-formatting'
-import { defineProps } from 'vue'
 
 defineProps({
     deviceTemplate: Object

@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { ref } from 'vue'
 import { getSales } from '@/services/rest/sales-api'
 import { getPlanById } from '@/services/rest/plans-api'

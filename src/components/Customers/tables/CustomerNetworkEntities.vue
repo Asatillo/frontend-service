@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { ref } from 'vue'
 import { getNetworkEntitiesByCustomer } from '@/services/rest/network-entities-api'
 
@@ -22,9 +21,9 @@ const props = defineProps(['id'])
 
 const headers = ref([
     { title: 'ID', value: 'id' },
-    { title: 'Number', value: 'networkIdentifier' },
-    { title: 'Tag', value: 'tag' },
     { title: 'Active', value: 'active' },
+    { title: 'Phone Number/SSID', value: 'networkIdentifier' },
+    { title: 'Tag', value: 'tag', align: 'center'},
 ])
 const totalItems = ref(0)
 

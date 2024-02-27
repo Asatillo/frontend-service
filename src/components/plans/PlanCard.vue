@@ -41,7 +41,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { ref } from 'vue'
 import { convertPeriodToDate } from '@/services/date-formatting'
 import { addCommasToPrice} from '@/services/number-formatting'
