@@ -5,11 +5,12 @@ const headers = {
     'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
 }
 
-export const getPlans = async() => {
-    return await axios.get(`/crm/plans?size=50`, {
+export const getPlans = async(page, size, search) => {
+    return await axios.get(`/crm/plans?size=${size}&page=${page}&search=${search}`, {
         headers: headers,
     }).then(response => {
-        return response.data.content;
+        console.log(response.data);
+        return response.data;
     }).catch(error => {
         console.error('Error getting plans:', error.message);
     });

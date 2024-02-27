@@ -55,19 +55,18 @@
         <div class="text-h5">Plans</div>
     </v-container>
     <v-container>
-        <v-row justify="center">
-            <v-toolbar :elevation="2" density="compact">
-                <v-btn color="primary" @click="openNewPlanDialog">
-                    <v-icon left>mdi-plus</v-icon>
-                    <span value="New Plan">New Plan</span>
-                </v-btn>
-            </v-toolbar>
+        <v-row align="end">
+            <v-btn color="primary" @click="openNewPlanDialog" prepend-icon="mdi-plus">New Plan</v-btn>
+            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
+                hide-details v-on:update:model-value="fetchPlans" variant="underlined"></v-text-field>
         </v-row>
         <v-row>
             <v-col v-for="plan in plans" :key="plan.id" cols="3">
                 <PlanCard :plan="plan" @edit="openEditPlanDialog" @changeActive="openChangeActiveDialog" />
             </v-col>
         </v-row>
+        <v-pagination v-model="page" v-if="plans.length" class="pt-6" :length="totalPages"
+            v-on:update:model-value="fetchPlans" />
     </v-container>
 </template>
 
@@ -85,6 +84,10 @@ const dialogChangeActive = ref(false);
 const activeIndex = ref(-1);
 const services = ref({ "MOBILE": [], "ROUTER": [] });
 const activeChangeMode = ref('');
+const search = ref('');
+const page = ref(1);
+const itemsPerPage = ref(24);
+const totalPages = ref(0);
 const defaultItem = ref({
     id: null,
     name: '',
@@ -123,10 +126,16 @@ function editPlan(plan) {
     });
 }
 
-onMounted(() => {
-    getPlans().then((response) => {
-        plans.value = response;
+const fetchPlans = () => {
+    getPlans(page.value, itemsPerPage.value, search.value).then((response) => {
+        plans.value = response.content;
+        totalPages.value = response.totalPages;
+        page.value = response.page;
     });
+};
+
+onMounted(() => {
+    fetchPlans()
     fetchServicesByType('MOBILE').then((response) => {
         services.value['MOBILE'] = response;
     });
@@ -138,6 +147,8 @@ onMounted(() => {
 function handleTypeSelect() {
     editedItem.value.services = [];
 }
+
+
 
 function openEditPlanDialog(plan) {
     editedItem.value = mapPlanToEditedItem(plan);
