@@ -2,40 +2,49 @@
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
         <v-card>
             <v-card-title>
-                <span class="text-h5">{{ editedItem.id != null ? "Edit Plan" : "New Plan" }}</span>
+                <div class="text-h6">{{ editedItem.id ? "Edit Plan" : "New Plan" }}</div>
             </v-card-title>
-            <v-card-text class="pb-0">
-                <v-container class="pa-0">
-                    <v-text-field v-model="editedItem.name" label="Name" required></v-text-field>
-                    <v-textarea v-model="editedItem.description" auto-grow label="Description" required
-                        rows="3"></v-textarea>
-                    <v-row>
-                        <v-col cols="4">
-                            <v-text-field v-model="editedItem.days" label="Days" required type="number"></v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-text-field v-model="editedItem.months" label="Months" required type="number"></v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-text-field v-model="editedItem.years" label="Years" required type="number"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-text-field v-model="editedItem.price" type="number" label="Price" required></v-text-field>
-                    <v-select v-model="editedItem.designatedDeviceType" label="Designated device type"
-                        :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect" chips></v-select>
-                    <v-select v-model="editedItem.services" :disabled="!editedItem.designatedDeviceType" label="Services"
-                        :items="services[editedItem.designatedDeviceType]" multiple required chips item-title="name"
-                        item-value="id"></v-select>
-                </v-container>
+            <v-card-text>
+                <v-window v-model="step">
+                    <v-window-item :value="1">
+                        <v-text-field v-model="editedItem.name" label="Name" required></v-text-field>
+                        <v-textarea v-model="editedItem.description" auto-grow label="Description" required
+                            rows="3"></v-textarea>
+                        <v-row>
+                            <v-col cols="4">
+                                <v-text-field v-model="editedItem.days" label="Days" required type="number"></v-text-field>
+                            </v-col>
+                            <v-col cols="4">
+                                <v-text-field v-model="editedItem.months" label="Months" required
+                                    type="number"></v-text-field>
+                            </v-col>
+                            <v-col cols="4">
+                                <v-text-field v-model="editedItem.years" label="Years" required
+                                    type="number"></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-text-field v-model="editedItem.price" type="number" label="Price" required></v-text-field>
+                        <v-select v-model="editedItem.designatedDeviceType" label="Designated device type"
+                            :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect" chips></v-select>
+                        <v-select v-model="editedItem.services" :disabled="!editedItem.designatedDeviceType"
+                            label="Services" :items="services[editedItem.designatedDeviceType]" multiple required chips
+                            item-title="name" item-value="id"></v-select>
+                    </v-window-item>
+                    <v-window-item :value="2">
+                        <div v-if="!responseObj.loading" class="pa-4 text-center">
+                            <v-icon size="80" color="green">mdi-check</v-icon>
+                            <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :
+                                'Something went wrong' }}!</h3>
+                            <span class="text-caption text-grey">{{ responseObj.message }}</span>
+                        </div>
+                        <v-progress-linear v-else indeterminate color="primary"></v-progress-linear>
+                    </v-window-item>
+                </v-window>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue-darken-1" @click="close">
-                    Cancel
-                </v-btn>
-                <v-btn color="blue-darken-1" @click="save">
-                    Save
-                </v-btn>
+                <v-btn color="red" @click="close">Cancel</v-btn>
+                <v-btn v-if="step == 1" color="primary" text @click="save">Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -88,6 +97,8 @@ const search = ref('');
 const page = ref(1);
 const itemsPerPage = ref(24);
 const totalPages = ref(0);
+const step = ref(1);
+const responseObj = ref({ loading: false, success: false, message: '' });
 const defaultItem = ref({
     id: null,
     name: '',
@@ -101,30 +112,17 @@ const defaultItem = ref({
 });
 const editedItem = ref(Object.assign({}, defaultItem.value));
 
-function fetchServicesByType(type) {
-    return getServicesByDeviceType(type).then((response) => {
-        var itemList = [];
-        response.forEach((element) => {
-            itemList.push({
-                id: element.id,
-                name: element.name,
-            });
+async function fetchServicesByType(type) {
+    const response = await getServicesByDeviceType(type);
+    var itemList = [];
+    response.forEach((element) => {
+        itemList.push({
+            id: element.id,
+            name: element.name,
         });
-        return itemList;
     });
+    return itemList;
 };
-
-function editPlan(plan) {
-    plan.duration = convertDateToPeriod(plan.days, plan.months, plan.years);
-    updatePlan(plan).then((response) => {
-        plans.value = plans.value.map((item) => {
-            if (item.id === response.id) {
-                return response;
-            }
-            return item;
-        });
-    });
-}
 
 const fetchPlans = () => {
     getPlans(page.value, itemsPerPage.value, search.value).then((response) => {
@@ -209,22 +207,53 @@ function changeActiveConfirm() {
 
 
 function close() {
-    editedItem.value = defaultItem.value;
     dialog.value = false;
+    step.value = 1;
+    responseObj.value = { loading: false, success: false, message: '' };
+    editedItem.value = Object.assign({}, defaultItem.value);
+    
 }
 
 function save() {
+    responseObj.value.loading = true;
+    step.value = 2;
     if (editedItem.value.id) {
-        editPlan(editedItem.value);
+        var plan = editedItem.value;
+        plan.duration = convertDateToPeriod(plan.days, plan.months, plan.years);
+        updatePlan(plan).then(() => {
+            responseObj.value.loading = false;
+            responseObj.value.success = true;
+            responseObj.value.message = 'Plan updated successfully';
+            fetchPlans();
+            setTimeout(() => {
+                if (dialog.value) {
+                    close();
+                }
+            }, 2000);
+        }).catch(() => {
+            responseObj.value.loading = false;
+            responseObj.value.success = false;
+            responseObj.value.message = 'Something went wrong';
+        });
     } else {
         var plan = editedItem.value;
         editedItem.value.period = convertDateToPeriod(plan.days, plan.months, plan.years);
-        addPlan(editedItem.value).then((response) => {
-            plans.value.push(response);
-        })
+        addPlan(editedItem.value).then(() => {
+            responseObj.value.loading = false;
+            responseObj.value.success = true;
+            responseObj.value.message = 'Plan added successfully';
+            fetchPlans();
+            setTimeout(() => {
+                if (dialog.value) {
+                    close();
+                }
+            }, 2000);
+        }).catch(() => {
+            responseObj.value.loading = false;
+            responseObj.value.success = false;
+            responseObj.value.message = 'Something went wrong';
+        });
     }
-    editedItem.value = defaultItem.value;
-    dialog.value = false;
 }
 
 </script>
