@@ -37,3 +37,13 @@ export const addSubscription = async (networkEntityId, planId) => {
         console.log(err);
     })
 }
+
+export const changeSubscriptionStatus = async (subscriptionId, status) => {
+    return await axios.patch(`/crm/subscriptions/${subscriptionId}/${status}`, {}, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
