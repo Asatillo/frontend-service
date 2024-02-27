@@ -38,8 +38,18 @@ export const addDevice = async (deviceTemplateId, amount) => {
     })
 }
 
-export const getDevicesByCustomer = async (customerId, {page, itemsPerPage}) => {
-    return await axios.get(`/crm/customers/${customerId}/devices?page=${page}&size=${itemsPerPage}`, {
+export const getDevicesByCustomer = async (customerId, {page, itemsPerPage, search}) => {
+    return await axios.get(`/crm/devices/customer/${customerId}?page=${page}&size=${itemsPerPage}&search=${search}`, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
+export const getAvailableDevicesWithoutPagination = async (type) => {
+    return await axios.get(`crm/devices/type/${type}/available?size=-1`, {
         headers: headers,
     }).then(response => {
         return response.data;
@@ -50,7 +60,7 @@ export const getDevicesByCustomer = async (customerId, {page, itemsPerPage}) => 
 
 
 // Stoped here
-export const sellDevice = async (customerId, deviceId) => {
+export const sellDeviceToCustomer = async (customerId, deviceId) => {
     return await axios.post(`/crm/devices/${deviceId}/sell`, {
         customerId: customerId,
     }, {

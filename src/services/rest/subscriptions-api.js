@@ -24,3 +24,16 @@ export const getSubscriptions = async ({page, itemsPerPage}) => {
         console.log(err);
     })
 }
+
+export const addSubscription = async (networkEntityId, planId) => {
+    return await axios.post('/crm/subscriptions', {
+        networkEntity: networkEntityId,
+        planId: planId,
+    }, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}

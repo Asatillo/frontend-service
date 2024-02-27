@@ -15,6 +15,16 @@ export const getPlans = async() => {
     });
 };
 
+export const getActivePlansByType = async (type) => {
+    return await axios.get(`crm/plans/device-type/${type}/active`, {
+        headers: headers,
+    }).then(response => {
+        return response.data;
+    }).catch(error => {
+        console.error('Error getting plans by type:', error.message);
+    });
+};
+
 export const addPlan = async (plan) => {
     return await axios.post(`/crm/plans`, {
         name: plan.name,
