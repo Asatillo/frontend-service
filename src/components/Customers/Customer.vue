@@ -53,10 +53,10 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-card flat tile class="mx-auto">
+        <v-card tile class="mx-auto" rounded="lg">
             <v-card-title class="justify-center align-center">
                 <v-row class="px-1 mt-1">
-                    <v-icon color="blue" size="40">mdi-account</v-icon>
+                    <v-icon color="blue" size="40" class="mx-1">mdi-account</v-icon>
                     <span class="text-h4 font-weight-bold">{{ customer.firstName }} {{ customer.lastName }}</span>
 
                     <v-chip :color="customer.active ? 'green' : 'red'" class="mt-1 ml-1">{{ customer.active ? 'active' :
@@ -84,12 +84,12 @@
                 </v-row>
             </v-card-title>
             <v-card-text class="pb-1">
-                <b>Member since:</b> {{ formatDateString(customer.accCreationDate) }}
+                <b>Joined on:</b> {{ formatDateString(customer.accCreationDate) }}
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-text class="py-0">
+            <v-card-text class="py-0 px-0">
                 <v-row>
-                    <v-col cols="12" md="6">
+                    <v-col cols="6" md="3">
                         <v-list dense>
                             <v-list-item>
                                 <v-icon color="red">mdi-seal</v-icon>
@@ -104,7 +104,7 @@
                             </v-list-item>
                         </v-list>
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="6" md="3">
                         <v-list dense>
                             <v-list-item>
                                 <v-icon color="primary">mdi-cake</v-icon>
@@ -120,7 +120,7 @@
                 </v-row>
             </v-card-text>
         </v-card>
-        <v-card>
+        <v-card class="mt-3" rounded="lg">
             <v-tabs v-model="tab" bg-color="">
                 <v-tab value="subscriptions">Subscriptions</v-tab>
                 <v-tab value="devices">Devices</v-tab>
