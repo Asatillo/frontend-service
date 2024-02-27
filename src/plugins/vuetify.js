@@ -23,7 +23,11 @@ export default createVuetify({
         }
       }
     }
-
+  },
+  defaults: {
+    VBtn: {
+      density: 'comfortable'
+    }
   }
 }
 )
