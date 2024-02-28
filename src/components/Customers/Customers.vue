@@ -39,10 +39,9 @@
             </template>
             <template v-slot:top>
                 <v-toolbar>
-                    <v-text-field v-model="search" prepend-icon="mdi-magnify" label="Search" single-line hide-details
+                    <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
                         class="ml-3"></v-text-field>
                     <v-divider class="mx-4" inset vertical></v-divider>
-                    <v-spacer></v-spacer>
                     <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
                         customer</v-btn>
                 </v-toolbar>

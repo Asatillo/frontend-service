@@ -64,11 +64,12 @@
         <div class="text-h5">Plans</div>
     </v-container>
     <v-container>
-        <v-row align="end">
+        <v-toolbar>
+            <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
+                hide-details v-on:update:model-value="fetchPlans"></v-text-field>
+            <v-divider class="mx-4" inset vertical></v-divider>
             <v-btn color="primary" @click="openNewPlanDialog" prepend-icon="mdi-plus">New Plan</v-btn>
-            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
-                hide-details v-on:update:model-value="fetchPlans" variant="underlined"></v-text-field>
-        </v-row>
+        </v-toolbar>
         <v-row>
             <v-col v-for="plan in plans" :key="plan.id" cols="3">
                 <PlanCard :plan="plan" @edit="openEditPlanDialog" @changeActive="openChangeActiveDialog" />
@@ -211,7 +212,7 @@ function close() {
     step.value = 1;
     responseObj.value = { loading: false, success: false, message: '' };
     editedItem.value = Object.assign({}, defaultItem.value);
-    
+
 }
 
 function save() {

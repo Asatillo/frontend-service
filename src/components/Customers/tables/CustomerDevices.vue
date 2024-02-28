@@ -32,8 +32,8 @@
     <v-data-table-server :items="devices" @update:options="requestServerItems" :items-per-page-options="[15, 20, 25]"
         :headers="headers" v-model:items-per-page="itemsPerPage" :items-length="totalItems" :search="search">
         <template v-slot:top>
-            <v-toolbar flat>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
+            <v-toolbar flat color="transparent">
+                <v-text-field class="ml-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
                     hide-details></v-text-field>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-btn color="green" prepend-icon="mdi-shopping" @click="openSellDeviceDialog">Add Device</v-btn>

@@ -58,8 +58,8 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
-                hide-details v-on:update:model-value="fetchBySearch" variant="underlined"></v-text-field>
+            <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
+                hide-details v-on:update:model-value="fetchBySearch"></v-text-field>
             <v-tab v-for="value, key in tabs" :key="key" :value="key">{{ key }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">

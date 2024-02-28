@@ -3,7 +3,7 @@
         :items-length="totalItems" @update:options="requestServerItems" :items-per-page-options="[15, 20, 25]">
         <template v-slot:top>
             <v-toolbar flat>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
+                <v-text-field class="ml-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
                     hide-details></v-text-field>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-btn color="green" prepend-icon="mdi-shopping" @click="openNewSubscriptionDialog">Add Subscription</v-btn>

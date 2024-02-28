@@ -4,9 +4,8 @@
     </v-container>
     <v-container>
         <v-toolbar flat>
-            <v-text-field prepend-icon="mdi-magnify" label="Search" single-line hide-details class="ml-3"></v-text-field>
+            <v-text-field append-inner-icon="mdi-magnify" label="Search" single-line hide-details class="ml-3"></v-text-field>
             <v-divider class="mx-4" inset vertical></v-divider>
-            <v-spacer></v-spacer>
             <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="openNewPromotionDialog">New Promotion</v-btn>
         </v-toolbar>
         <PromotionsTable @editPromotionFromChild="openChangePromotionDialog" />
