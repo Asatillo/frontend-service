@@ -106,4 +106,10 @@ onMounted(() => {
     position: absolute;
     bottom: 0;
 }
+
+/* TODO: place it to the global css file */
+.v-table{
+    border-radius: 13px;
+    padding: 10px;
+}
 </style>
