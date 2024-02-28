@@ -27,6 +27,24 @@ export default createVuetify({
   defaults: {
     VBtn: {
       density: 'comfortable'
+    },
+    VTextField: {
+      density: 'compact',
+      rounded: 'lg',
+      variant: 'solo',
+    },
+    VSelect: {
+      density: 'compact',
+      rounded: 'lg',
+      variant: 'solo',
+    },
+    VAutocomplete: {
+      density: 'compact',
+      rounded: 'lg',
+      variant: 'solo',
+    },
+    VToolbar: {
+      color: 'transparent',
     }
   }
 }
