@@ -78,12 +78,22 @@ const routes = [
     component: () => import('../views/OfferedPromotionsView.vue')
   },
   {
+    path: '/forbidden',
+    name: 'Forbidden',
+    props: {
+      errorMessage: "Access Denied", 
+      errorStatus: "403", 
+      errorText: "SORRY, YOU DON'T HAVE THE PERMISSION TO ACCESS THIS PAGE"
+    },
+    component: () => import('../views/ErrorTemplate.vue')
+  },
+  {
     path: '/:catchAll(.*)',
     name: 'NotFound',
     props: {
       errorMessage: "This page could not be found", 
       errorStatus: "404", 
-      errorText: "SORRY BUT THE PAGE YOU ARE LOOKING FOR DOES NOT EXIST, HAVE BEEN REMOVED, NAME CHANGED OR IS TEMPORARILY UNAVAILABLE"
+      errorText: "SORRY, BUT THE PAGE YOU ARE LOOKING FOR DOES NOT EXIST, HAVE BEEN REMOVED, NAME CHANGED OR IS TEMPORARILY UNAVAILABLE"
     },
     component: () => import('../views/ErrorTemplate.vue')
   }
