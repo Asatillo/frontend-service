@@ -59,7 +59,6 @@ function min(value) {
 async function login() {
   authorizeUser(username.value, password.value).then(response => {
     if (response.token) {
-      console.log(response);
       localStorage.setItem('accessToken', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
       router.push({ name: 'Home' });
