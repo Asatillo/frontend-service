@@ -30,7 +30,7 @@
 
 
             <template v-slot:top>
-                <v-toolbar :elevation="2" density="compact">
+                <v-toolbar >
                     <v-spacer></v-spacer>
                     <v-btn prepend-icon="mdi-plus" color="primary" dark @click="createNewServiceDialog">
                         New service
