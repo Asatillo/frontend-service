@@ -8,7 +8,7 @@
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="openNewPromotionDialog">New Promotion</v-btn>
         </v-toolbar>
-        <PromotionsTable @editPromotionFromChild="openChangePromotionDialog" />
+        <PromotionsTable @edit-promotion-from-child="openChangePromotionDialog" />
     </v-container>
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
         <v-card>
@@ -107,7 +107,6 @@ function close() {
 function save() {
     if (editedItem.value.id) {
         editPromotion(editedItem.value).then(response => {
-            // PromotionsTable.emit('editedPromotion', response);
             close();
         });
     } else {

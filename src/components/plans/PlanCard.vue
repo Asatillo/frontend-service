@@ -49,6 +49,8 @@ defineProps({
     plan: Object
 })
 
+defineEmits(['edit', 'changeActive'])
+
 const icons = ref({
     'SMS': 'mdi-message-text',
     'VOICE': 'mdi-phone',

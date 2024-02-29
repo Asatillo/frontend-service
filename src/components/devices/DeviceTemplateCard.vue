@@ -49,4 +49,6 @@ import { addCommasToPrice } from '@/services/number-formatting'
 defineProps({
     deviceTemplate: Object
 })
+
+defineEmits(['sell'])
 </script>

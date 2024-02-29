@@ -31,7 +31,7 @@
         </template>
         <template v-slot:item.actions="{ item }">
             <v-row>
-                <v-btn color="blue" size="30" icon class="mr-2" @click.stop="$emit('editPromotionFromChild', item)">
+                <v-btn color="blue" size="30" icon class="mr-2" @click.stop="$emit('edit-promotion-from-child', item)">
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn size="30" icon @click.stop="changeActive(item)">
@@ -47,6 +47,8 @@
 import { formatDateString } from '@/services/date-formatting'
 import { getPromotions, changePromotionStatus } from '@/services/rest/promotions-api'
 import { ref } from 'vue'
+
+defineEmits(['edit-promotion-from-child'])
 
 const promotions = ref([])
 const dialog = ref(false)
@@ -82,11 +84,9 @@ function changeActiveStatus() {
             }
             return promotion
         })
-
     }).catch(error => {
         console.log(error)
     })
-    // api call to change active status
 }
 
 const getAllPromotions = async ({ page, itemsPerPage }) => {
