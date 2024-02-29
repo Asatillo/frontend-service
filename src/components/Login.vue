@@ -7,10 +7,15 @@
 
       <v-form fast-fail @submit.prevent="login">
 
-        <v-text-field v-model="username" label="Username" :rules="usernameRules"></v-text-field>
+        <v-text-field v-model="username" label="Username" :rules="usernameRules" autocomplete="on"></v-text-field>
 
         <v-text-field v-model="password" label="Password" :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="passwordRules" :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1"></v-text-field>
+          :rules="passwordRules" :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1"
+          autocomplete="on"></v-text-field>
+
+        <v-alert type="error" v-if="error" dismissible>
+          {{ error }}
+        </v-alert>
 
         <a href="#" class="text-body-2 font-weight-regular"> Forgot Password? </a>
 
@@ -20,9 +25,7 @@
       <div class="mt-2">
         <p class="text-body-2"> Don't have an account? <router-link to="/signup"> Sign Up </router-link></p>
       </div> <br>
-      <v-alert type="error" v-if="error" dismissible>
-        {{ error }}
-      </v-alert>
+
     </v-sheet>
   </div>
 </template>
@@ -56,11 +59,12 @@ function min(value) {
 async function login() {
   authorizeUser(username.value, password.value).then(response => {
     if (response.token) {
+      console.log(response);
       localStorage.setItem('accessToken', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
       router.push({ name: 'Home' });
-    } else {
-      error.value = 'Authentication failed';
+    } else if (response.error) {
+      error.value = response.message;
     }
   }).catch(error => {
     console.log(error);
