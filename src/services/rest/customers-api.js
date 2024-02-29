@@ -1,14 +1,7 @@
-import axios from 'axios'
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-}
+import http from '@/plugins/axios';
 
 export const getCustomers = async ({page, itemsPerPage, sortBy, groupBy, search}) => {
-    return await axios.get(`/crm/customers?page=${page}&size=${itemsPerPage}&sort=${sortBy}&search=${search}`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`/crm/customers?page=${page}&size=${itemsPerPage}&sort=${sortBy}&search=${search}`).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
@@ -16,9 +9,7 @@ export const getCustomers = async ({page, itemsPerPage, sortBy, groupBy, search}
 }
 
 export const getCustomerById = async (id) => {
-    return await axios.get(`/crm/customers/${id}`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`/crm/customers/${id}`).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
@@ -26,9 +17,7 @@ export const getCustomerById = async (id) => {
 }
 
 export const editCustomer = async (id, customer) => {
-    return await axios.put(`/crm/customers/${id}`, customer, {
-        headers: headers,
-    }).then(response => {
+    return await http.put(`/crm/customers/${id}`, customer).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
@@ -36,9 +25,7 @@ export const editCustomer = async (id, customer) => {
 }
 
 export const searchCustomers = async (search) => {
-    return await axios.get(`/crm/customers?search=${search}&size=10`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`/crm/customers?search=${search}&size=10`).then(response => {
         var customersList = [];
         response.data.content.forEach(customer => {
             customersList.push({
@@ -53,9 +40,7 @@ export const searchCustomers = async (search) => {
 }
 
 export const changeCustomerStatus = async (id, status) => {
-    return await axios.patch(`/crm/customers/${id}/${status}`, {}, {
-        headers: headers,
-    }).then(response => {
+    return await http.patch(`/crm/customers/${id}/${status}`, {}).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
@@ -63,9 +48,7 @@ export const changeCustomerStatus = async (id, status) => {
 }
 
 export const addCustomer = async (customer) => {
-    return await axios.post(`/crm/customers`, customer, {
-        headers: headers,
-    }).then(response => {
+    return await http.post(`/crm/customers`, customer).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);

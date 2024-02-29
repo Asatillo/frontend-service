@@ -1,14 +1,7 @@
-import axios from 'axios'
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-}
+import http from '@/plugins/axios'
 
 export const getSubscriptionsByCustomer = async (customerId, {page, itemsPerPage}) => {
-    return await axios.get(`/crm/subscriptions/customers/${customerId}?page=${page}&size=${itemsPerPage}`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`/crm/subscriptions/customers/${customerId}?page=${page}&size=${itemsPerPage}`).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
@@ -16,9 +9,7 @@ export const getSubscriptionsByCustomer = async (customerId, {page, itemsPerPage
 }
 
 export const getSubscriptions = async ({page, itemsPerPage}) => {
-    return await axios.get(`/crm/subscriptions?page=${page}&size=${itemsPerPage}`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`/crm/subscriptions?page=${page}&size=${itemsPerPage}`).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
@@ -26,11 +17,9 @@ export const getSubscriptions = async ({page, itemsPerPage}) => {
 }
 
 export const addSubscription = async (networkEntityId, planId) => {
-    return await axios.post('/crm/subscriptions', {
+    return await http.post('/crm/subscriptions', {
         networkEntity: networkEntityId,
         planId: planId,
-    }, {
-        headers: headers,
     }).then(response => {
         return response.data;
     }).catch(err => {
@@ -39,9 +28,7 @@ export const addSubscription = async (networkEntityId, planId) => {
 }
 
 export const changeSubscriptionStatus = async (subscriptionId, status) => {
-    return await axios.patch(`/crm/subscriptions/${subscriptionId}/${status}`, {}, {
-        headers: headers,
-    }).then(response => {
+    return await http.patch(`/crm/subscriptions/${subscriptionId}/${status}`, {}).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);

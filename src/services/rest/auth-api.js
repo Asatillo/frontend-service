@@ -1,13 +1,8 @@
-import axios from 'axios'
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-}
+import http from '@/plugins/axios'
 
 export const authorizeUser = async (username, password) => {
     try {
-        const userData = await axios.post('auth-service/auth/authenticate', {
+        const userData = await http.post('auth-service/auth/authenticate', {
             username: username,
             password: password,
         });
@@ -21,7 +16,7 @@ export const authorizeUser = async (username, password) => {
 
 export const signUpUser = async (userData) => {
     try {
-        const response = await axios.post('auth-service/auth/register', userData);
+        const response = await http.post('auth-service/auth/register', userData);
         return response.data
     } catch (err) {
         if (err.response) {
@@ -30,16 +25,10 @@ export const signUpUser = async (userData) => {
     }
 }
 
-// const response = await axios.get(`/auth-service/users?page=${tab.pagination.currentPage}&size=${itemsPerPage.value}&role=${tab.role}`, config);
 export const getUsersByRole = async ({ page, itemsPerPage}, role) => {
-    try {
-        const response = await axios.get(`/auth-service/users?page=${page}&size=${itemsPerPage}&role=${role}`, {
-            headers: headers,
-        });
+    return await http.get(`/auth-service/users?page=${page}&size=${itemsPerPage}&role=${role}`).then(response => {
         return response.data
-    } catch (err) {
-        if (err.response) {
-            return err.response.data
-        }
-    }
+    }).catch(err => {
+        console.log(err)
+    })
 }

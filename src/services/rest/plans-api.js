@@ -1,15 +1,7 @@
-import axios from 'axios'
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-}
+import http from '@/plugins/axios'
 
 export const getPlans = async(page, size, search) => {
-    return await axios.get(`/crm/plans?size=${size}&page=${page}&search=${search}`, {
-        headers: headers,
-    }).then(response => {
-        console.log(response.data);
+    return await http.get(`/crm/plans?size=${size}&page=${page}&search=${search}`).then(response => {
         return response.data;
     }).catch(error => {
         console.error('Error getting plans:', error.message);
@@ -17,9 +9,7 @@ export const getPlans = async(page, size, search) => {
 };
 
 export const getActivePlansByType = async (type) => {
-    return await axios.get(`crm/plans/device-type/${type}/active`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`crm/plans/device-type/${type}/active`).then(response => {
         return response.data;
     }).catch(error => {
         console.error('Error getting plans by type:', error.message);
@@ -27,15 +17,13 @@ export const getActivePlansByType = async (type) => {
 };
 
 export const addPlan = async (plan) => {
-    return await axios.post(`/crm/plans`, {
+    return await http.post(`/crm/plans`, {
         name: plan.name,
         description: plan.description,
         duration: plan.period,
         price: plan.price,
         designatedDeviceType: plan.designatedDeviceType,
         services: plan.services
-    }, {
-        headers: headers,
     }).then(response => {
         return response.data;
     }).catch(error => {
@@ -44,17 +32,13 @@ export const addPlan = async (plan) => {
 };
 
 export const updatePlan = async (plan) => {
-    return await axios.put(`/crm/plans/${plan.id}`, {
+    return await http.put(`/crm/plans/${plan.id}`, {
         name: plan.name,
         description: plan.description,
         duration: plan.duration,
         price: plan.price,
         designatedDeviceType: plan.designatedDeviceType,
         services: plan.services
-    }, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
     }).then(response => {
         return response.data;
     }).catch(error => {
@@ -63,9 +47,7 @@ export const updatePlan = async (plan) => {
 };
 
 export const changePlanStatus = async (planId, mode) => {
-    return await axios.patch(`/crm/plans/${planId}/${mode}`, {}, {
-        headers: headers,
-    }).then(response => {
+    return await http.patch(`/crm/plans/${planId}/${mode}`, {}).then(response => {
         return response.data;
     }).catch(error => {
         console.error('Error changing plan status:', error.message);
@@ -73,9 +55,7 @@ export const changePlanStatus = async (planId, mode) => {
 };
 
 export const getPlanById = async (planId) => {
-    return await axios.get(`/crm/plans/${planId}`, {
-        headers: headers,
-    }).then(response => {
+    return await http.get(`/crm/plans/${planId}`).then(response => {
         return response.data;
     }).catch(error => {
         console.error('Error getting plan by id:', error.message);
