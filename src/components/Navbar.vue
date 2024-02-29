@@ -3,7 +3,7 @@
         style="color: azure; background-color: rgb(45, 47, 64); max-width: fit-content;" elevation="10" :rail="rail"
         @click="rail = false">
         <v-list density="compact">
-            <v-list-item title="LOGO" @click="redirectToRoute('Home')">
+            <v-list-item title="NOVA" @click="redirectToRoute('Home')">
                 <template v-slot:append>
                     <v-btn v-if="!rail" variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
                 </template>
@@ -12,8 +12,7 @@
         <v-divider></v-divider>
 
         <v-list :lines="false" density="compact" nav>
-            <v-list-item @click="redirectToRoute(item.title)" v-for="item in menuItems" :key="item.value"
-                :title="item.title" :value="item.value">
+            <v-list-item @click="redirectToRoute(item.value)" v-for="item in menuItems" :title="item.title">
                 <template v-slot:prepend>
                     <v-icon :icon="item.icon" size="18"></v-icon>
                 </template>
@@ -52,16 +51,16 @@ import router from '@/router';
 const drawer = ref(true)
 const rail = ref(false)
 const menuItems = ref([
-    { icon: 'mdi-view-dashboard', title: 'Home', value: '' },
-    { icon: 'mdi-account-multiple', title: 'Customers', value: 'customers' },
-    { icon: 'mdi-playlist-check', title: 'Subscriptions', value: 'subscriptions' },
-    { icon: 'mdi-currency-usd', title: 'Sales', value: 'sales' },
-    { icon: 'mdi-gift', title: 'Promotions', value: 'promotions' },
-    { icon: 'mdi-account-question', title: 'OfferedPromotions' },
-    { icon: 'mdi-format-list-bulleted-type', title: 'Plans', value: 'plans' },
-    { icon: 'mdi-account-hard-hat', title: 'Users', value: 'users' },
-    { icon: 'mdi-floor-plan', title: 'Services', value: 'services' },
-    { icon: 'mdi-router-wireless', title: 'Devices', value: 'devices' },])
+    { icon: 'mdi-view-dashboard', value: 'Home', title: 'Home' },
+    { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers' },
+    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions' },
+    { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales' },
+    { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions' },
+    { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions'},
+    { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans' },
+    { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users' },
+    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services' },
+    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices' },])
 const user = ref(null)
 const image = ref('')
 const username = ref('')
