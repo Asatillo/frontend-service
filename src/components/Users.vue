@@ -117,7 +117,6 @@ const getAllUsers = async (tab) => {
 
 watch(search, (newValue, oldValue) => {
     if (newValue.length > 3) {
-        console.log(newValue)
     }
 })
 

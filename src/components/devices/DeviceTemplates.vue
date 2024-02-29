@@ -140,10 +140,8 @@ onMounted(() => {
 })
 
 function loadDeviceTemplates(page, search) {
-    console.log(page, search)
     var currentTab = tabs.value[tab.value]
     getDeviceTemplatesByType(tab.value, currentTab.pagination.itemsPerPage, page, search).then(response => {
-        console.log(response)
         currentTab.templates = response.content
         currentTab.pagination.totalPages = response.totalPages
         currentTab.pagination.currentPage = response.page

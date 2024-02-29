@@ -76,7 +76,6 @@ function close() {
 function changeActiveStatus() {
     changePromotionStatus(itemToChange.value.id, (itemToChange.value.active ? 'deactivate' : 'activate')).then(response => {
         dialog.value = false
-        console.log(response)
         promotions.value = promotions.value.map(promotion => {
             if (promotion.id === response.id) {
                 promotion.active = response.active

@@ -164,8 +164,6 @@ function createDevice(deviceTemplateId, amount) {
     step.value = 2
 
     addDevice(deviceTemplateId, amount).then(response => {
-        console.log(response)
-
         if (response.success) {
             responseObj.value.loading = false
             responseObj.value.success = response.success

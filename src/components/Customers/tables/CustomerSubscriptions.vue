@@ -208,7 +208,6 @@ function closeActiveChangeDialog() {
 function changeActiveStatus() {
     changeSubscriptionStatus(itemToChange.value.id, (itemToChange.value.active ? 'deactivate' : 'activate')).then(response => {
         dialogActive.value = false
-        console.log(response)
         subscriptions.value = subscriptions.value.map(subscription => {
             if (subscription.id === response.id) {
                 subscription.active = response.active

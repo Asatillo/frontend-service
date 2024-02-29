@@ -95,7 +95,6 @@ function openNewPromotionDialog() {
 }
 
 function openChangePromotionDialog(promotion) {
-    console.log(promotion);
     editedItem.value = Object.assign({}, promotion);
     dialogReason.value = 'Edit';
     dialog.value = true;
@@ -108,13 +107,11 @@ function close() {
 function save() {
     if (editedItem.value.id) {
         editPromotion(editedItem.value).then(response => {
-            console.log(response);
             // PromotionsTable.emit('editedPromotion', response);
             close();
         });
     } else {
         addPromotion(editedItem.value).then(response => {
-            console.log(response);
             close();
         });
     }
