@@ -1,37 +1,21 @@
 <template>
-    <div class="errorContainer">
-      <div class="errorCard">
-        <div class="text-h1 error-status">{{ errorStatus }}</div>
-        <div class="text-h4">Oops! {{ errorMessage }}</div><br>
-        <p>{{ errorText }}</p>
-        <router-link to="/"> Go to Homepage </router-link>
-      </div>
-    </div>
+    <v-container fill-height>
+        <v-row justify="center" align="center">
+            <v-col cols="12" sm="4">
+                <div class="text-h1 error-status">{{ errorStatus }}</div>
+                <div class="text-h4">Oops! {{ errorMessage }}</div><br>
+                <p>{{ errorText }}</p>
+                <router-link to="/"> Go to Homepage </router-link>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
   
-<script>
-export default {
-    name: "ErrorTemplate",
-    props: ["errorMessage", "errorStatus", "errorText"],
-};
+<script setup>
+defineProps(["errorMessage", "errorStatus", "errorText"]);
 </script>
   
 <style>
-.errorContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-}
-
-.errorCard {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
-    width: 800px;
-}
-
 .error-status {
     color: #2079dd;
 }
