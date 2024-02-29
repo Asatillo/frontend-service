@@ -78,12 +78,32 @@ const routes = [
     component: () => import('../views/OfferedPromotionsView.vue')
   },
   {
-    path: '/forbidden',
+    path: '/error',
     name: 'Forbidden',
     props: {
       errorMessage: "Access Denied", 
       errorStatus: "403", 
       errorText: "SORRY, YOU DON'T HAVE THE PERMISSION TO ACCESS THIS PAGE"
+    },
+    component: () => import('../views/ErrorTemplate.vue')
+  },
+  {
+    path: '/error',
+    name: 'ServiceUnavailable',
+    props: {
+      errorMessage: "Service Unavailable", 
+      errorStatus: "503", 
+      errorText: "SORRY, THE SERVICE YOU ARE TRYING TO ACCESS IS CURRENTLY UNAVAILABLE"
+    },
+    component: () => import('../views/ErrorTemplate.vue')
+  },
+  {
+    path: '/error',
+    name: 'Unhandled',
+    props: {
+      errorMessage: "An error occurred", 
+      errorStatus: "???", 
+      errorText: "SORRY, AN ERROR OCCURRED WE HAVEN'T HANDLED YET"
     },
     component: () => import('../views/ErrorTemplate.vue')
   },

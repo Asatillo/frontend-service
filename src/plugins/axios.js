@@ -26,9 +26,15 @@ http.interceptors.response.use((response) => {
     if (error.response.status === 403) {
         router.push({name: "Forbidden"});
     }
-    if (error.response.status === 401) {
+    else if (error.response.status === 401) {
         localStorage.removeItem("accessToken");
         router.push({name: "Login", });
+    }
+    else if (error.response.status === 503) {
+        router.push({name: "ServiceUnavailable"});
+    }
+    else{
+        router.push({name: "Unhandled"});
     }
     
     return Promise.reject(error);
