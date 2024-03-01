@@ -1,5 +1,13 @@
 import http from '@/plugins/axios'
 
+export const getNetworkEntities = async ({page, itemsPerPage, search}) => {
+    return await http.get(`/crm/network-entities?page=${page}&size=${itemsPerPage}&search=${search}`).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 export const getNetworkEntitiesByCustomer = async (customerId, {page, itemsPerPage, search}) => {
     return await http.get(`/crm/network-entities/customer/${customerId}?page=${page}&size=${itemsPerPage}&search=${search}`).then(response => {
         return response.data;

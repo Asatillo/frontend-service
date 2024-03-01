@@ -60,7 +60,9 @@ const menuItems = ref([
     { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans' },
     { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users' },
     { icon: 'mdi-floor-plan', value: 'Services', title: 'Services' },
-    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices' },])
+    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices' },
+    { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities' },
+])
 const user = ref(null)
 const image = ref('')
 const username = ref('')

@@ -76,6 +76,10 @@ const routes = [
     path: '/offered-promotions',
     name: 'OfferedPromotions',
     component: () => import('../views/OfferedPromotionsView.vue')
+  },{
+    path: '/network-entities',
+    name: 'NetworkEntities',
+    component: () => import('../views/NetworkEntitiesView.vue')
   },
   {
     path: '/error',
