@@ -49,8 +49,10 @@ const headers = ref([
 
 function fetchSales({ page, itemsPerPage }) {
     getSalesByCustomerId(props.id, page, itemsPerPage).then(response => {
-        sales.value = response.content
-        totalItems.value = response.totalElements
+        if(response){
+            sales.value = response.content
+            totalItems.value = response.totalElements
+        }
     })
 }
 
