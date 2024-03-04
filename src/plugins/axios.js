@@ -33,9 +33,9 @@ http.interceptors.response.use((response) => {
     else if (error.response.status === 503) {
         router.push({name: "ServiceUnavailable"});
     }
-    else{
-        router.push({name: "Unhandled"});
-    }
+    // else{
+    //     router.push({name: "Unhandled"});
+    // }
     
     return Promise.reject(error);
 });
