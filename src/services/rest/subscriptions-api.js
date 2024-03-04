@@ -8,8 +8,8 @@ export const getSubscriptionsByCustomer = async (customerId, {page, itemsPerPage
     })
 }
 
-export const getSubscriptions = async ({page, itemsPerPage}) => {
-    return await http.get(`/crm/subscriptions?page=${page}&size=${itemsPerPage}`).then(response => {
+export const getSubscriptions = async ({page, itemsPerPage, search}) => {
+    return await http.get(`/crm/subscriptions?page=${page}&size=${itemsPerPage}&search=${search}`).then(response => {
         return response.data;
     }).catch(err => {
         console.log(err);
