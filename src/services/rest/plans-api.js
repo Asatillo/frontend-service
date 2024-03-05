@@ -16,6 +16,14 @@ export const getActivePlansByType = async (type) => {
     });
 };
 
+export const getActivePlans = async () => {
+    return await http.get(`crm/plans/active`).then(response => {
+        return response.data;
+    }).catch(error => {
+        console.error('Error getting active plans:', error.message);
+    });
+}
+
 export const addPlan = async (plan) => {
     return await http.post(`/crm/plans`, {
         name: plan.name,

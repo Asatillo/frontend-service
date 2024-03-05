@@ -16,10 +16,12 @@ export const getSubscriptions = async ({page, itemsPerPage, search}) => {
     })
 }
 
-export const addSubscription = async (networkEntityId, planId) => {
+export const addSubscription = async (networkEntityId, planId, startDate, promotionId) => {
     return await http.post('/crm/subscriptions', {
         networkEntity: networkEntityId,
         planId: planId,
+        promotionId: promotionId,
+        startDate: startDate
     }).then(response => {
         return response.data;
     }).catch(err => {
