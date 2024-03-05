@@ -12,10 +12,9 @@
                     </v-window-item>
                     <v-window-item :value="2">
                         <div v-if="!responseObj.loading" class="pa-4 text-center">
-                            <v-icon size="80" color="green">mdi-check</v-icon>
-                            <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :
-                                'Something went wrong' }}!</h3>
-                            <span class="text-caption text-grey">{{ responseObj.message }}</span>
+                            <v-icon v-if="responseObj.success" size="80" color="green">mdi-check</v-icon>
+                            <v-icon v-else size="80" color="red">mdi-message-alert</v-icon>
+                            <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.message }}</h3>
                         </div>
                         <v-progress-linear v-else indeterminate color="primary"></v-progress-linear>
                     </v-window-item>
@@ -61,6 +60,7 @@ import { watch } from 'vue';
 
 const props = defineProps(['id'])
 
+
 const devices = ref([])
 const step = ref(1)
 const availableDevices = ref([])
@@ -70,7 +70,7 @@ const dialog = ref(false)
 const itemsPerPage = ref(15)
 const totalItems = ref(0)
 const search = ref('')
-const responseObj = ref({ loading: false, success: false, message: '' })
+const responseObj = ref({ loading: false, success: null, message: '' })
 const headers = ref([
     { title: 'ID', value: 'id' },
     { title: 'Name', value: 'name' },
@@ -79,12 +79,8 @@ const headers = ref([
     { title: 'Warranty ends', value: 'WarrantyEndDate' },
 ])
 
-function requestServerItems({ page, itemsPerPage, sortBy, groupBy, search }) {
-    getCustomerDevices({ page, itemsPerPage, search }, props.id)
-}
-
-const getCustomerDevices = async ({ page, itemsPerPage, search }, customerId) => {
-    getDevicesByCustomer(customerId, { page, itemsPerPage, search }).then(response => {
+const requestServerItems = async({ page, itemsPerPage, sortBy, groupBy, search }) => {
+    getDevicesByCustomer(props.id, { page, itemsPerPage, search }).then(response => {
         totalItems.value = response.totalElements
         devices.value = response.content
     }).catch(error => {
@@ -109,19 +105,24 @@ function sellDevice(customerId, deviceTemplateId) {
     step.value = 2
     responseObj.value.loading = true
     sellDeviceToCustomer(customerId, deviceTemplateId).then(response => {
-        responseObj.value.loading = false
-        responseObj.value.success = true
-        responseObj.value.message = 'Device sold successfully'
-        requestServerItems({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value })
-        setTimeout(() => {
-            if (dialog.value) {
-                close()
-            }
-        }, 2000)
+        if (response) {
+            responseObj.value.message = 'Device sold successfully'
+            responseObj.value.success = true
+            requestServerItems({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value })
+            this.$emit('invoice-created')
+            setTimeout(() => {
+                if (dialog.value) {
+                    close()
+                }
+            }, 5000)
+        }else{
+            responseObj.value.message = 'Something went wrong. Please try again later...'
+            responseObj.value.success = false
+        }
+
     }).catch(error => {
+    }).finally(() => {
         responseObj.value.loading = false
-        responseObj.value.success = false
-        responseObj.value.message = 'Something went wrong'
     })
 }
 
