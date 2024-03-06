@@ -1,7 +1,7 @@
 <template>
     <v-toolbar flat>
         <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
-            class="ml-3"></v-text-field>
+            class="ma-1"></v-text-field>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-btn prepend-icon="mdi-plus" color="blue-darken-1">Make Offer</v-btn>
     </v-toolbar>

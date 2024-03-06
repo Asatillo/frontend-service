@@ -1,4 +1,58 @@
 <template>
+    <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
+        <v-card>
+            <v-card-title>
+                <span class="text-h6">{{ editedItem.id != null ? "Edit Service" : "New Service"
+                    }}</span>
+            </v-card-title>
+
+            <v-card-text>
+                <v-container>
+                    <v-row>
+                        <v-col cols="12" sm="12" md="12">
+                            <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-select v-model="editedItem.designatedDeviceType" label="Device type" cols="12" sm="6" md="6"
+                        :items="['MOBILE', 'ROUTER']">
+                    </v-select>
+                    <v-select v-model="editedItem.type" label="Type" cols="12" sm="6" md="6" :items="serviceTypesList">
+                    </v-select>
+                    <v-row>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-text-field v-model="editedItem.amount" type="number" label="Amount"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-text-field v-model="editedItem.price" type="number" label="Price"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="close">
+                    Cancel
+                </v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="save">
+                    Save
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogChangeActive" max-width="500px">
+        <v-card>
+            <v-card-title class="text-h6 text-center">Are you sure you want to {{ activeChangeMode }}
+                this
+                item?</v-card-title>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="changeActiveClose">Cancel</v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="changeActiveConfirm">Confirm</v-btn>
+                <v-spacer></v-spacer>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     <v-container class="pb-0">
         <div class="text-h5">Services</div>
         <div class="text-subtitle-1 mt-2">
@@ -7,92 +61,35 @@
         </div>
     </v-container>
     <v-container>
+        <v-toolbar flat>
+            <v-text-field class="ma-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
+                hide-details></v-text-field>
+            <v-divider class="mx-2" inset vertical></v-divider>
+            <v-btn prepend-icon="mdi-plus" color="primary" dark @click="createNewServiceDialog">New service</v-btn>
+        </v-toolbar>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
             :items="services" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading"
-            @update:options="getAllServices">
+            @update:options="getAllServices" :search="search">
             <template v-slot:item.active="{ item }">
                 <v-icon v-if="item.active" color="green">mdi-check</v-icon>
                 <v-icon v-else color="red">mdi-close</v-icon>
             </template>
+
             <template v-slot:item.type="{ item }">
                 <v-icon v-if="item.type == 'DATA'" color="blue">mdi-web</v-icon>
                 <v-icon v-else-if="item.type == 'VOICE'" color="green">mdi-phone</v-icon>
                 <v-icon v-else-if="item.type == 'SMS'" color="orange">mdi-message</v-icon>
             </template>
+
             <template v-slot:item.designatedDeviceType="{ item }">
                 <v-icon v-if="item.designatedDeviceType == 'MOBILE'" color="green">mdi-cellphone</v-icon>
                 <v-icon v-else color="blue">mdi-router-wireless</v-icon>
                 <span>{{ item.designatedDeviceType }}</span>
             </template>
+
             <template v-slot:item.price="{ item }">
                 <span>{{ item.price }}</span>
             </template>
-
-
-            <template v-slot:top>
-                <v-toolbar >
-                    <v-spacer></v-spacer>
-                    <v-btn prepend-icon="mdi-plus" color="primary" dark @click="createNewServiceDialog">
-                        New service
-                    </v-btn>
-                    <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-                        <v-card>
-                            <v-card-title>
-                                <span class="text-h6">{{ editedItem.id != null ? "Edit Service" : "New Service" }}</span>
-                            </v-card-title>
-
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12" sm="12" md="12">
-                                            <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-select v-model="editedItem.designatedDeviceType" label="Device type" cols="12" sm="6"
-                                        md="6" :items="['MOBILE', 'ROUTER']">
-                                    </v-select>
-                                    <v-select v-model="editedItem.type" label="Type" cols="12" sm="6" md="6"
-                                        :items="serviceTypesList">
-                                    </v-select>
-                                    <v-row>
-                                        <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="editedItem.amount" type="number"
-                                                label="Amount"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="editedItem.price" type="number"
-                                                label="Price"></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
-
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue-darken-1" variant="text" @click="close">
-                                    Cancel
-                                </v-btn>
-                                <v-btn color="blue-darken-1" variant="text" @click="save">
-                                    Save
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="dialogChangeActive" max-width="500px">
-                        <v-card>
-                            <v-card-title class="text-h6 text-center">Are you sure you want to {{ activeChangeMode }} this
-                                item?</v-card-title>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue-darken-1" variant="text" @click="changeActiveClose">Cancel</v-btn>
-                                <v-btn color="blue-darken-1" variant="text" @click="changeActiveConfirm">Confirm</v-btn>
-                                <v-spacer></v-spacer>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
-            </template>
-
 
             <template v-slot:item.actions="{ item }">
                 <v-icon color="blue" size="small" class="me-2" @click="editServiceDialog(item)">
@@ -107,7 +104,7 @@
 
     </v-container>
 </template>
-  
+
 <script setup>
 import { ref, reactive, computed } from 'vue';
 import { getServices, changeServiceStatus, updateService, createService } from '@/services/rest/services-api';
@@ -142,9 +139,9 @@ const headers = reactive([
     { title: 'Actions', key: 'actions', sortable: false, sortable: false },
 ]);
 
-const getAllServices = async ({ page, itemsPerPage, sortBy }) => {
+const getAllServices = async ({ page, itemsPerPage, search }) => {
     loading.value = true;
-    getServices({ page, itemsPerPage, sortBy }).then(response => {
+    getServices({ page, itemsPerPage, search }).then(response => {
         loading.value = false;
         totalItems.value = response.totalElements;
         services.value = response.content;
@@ -237,4 +234,3 @@ const addService = async (item) => {
     });
 };
 </script>
-  

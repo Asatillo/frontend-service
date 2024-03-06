@@ -65,7 +65,7 @@
     </v-container>
     <v-container>
         <v-toolbar>
-            <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
+            <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" class="ma-1" single-line
                 hide-details v-on:update:model-value="fetchPlans"></v-text-field>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-btn color="primary" @click="openNewPlanDialog" prepend-icon="mdi-plus">New Plan</v-btn>

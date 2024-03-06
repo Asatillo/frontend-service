@@ -3,11 +3,6 @@
         <div class="text-h5">Promotions</div>
     </v-container>
     <v-container>
-        <v-toolbar flat>
-            <v-text-field append-inner-icon="mdi-magnify" label="Search" single-line hide-details class="ml-3"></v-text-field>
-            <v-divider class="mx-4" inset vertical></v-divider>
-            <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="openNewPromotionDialog">New Promotion</v-btn>
-        </v-toolbar>
         <PromotionsTable @edit-promotion-from-child="openChangePromotionDialog" />
     </v-container>
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">

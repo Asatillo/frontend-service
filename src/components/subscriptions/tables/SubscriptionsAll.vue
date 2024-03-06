@@ -66,19 +66,15 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-toolbar flat>
+    <v-text-field class="ma-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
+      hide-details></v-text-field>
+    <v-divider class="mx-2" inset vertical></v-divider>
+    <v-btn prepend-icon="mdi-plus" color="primary" @click="openAddNumberDialog">Add subscription</v-btn>
+  </v-toolbar>
   <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
     :items="subscriptions" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading" :search="search"
     @update:options="requestServerItems" no-data-text="No subscriptions found">
-
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-text-field class="ml-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
-          hide-details></v-text-field>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-btn prepend-icon="mdi-plus" color="primary" @click="openAddNumberDialog">Add subscription</v-btn>
-      </v-toolbar>
-    </template>
-
     <template v-slot:item.active="{ item }">
       <v-icon size="15" v-if="item.active" color="green">mdi-check</v-icon>
       <v-icon size="15" v-else color="red">mdi-close</v-icon>

@@ -1,7 +1,7 @@
 import http from '@/plugins/axios'
 
-export const getServices = async ({ page, itemsPerPage }) => {
-    return await http.get(`/crm/services?page=${page}&size=${itemsPerPage}`).then(response => {
+export const getServices = async ({ page, itemsPerPage, search }) => {
+    return await http.get(`/crm/services?page=${page}&size=${itemsPerPage}&search=${search}`).then(response => {
         return response.data;
     }).catch(error => {
         console.error('Error getting services:', error.message);

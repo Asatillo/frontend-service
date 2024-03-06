@@ -1,7 +1,7 @@
 import http from '@/plugins/axios'
 
-export const getPromotions = async (page, size) => {
-    return await http.get(`/sales/promotions?size=${size}&page=${page}`).then(response => {
+export const getPromotions = async (page, size, search) => {
+    return await http.get(`/sales/promotions?size=${size}&page=${page}&search=${search}`).then(response => {
         return response.data;
     }).catch(error => {
         console.error('Error getting promotions:', error.message);

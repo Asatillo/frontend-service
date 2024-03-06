@@ -12,23 +12,34 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-toolbar flat>
+        <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
+            class="ma-1"></v-text-field>
+        <v-divider class="mx-2" inset vertical></v-divider>
+        <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="openNewPromotionDialog">New
+            Promotion</v-btn>
+    </v-toolbar>
     <v-data-table-server :items="promotions" :headers="headers" :items-length="totalItems"
         :itemsPerPageOptions="[15, 20, 25]" :loading="loading" @update:options="getAllPromotions"
-        v-model:itemsPerPage="itemsPerPage">
+        v-model:itemsPerPage="itemsPerPage" :search="search">
         <template v-slot:item.active="{ item }">
             <v-icon v-if="item.active" color="green">mdi-check</v-icon>
             <v-icon v-else color="red">mdi-close</v-icon>
         </template>
+
         <template v-slot:item.renewable="{ item }">
             <v-icon v-if="item.renewable" color="green">mdi-check</v-icon>
             <v-icon v-else color="red">mdi-close</v-icon>
         </template>
+
         <template v-slot:item.startDate="{ item }">
             {{ formatDateString(item.startDate) }}
         </template>
+
         <template v-slot:item.endDate="{ item }">
             {{ formatDateString(item.endDate) }}
         </template>
+
         <template v-slot:item.actions="{ item }">
             <v-row>
                 <v-btn color="blue" size="30" icon class="mr-2" @click.stop="$emit('edit-promotion-from-child', item)">
@@ -56,11 +67,14 @@ const loading = ref(false)
 const itemsPerPage = ref(15)
 const totalItems = ref(0)
 const itemToChange = ref(null)
+const search = ref('')
 const headers = [
     { title: 'Active', value: 'active', align: 'center' },
     { title: 'Description', value: 'description' },
+    { title: 'Product Type', value: 'productType', align: 'center'},
     { title: 'Renewable', value: 'renewable', align: 'center' },
     { title: 'Max Amount', value: 'maxAmount', align: 'center' },
+    { title: 'Type', value: 'type', align: 'center' },
     { title: 'Start Date', value: 'startDate', align: 'center' },
     { title: 'End Date', value: 'endDate', align: 'center' },
     { title: 'Actions', value: 'actions' }
@@ -89,9 +103,9 @@ function changeActiveStatus() {
     })
 }
 
-const getAllPromotions = async ({ page, itemsPerPage }) => {
+const getAllPromotions = async ({ page, itemsPerPage, search }) => {
     loading.value = true
-    getPromotions(page, itemsPerPage).then(response => {
+    getPromotions(page, itemsPerPage, search).then(response => {
         promotions.value = response.content
         totalItems.value = response.totalElements
     }).catch(error => {
