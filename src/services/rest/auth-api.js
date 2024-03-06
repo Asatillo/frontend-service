@@ -19,8 +19,8 @@ export const signUpUser = async (userData) => {
     })
 }
 
-export const getUsersByRole = async ({ page, itemsPerPage}, role) => {
-    return await http.get(`/auth-service/users?page=${page}&size=${itemsPerPage}&role=${role}`).then(response => {
+export const getUsersByRole = async ({ page, itemsPerPage, search}, role) => {
+    return await http.get(`/auth-service/users?page=${page}&size=${itemsPerPage}&search=${search}&role=${role}`).then(response => {
         return response.data
     })
 }

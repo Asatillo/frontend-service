@@ -2,15 +2,16 @@
     <v-container class="pb-0">
         <div class="text-h5">Users</div>
     </v-container>
-    <v-container >
+    <v-container>
         <v-tabs v-model="tab" class="mb-6">
-            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"></v-text-field>
-            <v-spacer></v-spacer>
-            <v-tab v-for="value, key in tabs" :key="key" :value="value.name">{{ value.name }}</v-tab>
+            <v-text-field v-model="search" append-inner-icon="mdi-magnify" class="ma-1" label="Search"
+                single-line></v-text-field>
+            <v-divider inset vertical class="mx-4"></v-divider>
+            <v-tab v-for="value, key in tabs" :key="key" :value="key">{{ value.name }}</v-tab>
         </v-tabs>
 
         <v-window v-model="tab">
-            <v-window-item v-for="value, key in tabs" :key="key" :value="value.name">
+            <v-window-item v-for="value, key in tabs" :key="key" :value="key">
                 <v-row v-if="value.users.length">
                     <v-col v-for="user in value.users" :key="user.id" cols="4">
                         <v-card class="px-2 d-flex align-center" :elevation="1" rounded="lg">
@@ -54,16 +55,15 @@
 
     </v-container>
 </template>
-  
+
 <script setup>
 import { ref } from 'vue';
 import { getUsersByRole } from '@/services/rest/auth-api';
-import router from '@/router';
 import { onMounted } from 'vue';
 import { watch } from 'vue';
 
 const tab = ref(null)
-const search = ref(null)
+const search = ref('')
 
 const defaultPagination = {
     currentPage: 1,
@@ -104,20 +104,30 @@ onMounted(() => {
     }
 })
 
-const getAllUsers = async (tab) => {
-    var page = tab.pagination.currentPage;
-    var role = tab.role;
-    getUsersByRole({ page, itemsPerPage }, role).then(response => {
-        tab.pagination.totalPages = response.totalPages;
-        tab.users = response.content;
+const getAllUsers = async (currentTab) => {
+    var page = currentTab.pagination.currentPage;
+    var role = currentTab.role;
+    getUsersByRole({ page, itemsPerPage, search: search.value }, role).then(response => {
+        currentTab.pagination.totalPages = response.totalPages;
+        currentTab.users = response.content;
     }).catch(error => {
         console.log(error)
     });
 }
 
-watch(search, (newValue, oldValue) => {
-    if (newValue.length > 3) {
-    }
-})
+function syncTabsAndSearch() {
+    var currentTab = tabs.value[tab.value];
+    var role = currentTab.role;
+    getUsersByRole({ page: 1, itemsPerPage, search: search.value }, role).then(response => {
+        currentTab.pagination.totalPages = response.totalPages;
+        currentTab.pagination.currentPage = 1;
+        currentTab.users = response.content;
+    }).catch(error => {
+        console.log(error)
+    });
+}
 
+watch([search, tab], () => {
+    syncTabsAndSearch()
+})
 </script>
