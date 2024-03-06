@@ -4,8 +4,8 @@
         :search="search">
         <template v-slot:top>
             <v-toolbar>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
-                class="ml-3"></v-text-field>
+                <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
+                class="ma-1"></v-text-field>
             </v-toolbar>
         </template>
         <template v-slot:item.paymentDate="{ item }">
