@@ -92,12 +92,11 @@ function changeActiveStatus() {
 const getAllPromotions = async ({ page, itemsPerPage }) => {
     loading.value = true
     getPromotions(page, itemsPerPage).then(response => {
-        loading.value = false
         promotions.value = response.content
         totalItems.value = response.totalElements
     }).catch(error => {
         console.log(error)
-    })
+    }).finally(() => loading.value = false)
 }
 
 
