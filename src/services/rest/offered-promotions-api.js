@@ -1,5 +1,13 @@
 import http from '@/plugins/axios'
 
+export const getOfferedPromotions = async (page, size, search) => {
+    return await http.get(`/sales/promotions/offered?page=${page}&size=${size}&search=${search}`).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 export const getOfferedPromotionsByCustomerId = async (id, page, size) => {
     return await http.get(`/sales/promotions/offered/customer/${id}?page=${page}&size=${size}`).then(response => {
         return response.data;

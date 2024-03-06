@@ -8,6 +8,14 @@ export const getCustomers = async ({page, itemsPerPage, sortBy, groupBy, search}
     })
 }
 
+export const getCustomersFullName = async (id) => {
+    return await http.get(`/crm/customers/${id}/fullname`).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 export const getCustomerById = async (id) => {
     return await http.get(`/crm/customers/${id}`).then(response => {
         return response.data;
