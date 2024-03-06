@@ -55,6 +55,17 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="changeActiveDialog" max-width="500px" @click:outside="closeActiveChangeDialog">
+    <v-card>
+      <v-card-title class="text-h6 text-center">{{ changeActiveDialogTitle }}</v-card-title>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue" @click="closeActiveChangeDialog">Cancel</v-btn>
+        <v-btn color="blue" @click="changeActiveStatus">Confirm</v-btn>
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <v-data-table-server v-model:itemsPerPage="itemsPerPage" :headers="headers" :items-length="totalItems"
     :items="subscriptions" item-value="id" :itemsPerPageOptions="[10, 15, 20]" :loading="loading" :search="search"
     @update:options="requestServerItems" no-data-text="No subscriptions found">
@@ -95,8 +106,8 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-      <v-icon @click="editSubscription(item)" color="blue">mdi-pencil</v-icon>
-      <v-icon @click="deactivateSubscription(item)" color="red">mdi-delete</v-icon>
+      <v-icon class="mx-1" @click="openChangeActiveDialog(item)" :color="item.active ? 'red' : 'green'">{{ item.active ?
+    'mdi-bell-off' : 'mdi-bell' }}</v-icon>
     </template>
   </v-data-table-server>
 </template>
@@ -105,7 +116,7 @@
 import { ref, watch } from 'vue';
 import { formatDateString } from '@/services/date-formatting';
 import { searchCustomers } from '@/services/rest/customers-api'
-import { getSubscriptions, addSubscription } from '@/services/rest/subscriptions-api';
+import { getSubscriptions, addSubscription, changeSubscriptionStatus } from '@/services/rest/subscriptions-api';
 import { getActivePlansByType } from '@/services/rest/plans-api';
 import { getNetworkEntitiesOfCustomerByType } from '@/services/rest/network-entities-api';
 import { getAcceptedOfferedPromotionsByCustomerAndType } from '@/services/rest/offered-promotions-api';
@@ -120,6 +131,8 @@ const subscriptions = ref([]);
 // dialog variables
 const dialog = ref(false);
 const dialogTitle = ref('');
+const changeActiveDialog = ref(false);
+const changeActiveDialogTitle = ref('');
 
 // loding indicator variables
 const plansLoading = ref(false);
@@ -133,6 +146,7 @@ const plans = ref([]);
 const networkEntities = ref([]);
 const promotions = ref([]);
 const deviceType = ref(null);
+const itemToChange = ref(null);
 
 const step = ref(1);
 const responseObj = ref({ loading: false, success: null, message: '' })
@@ -207,7 +221,7 @@ function save() {
   step.value = 2;
   responseObj.value.loading = true;
   addSubscription(editedItem.value.networkEntity, editedItem.value.plan, editedItem.value.startDate, editedItem.value.promotion).then((response) => {
-    if(response){
+    if (response) {
       responseObj.value.message = 'Subscription added successfully';
       responseObj.value.success = true;
       requestServerItems({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value });
@@ -228,6 +242,32 @@ function close() {
   plans.value = Object.assign([]);
   networkEntities.value = Object.assign([]);
   promotions.value = Object.assign([]);
+}
+
+function openChangeActiveDialog(promotion) {
+  itemToChange.value = promotion
+  changeActiveDialogTitle.value = `Are you sure you want to ${itemToChange.value.active ? 'deactivate' : 'activate'} this item?`
+  changeActiveDialog.value = true
+}
+
+function closeActiveChangeDialog() {
+  changeActiveDialog.value = false
+  itemToChange.value = Object.assign({})
+}
+
+function changeActiveStatus() {
+  var mode = itemToChange.value.active ? 'deactivate' : 'activate'
+  changeSubscriptionStatus(itemToChange.value.id, mode).then(response => {
+    subscriptions.value = subscriptions.value.map(subscription => {
+      if (subscription.id === response.id) {
+        subscription.active = response.active
+      }
+      return subscription
+    })
+    closeActiveChangeDialog()
+  }).catch(error => {
+    console.log(error)
+  })
 }
 
 watch(deviceType, (newDeviceType) => {
