@@ -38,15 +38,6 @@
             <template v-slot:item.name="{ item }">
                 {{ item.firstName }} {{ item.lastName }}
             </template>
-            <template v-slot:top>
-                <v-toolbar>
-                    <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
-                        class="ml-3"></v-text-field>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-                    <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
-                        customer</v-btn>
-                </v-toolbar>
-            </template>
         </v-data-table-server>
         <v-dialog v-model="dialogChangeActive" max-width="500px">
             <v-card>
