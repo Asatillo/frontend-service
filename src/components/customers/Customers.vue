@@ -15,10 +15,8 @@
             @update:options="getAllCustomers" :headers="headers" :search="search" @click:row="handleRowClick"
             item-class="row-class">
             <template v-slot:item.active="{ item }">
-                <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close'
-                    }}</v-icon>
+                <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close' }}</v-icon>
             </template>
-
             <template v-slot:item.actions="{ item }">
                 <v-row>
                     <v-btn color="blue" size="30" icon class="mr-2" @click.stop="editCustomerDialog(item)">
@@ -80,8 +78,7 @@
                                 <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete v-model="editedItem.city" :items="hu_cities"
-                                    label="City"></v-autocomplete>
+                                <v-autocomplete v-model="editedItem.city" :items="hu_cities" label="City"></v-autocomplete>
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <v-text-field v-model="editedItem.dob" label="Birth date" type="date"></v-text-field>
@@ -141,7 +138,7 @@ const headers = ref([
     { title: 'Segment', key: 'segment', sortable: true },
     { title: "Account created", key: 'accCreationDate', sortable: true },
     { title: "Wired internet", key: "wiredInternetAvailable", sortable: false, align: "center" },
-    { title: "Actions", key: "actions", sortable: false, align: "start" }
+    { title: "Actions", key: "actions", sortable: false, align: "center" }
 
 ])
 const totalItems = ref(0);
