@@ -45,6 +45,9 @@ export default createVuetify({
     },
     VToolbar: {
       color: 'transparent',
+    },
+    VDataTableServer: {
+      density: 'comfortable',
     }
   }
 }
