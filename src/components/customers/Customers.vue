@@ -30,7 +30,7 @@
             </template>
             <template v-slot:item.wiredInternetAvailable="{ item }">
                 <v-icon :color="item.wiredInternetAvailable ? 'green' : 'red'" dark>{{ item.wiredInternetAvailable ?
-                'mdi-check' : 'mdi-close' }}</v-icon>
+                    'mdi-check' : 'mdi-close' }}</v-icon>
             </template>
             <template v-slot:item.dob="{ item }">
                 {{ formatDateString(item.dob) }}
@@ -100,7 +100,7 @@
         </v-dialog>
     </v-container>
 </template>
-
+  
 <script setup>
 import { ref } from 'vue';
 import { formatDateString } from '@/services/date-formatting'
@@ -258,8 +258,8 @@ function handleRowClick(event, customer) {
 }
 
 </script>
-
-
+    
+  
 <style scoped>
 .row-class:hover {
     background-color: lightblue;
