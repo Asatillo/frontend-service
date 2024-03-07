@@ -51,7 +51,6 @@ import router from '@/router';
 const drawer = ref(true)
 const rail = ref(false)
 const menuItems = ref([
-    { icon: 'mdi-view-dashboard', value: 'Home', title: 'Home' },
     { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers' },
     { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions' },
     { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales' },
