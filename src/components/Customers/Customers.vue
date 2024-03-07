@@ -3,7 +3,9 @@
         <div class="text-h5">Customers</div>
     </v-container>
     <v-container>
+            <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
             <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
+                customer</v-btn>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :items="customers" item-value="id"
             :items-length="totalItems" :items-per-page-options="[15, 20, 25]" :loading="loading"
             @update:options="getAllCustomers" :headers="headers" :search="search" @click:row="handleRowClick"
