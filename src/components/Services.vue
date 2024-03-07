@@ -34,7 +34,7 @@
                 <v-btn color="blue-darken-1" variant="text" @click="close">
                     Cancel
                 </v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="save">
+                <v-btn color="blue-darken-1" variant="text" @click="save" :disabled="!(editedItem.name && editedItem.designatedDeviceType && editedItem.type && editedItem.amount & editedItem.price)">
                     Save
                 </v-btn>
             </v-card-actions>
@@ -121,10 +121,10 @@ const totalItems = ref(0);
 const dialogPurpose = ref('New Service');
 const defaultItem = ref({
     id: null,
-    name: "",
-    type: "",
+    name: null,
+    type: null,
     amount: null,
-    designatedDeviceType: "",
+    designatedDeviceType: null,
     price: null,
     active: true
 });
@@ -142,9 +142,10 @@ const headers = reactive([
 const getAllServices = async ({ page, itemsPerPage, search }) => {
     loading.value = true;
     getServices({ page, itemsPerPage, search }).then(response => {
-        loading.value = false;
         totalItems.value = response.totalElements;
         services.value = response.content;
+    }).finally(() => {
+        loading.value = false;
     });
 };
 
@@ -216,7 +217,7 @@ const editService = async (item) => {
         price: item.price,
     };
     updateService(item.id, service).then(() => {
-        getAllServices({ page: 1, itemsPerPage: 10, sortBy: [] });
+        getAllServices({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value });
     });
 }
 
@@ -228,7 +229,7 @@ function createNewServiceDialog() {
 
 const addService = async (item) => {
     createService(item).then(() => {
-        getAllServices({ page: 1, itemsPerPage: 10, sortBy: [] });
+        getAllServices({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value });
     }).catch(err => {
         console.log(err);
     });
