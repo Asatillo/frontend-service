@@ -47,6 +47,8 @@ const headers = ref([
     { title: 'Create date', value: 'createDate'},
 ])
 
+defineExpose({ fetchSales })
+
 function fetchSales({ page, itemsPerPage }) {
     getSalesByCustomerId(props.id, page, itemsPerPage).then(response => {
         if(response){

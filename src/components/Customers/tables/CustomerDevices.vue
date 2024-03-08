@@ -60,6 +60,7 @@ import { watch } from 'vue';
 
 const props = defineProps(['id'])
 
+const emit = defineEmits(['invoice-created'])
 
 const devices = ref([])
 const step = ref(1)
@@ -109,7 +110,7 @@ function sellDevice(customerId, deviceTemplateId) {
             responseObj.value.message = 'Device sold successfully'
             responseObj.value.success = true
             requestServerItems({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value })
-            this.$emit('invoice-created')
+            emit('invoice-created')
             setTimeout(() => {
                 if (dialog.value) {
                     close()

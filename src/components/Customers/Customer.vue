@@ -136,7 +136,7 @@
                     </v-window-item>
 
                     <v-window-item value="devices">
-                        <CustomerDevices v-bind:id=route.params.id />
+                        <CustomerDevices v-bind:id=route.params.id @invoice-created="updateInvoiceTable"/>
                     </v-window-item>
 
                     <v-window-item value="phone_numbers">
@@ -144,7 +144,7 @@
                     </v-window-item>
 
                     <v-window-item value="sales">
-                        <CustomerSales v-bind:id=route.params.id />
+                        <CustomerSales ref="salesTable" v-bind:id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="offers">
@@ -167,6 +167,8 @@ import CustomerSubscriptions from '@/components/customers/tables/CustomerSubscri
 import CustomerDevices from '@/components/customers/tables/CustomerDevices.vue';
 import CustomerOfferedPromotions from '@/components/customers/tables/CustomerOfferedPromotions.vue';
 import CustomerSales from '@/components/customers/tables/CustomerSales.vue';
+
+const salesTable = ref(null);
 
 const route = useRoute();
 const tab = ref('subscriptions');
@@ -251,4 +253,8 @@ const changeCustomerActive = async (id, mode) => {
         console.log(error);
     });
 };
+
+function updateInvoiceTable() {
+    salesTable.value.fetchSales({page: 1, itemsPerPage: 15});
+}
 </script>
