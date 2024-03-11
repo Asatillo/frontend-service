@@ -25,6 +25,15 @@
             <v-chip v-else-if="item.decision == 'REJECTED'" color="red" text-color="white">Rejected</v-chip>
             <v-chip @click="openChangeDecisionDialog(item.id)" v-else-if="item.decision == 'PENDING'" color="blue" text-color="white">Pending</v-chip>
         </template>
+        <template v-slot:item.promotion.productType="{ item }">
+            <v-chip>{{ item.promotion.productType }}</v-chip>
+        </template>
+        <template v-slot:item.communicationType="{ item }">
+            <v-chip v-if="item.communicationType === 'SMS'" prepend-icon="mdi-message">{{ item.communicationType }}</v-chip>
+            <v-chip v-else-if="item.communicationType === 'EMAIL'" prepend-icon="mdi-gmail">{{ item.communicationType }}</v-chip>
+            <v-chip v-else-if="item.communicationType === 'CALL'" prepend-icon="mdi-phone">{{ item.communicationType }}</v-chip>
+            <v-chip v-else-if="item.communicationType === 'IN_PERSON'" prepend-icon="mdi-account-voice">{{ item.communicationType }}</v-chip>
+        </template>
     </v-data-table-server>
     <NewPromotionOfferDialog ref="newPromotionOfferDialog" :id="props.id" @update-promotions="fetchOfferedPromotions({page: page, itemsPerPage: itemsPerPage, search})"/>
     <MakeDecisionForPromotionDialog ref="makeDecisionForPromotionDialog" @update-promotion="updateDecidedPromotion"/>
@@ -50,6 +59,7 @@ const totalItems = ref(0)
 const headers = ref([
     { title: 'ID', value: 'id' },
     { title: 'Description', value: 'promotion.description' },
+    { title: 'Product', value: 'promotion.productType', align: 'center'},
     { title: 'Offer date', value: 'offerDate', align: 'center' },
     { title: 'Expires at', value: 'expiresAt', align: 'center' },
     { title: 'Communication', value: 'communicationType', align: 'center' },
