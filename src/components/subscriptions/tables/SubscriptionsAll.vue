@@ -28,8 +28,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col cols="6">
-                <v-select v-model="editedItem.promotion" :items="promotions" label="Promotion" item-title="name"
-                  item-value="id" :loading="promotionsLoading" density="comfortable"></v-select>
+                <OfferedPromotionsByCustomerAndType v-model="editedItem.promotion" :promotion="editedItem.promotion" type="PLAN" :customerId="editedItem.customer"/>
               </v-col>
               <v-col cols="6">
                 <v-text-field v-model="editedItem.startDate" label="Start Date" type="date"
@@ -115,7 +114,7 @@ import { searchCustomers } from '@/services/rest/customers-api'
 import { getSubscriptions, addSubscription, changeSubscriptionStatus } from '@/services/rest/subscriptions-api';
 import { getActivePlansByType } from '@/services/rest/plans-api';
 import { getNetworkEntitiesOfCustomerByType } from '@/services/rest/network-entities-api';
-import { getAcceptedOfferedPromotionsByCustomerAndType } from '@/services/rest/offered-promotions-api';
+import OfferedPromotionsByCustomerAndType from '@/components/offered-promotions/OfferedPromotionsByCustomerAndType.vue';
 
 // data table variables
 const itemsPerPage = ref(15);
@@ -134,7 +133,6 @@ const changeActiveDialogTitle = ref('');
 const plansLoading = ref(false);
 const networkEntitiesLoading = ref(false);
 const customersLoading = ref(false);
-const promotionsLoading = ref(false);
 
 // data variables
 const customers = ref([]);
@@ -193,7 +191,6 @@ function getCustomers(search) {
 function getNetworkEntities() {
   if (!editedItem.value.customer || !deviceType.value) return;
   networkEntitiesLoading.value = true;
-  promotionsLoading.value = true;
   getNetworkEntitiesOfCustomerByType(editedItem.value.customer, deviceType.value).then(response => {
     networkEntities.value = response.content.map(entity => {
       return {
@@ -202,15 +199,6 @@ function getNetworkEntities() {
       };
     });
   }).finally(() => networkEntitiesLoading.value = false);
-
-  getAcceptedOfferedPromotionsByCustomerAndType(editedItem.value.customer, 'PLAN', '').then(response => {
-    promotions.value = response.content.map(offeredPromotion => {
-      return {
-        id: offeredPromotion.promotion.id,
-        name: offeredPromotion.promotion.name
-      };
-    });
-  }).then(() => promotionsLoading.value = false);
 }
 
 function save() {
