@@ -25,7 +25,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue" @click="close">Cancel</v-btn>
-                <v-btn color="blue" @click="save">Confirm</v-btn>
+                <v-btn color="blue" @click="save" :disabled="disabled">Confirm</v-btn>
                 <v-spacer></v-spacer>
             </v-card-actions>
         </v-card>
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref} from 'vue'
+import { computed, onMounted, ref} from 'vue'
 import { getActivePromotions } from '@/services/rest/promotions-api'
 import { addOfferedPromotion } from '@/services/rest/offered-promotions-api'
 
@@ -43,9 +43,7 @@ defineExpose({ openNewPromotionDialog })
 const emit = defineEmits(['update-promotions'])
 
 const promotions = ref([])
-
 const promotionsSearch = ref('')
-
 const communticationTypes = [{
     name: 'SMS',
     value: 'SMS'
@@ -59,9 +57,6 @@ const communticationTypes = [{
     name: 'IN PERSON',
     value: 'IN_PERSON'
 }]
-
-
-
 const dialog = ref(false)
 const defaultItem = {
     customerId: props.id,
@@ -70,6 +65,9 @@ const defaultItem = {
     decision: 'PENDING',
 }
 const editedItem = ref(Object.assign({}, defaultItem))
+const disabled = computed(() => {
+    return !editedItem.value.promotionId || !editedItem.value.communicationType || !editedItem.value.decision || !editedItem.value.customerId
+})
 
 onMounted(() => {
     fetchPromotions()
