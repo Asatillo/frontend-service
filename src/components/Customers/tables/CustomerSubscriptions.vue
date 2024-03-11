@@ -47,13 +47,15 @@
                         <v-select v-model="subscription.planId" label="Plan" required :disabled="!deviceType"
                             :items="availablePlans" item-value="id" item-title="name">
                         </v-select>
+                        <v-select v-model="subscription.promotionId" :items="promotions" label="Promotion" item-title="name"
+                            item-value="id" :loading="promotionsLoading" density="comfortable"></v-select>
                     </v-window-item>
                     <v-window-item :value="2">
                         <v-progress-linear v-if="responseObj.loading" indeterminate color="primary"></v-progress-linear>
                         <div v-else class="pa-4 text-center">
                             <v-icon size="80" color="green">mdi-check</v-icon>
                             <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :
-                                'Fail' }}!</h3>
+        'Fail' }}!</h3>
                             <span class="text-caption text-grey">{{ responseObj.message }}</span>
                         </div>
                     </v-window-item>
@@ -62,7 +64,8 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="close">Close</v-btn>
-                <v-btn v-if="step == 1" color="primary" text @click="addNewSubscription" :disabled="!subscription.planId || !subscription.networkEntityId">Save</v-btn>
+                <v-btn v-if="step == 1" color="primary" text @click="addNewSubscription"
+                    :disabled="!subscription.planId || !subscription.networkEntityId">Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -86,6 +89,7 @@ import { ref } from 'vue'
 import { getSubscriptionsByCustomer, changeSubscriptionStatus } from '@/services/rest/subscriptions-api'
 import { getNetworkEntitiesOfCustomerByType } from '@/services/rest/network-entities-api'
 import { getActivePlansByType } from '@/services/rest/plans-api'
+import { getAcceptedOfferedPromotionsByCustomerAndType } from '@/services/rest/offered-promotions-api';
 import { addSubscription } from '@/services/rest/subscriptions-api'
 import { formatDateString } from '@/services/date-formatting.js'
 import { watch } from 'vue';
@@ -103,7 +107,7 @@ const headers = ref([
     { title: 'Start date', key: 'startDate' },
     { title: 'End date', key: 'endDate' },
     { title: 'Price (HUF)', key: 'plan.price', align: 'end' },
-    { title: 'Actions', value: 'actions', align:'center', sortable: false }
+    { title: 'Actions', value: 'actions', align: 'center', sortable: false }
 ]);
 const subscriptions = ref([])
 const deviceType = ref('')
@@ -115,12 +119,16 @@ const totalItems = ref(0)
 const itemsPerPage = ref(15)
 const itemToChange = ref(null)
 const dialogActive = ref(false)
-const subscription = ref({
+const defaultSubscription = {
     networkEntityId: null,
     planId: null,
-})
+    promotionId: null
+}
+const subscription = ref(Object.assign({}, defaultSubscription))
 const availableNetworkEntities = ref([])
 const availablePlans = ref([])
+const promotions = ref([])
+const promotionsLoading = ref(false)
 
 function requestServerItems({ page, itemsPerPage }) {
     getCustomerSubscriptions({ page, itemsPerPage }, props.id)
@@ -138,7 +146,7 @@ const getCustomerSubscriptions = async ({ page, itemsPerPage }, id) => {
 const addNewSubscription = async () => {
     step.value = 2
     responseObj.value.loading = true
-    addSubscription(subscription.value.networkEntityId, subscription.value.planId).then(response => {
+    addSubscription(subscription.value.networkEntityId, subscription.value.planId, subscription.value.promotionId).then(response => {
         responseObj.value.loading = false
         responseObj.value.success = true
         responseObj.value.message = 'Subscription added successfully'
@@ -159,6 +167,7 @@ const addNewSubscription = async () => {
 
 function openNewSubscriptionDialog() {
     dialog.value = true
+    getCustomertAcceptedOffers();
 }
 
 function close() {
@@ -168,8 +177,7 @@ function close() {
     responseObj.value.success = false
     responseObj.value.message = ''
     deviceType.value = ''
-    subscription.value.networkEntityId = null
-    subscription.value.planId = null
+    subscription.value = Object.assign({}, defaultSubscription)
 }
 
 const getNetworkEntitiesOfCustomer = async (deviceType) => {
@@ -220,7 +228,18 @@ function changeActiveStatus() {
     }).catch(error => {
         console.log(error)
     })
-    // api call to change active status
+}
+
+function getCustomertAcceptedOffers(){
+    promotionsLoading.value = true;
+    getAcceptedOfferedPromotionsByCustomerAndType(props.id, 'PLAN', '').then(response => {
+    promotions.value = response.content.map(offeredPromotion => {
+      return {
+        id: offeredPromotion.promotion.id,
+        name: offeredPromotion.promotion.name
+      };
+    });
+  }).then(() => promotionsLoading.value = false);
 }
 
 watch(deviceType, (newValue) => {

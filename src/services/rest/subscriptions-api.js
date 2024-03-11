@@ -16,7 +16,7 @@ export const getSubscriptions = async ({page, itemsPerPage, search}) => {
     })
 }
 
-export const addSubscription = async (networkEntityId, planId, startDate, promotionId) => {
+export const addSubscription = async (networkEntityId, planId, promotionId, startDate) => {
     return await http.post('/crm/subscriptions', {
         networkEntity: networkEntityId,
         planId: planId,

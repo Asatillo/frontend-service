@@ -5,7 +5,7 @@
       <v-card-text>
         <v-window v-model="step">
           <v-window-item :value="1">
-            <v-row>
+            <v-row class="ma-1">
               <v-col cols="6">
                 <v-autocomplete v-model="editedItem.customer" label="Customer" :items="customers" required
                   item-title="name" item-value="id" @update:search="getCustomers"
@@ -216,7 +216,7 @@ function getNetworkEntities() {
 function save() {
   step.value = 2;
   responseObj.value.loading = true;
-  addSubscription(editedItem.value.networkEntity, editedItem.value.plan, editedItem.value.startDate, editedItem.value.promotion).then((response) => {
+  addSubscription(editedItem.value.networkEntity, editedItem.value.plan, editedItem.value.promotion, editedItem.value.startDate).then((response) => {
     if (response) {
       responseObj.value.message = 'Subscription added successfully';
       responseObj.value.success = true;
