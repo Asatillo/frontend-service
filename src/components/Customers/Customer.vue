@@ -132,7 +132,7 @@
             <v-card-text>
                 <v-window v-model="tab">
                     <v-window-item value="subscriptions">
-                        <CustomerSubscriptions v-bind:id=route.params.id />
+                        <CustomerSubscriptions :id=route.params.id @invoice-created="updateInvoiceTable"/>
                     </v-window-item>
 
                     <v-window-item value="devices">
@@ -255,6 +255,6 @@ const changeCustomerActive = async (id, mode) => {
 };
 
 function updateInvoiceTable() {
-    salesTable.value.fetchSales({page: 1, itemsPerPage: 15});
+    salesTable.value.updateFromParent();
 }
 </script>

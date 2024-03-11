@@ -1,6 +1,7 @@
 <template>
     <v-data-table-server :items="sales" @update:options="fetchSales" :items-per-page-options="[15, 20, 25]"
-        :loading="loading" v-model:items-per-page="itemsPerPage" :items-length="totalItems" :headers="headers" :search="search">
+        :loading="loading" v-model:items-per-page="itemsPerPage" :items-length="totalItems" :headers="headers" :search="search"
+        v-model:page="page">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
                 <v-text-field class="ma-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
@@ -41,6 +42,7 @@ const props = defineProps(['id'])
 const sales = ref([])
 const search = ref('')
 const itemsPerPage = ref(15)
+const page = ref(1)
 const loading = ref(false)
 const totalItems = ref(0)
 const headers = ref([
@@ -57,7 +59,7 @@ const headers = ref([
     { title: 'Create date', value: 'createDate' },
 ])
 
-defineExpose({ fetchSales })
+defineExpose({ updateFromParent })
 
 function fetchSales({ page, itemsPerPage, search }) {
     getSalesByCustomerId(props.id, page, itemsPerPage, search).then(response => {
@@ -102,5 +104,9 @@ function getServiceNameById(id) {
     return getServiceById(id).then(service => {
         return service.name
     })
+}
+
+function updateFromParent() {
+    fetchSales({ page: page.value, itemsPerPage: itemsPerPage.value, search: search.value })
 }
 </script>

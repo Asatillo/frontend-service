@@ -92,6 +92,8 @@ import { watch } from 'vue';
 
 const props = defineProps(['id'])
 
+const emit = defineEmits(['invoice-created'])
+
 const headers = ref([
     { title: 'ID', key: 'id' },
     { title: 'Active', key: 'active' },
@@ -141,6 +143,7 @@ const addNewSubscription = async () => {
         responseObj.value.success = true
         responseObj.value.message = 'Subscription added successfully'
         requestServerItems({ page: 1, itemsPerPage: itemsPerPage.value })
+        emit('invoice-created')
         setTimeout(() => {
             if (dialog.value) {
                 close()
