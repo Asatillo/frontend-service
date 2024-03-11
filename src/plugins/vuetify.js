@@ -48,7 +48,10 @@ export default createVuetify({
     },
     VDataTableServer: {
       density: 'comfortable',
-    }
+    },
+    VChip: {
+      size: 'small',
+    },
   }
 }
 )
