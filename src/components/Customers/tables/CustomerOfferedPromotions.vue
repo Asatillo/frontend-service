@@ -1,7 +1,7 @@
 <template>
     <v-data-table-server :items="offeredPromotions" @update:options="fetchOfferedPromotions"
         :items-per-page-options="[15, 20, 25]" :loading="loading" :headers="headers"
-        v-model:items-per-page="itemsPerPage" :items-length="totalItems" :search="search">
+        v-model:items-per-page="itemsPerPage" :items-length="totalItems" :search="search" hover v-model:page="page">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
                 <v-text-field class="ml-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
@@ -23,22 +23,26 @@
         <template v-slot:item.decision="{ item }">
             <v-chip v-if="item.decision == 'ACCEPTED'" color="green" text-color="white">Accepted</v-chip>
             <v-chip v-else-if="item.decision == 'REJECTED'" color="red" text-color="white">Rejected</v-chip>
-            <v-chip v-else-if="item.decision == 'PENDING'" color="blue" text-color="white">Pending</v-chip>
+            <v-chip @click="openChangeDecisionDialog(item.id)" v-else-if="item.decision == 'PENDING'" color="blue" text-color="white">Pending</v-chip>
         </template>
     </v-data-table-server>
-    <NewPromotionOfferDialog ref="newPromotionOfferDialog" :id="props.id" @update-promotions="fetchOfferedPromotions({page: 1, itemsPerPage: itemsPerPage, search})"/>
+    <NewPromotionOfferDialog ref="newPromotionOfferDialog" :id="props.id" @update-promotions="fetchOfferedPromotions({page: page, itemsPerPage: itemsPerPage, search})"/>
+    <MakeDecisionForPromotionDialog ref="makeDecisionForPromotionDialog" @update-promotion="updateDecidedPromotion"/>
 </template>
 
 <script setup>
 import NewPromotionOfferDialog from '@/components/customers/dialogs/NewPromotionOfferDialog.vue'
+import MakeDecisionForPromotionDialog from '@/components/customers/dialogs/MakeDecisionForPromotionDialog.vue'
 import { ref } from 'vue'
 import { getOfferedPromotionsByCustomerId } from '@/services/rest/offered-promotions-api'
 import { formatDateString } from '@/services/date-formatting'
 
 const newPromotionOfferDialog = ref(null) 
+const makeDecisionForPromotionDialog = ref(null)
 
 const props = defineProps(['id'])
 const search = ref('')
+const page = ref(1)
 const offeredPromotions = ref([])
 const loading = ref(false)
 const itemsPerPage = ref(15)
@@ -64,5 +68,13 @@ function fetchOfferedPromotions({ page, itemsPerPage, search }) {
 
 function openMakeOfferDialog() {
     newPromotionOfferDialog.value.openNewPromotionDialog()
+}
+
+function openChangeDecisionDialog(id) {
+    makeDecisionForPromotionDialog.value.openChangeDecisionDialog(id)
+}
+
+function updateDecidedPromotion(promotion) {
+    offeredPromotions.value = offeredPromotions.value.map(p => p.id === promotion.id ? promotion : p)
 }
 </script>

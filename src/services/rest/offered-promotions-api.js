@@ -31,3 +31,11 @@ export const addOfferedPromotion = async (data) => {
         console.log(err);
     })
 }
+
+export const makeDecision = async (id, decision) => {
+    return await http.patch(`/sales/promotions/offered/${id}/${decision}`, {}).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
