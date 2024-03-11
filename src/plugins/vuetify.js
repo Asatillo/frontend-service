@@ -47,6 +47,7 @@ export default createVuetify({
       color: 'transparent',
     },
     VDataTableServer: {
+      hover: true,
       density: 'comfortable',
     },
     VChip: {
