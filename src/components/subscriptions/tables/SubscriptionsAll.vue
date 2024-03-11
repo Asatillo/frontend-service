@@ -138,7 +138,6 @@ const customersLoading = ref(false);
 const customers = ref([]);
 const plans = ref([]);
 const networkEntities = ref([]);
-const promotions = ref([]);
 const deviceType = ref(null);
 const itemToChange = ref(null);
 
@@ -225,7 +224,6 @@ function close() {
   editedItem.value = Object.assign({}, defaultItem);
   plans.value = Object.assign([]);
   networkEntities.value = Object.assign([]);
-  promotions.value = Object.assign([]);
 }
 
 function openChangeActiveDialog(promotion) {
