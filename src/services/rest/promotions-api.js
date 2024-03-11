@@ -8,6 +8,14 @@ export const getPromotions = async (page, size, search) => {
     });
 };
 
+export const getActivePromotions = async (page, size, search) => {
+    return await http.get(`/sales/promotions/active?size=${size}&page=${page}&search=${search}`).then(response => {
+        return response.data;
+    }).catch(error => {
+        console.error('Error getting active promotions:', error.message);
+    });
+};
+
 export const addPromotion = async (promotion) => {
     return await http.post('/sales/promotions', promotion).then(response => {
         return response.data;
