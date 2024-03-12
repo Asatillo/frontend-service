@@ -21,10 +21,10 @@
     </v-data-table-server>
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
         <v-card>
-            <v-card-title class="text-h6">New Number</v-card-title>
+            <v-card-title class="text-h6 text-center">New Number</v-card-title>
             <v-card-text>
                 <v-window v-model="step">
-                    <v-window-item :value="1">
+                    <v-window-item :value="1" class="ma-1">
                         <v-select v-model="newDeviceType" label="Device type" :items="['MOBILE', 'ROUTER']" required
                             item-value="id" item-title="brand"></v-select>
                         <v-autocomplete :disabled="!newDeviceType" v-model="newEntityId" label="Number" :items="availableEntities"
