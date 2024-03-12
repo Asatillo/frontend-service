@@ -47,8 +47,7 @@
                         <v-select v-model="subscription.planId" label="Plan" required :disabled="!deviceType"
                             :items="availablePlans" item-value="id" item-title="name">
                         </v-select>
-                        <v-select v-model="subscription.promotionId" :items="promotions" label="Promotion" item-title="name"
-                            item-value="id" :loading="promotionsLoading" density="comfortable"></v-select>
+                        <OfferedPromotionsByCustomerAndType v-model="subscription.promotionId" :promotion="subscription.promotionId" :customerId="props.id" type="PLAN"/>
                     </v-window-item>
                     <v-window-item :value="2">
                         <v-progress-linear v-if="responseObj.loading" indeterminate color="primary"></v-progress-linear>
@@ -89,9 +88,9 @@ import { ref } from 'vue'
 import { getSubscriptionsByCustomer, changeSubscriptionStatus } from '@/services/rest/subscriptions-api'
 import { getNetworkEntitiesOfCustomerByType } from '@/services/rest/network-entities-api'
 import { getActivePlansByType } from '@/services/rest/plans-api'
-import { getAcceptedOfferedPromotionsByCustomerAndType } from '@/services/rest/offered-promotions-api';
 import { addSubscription } from '@/services/rest/subscriptions-api'
 import { formatDateString } from '@/services/date-formatting.js'
+import OfferedPromotionsByCustomerAndType from '@/components/offered-promotions/OfferedPromotionsByCustomerAndType.vue';
 import { watch } from 'vue';
 
 const props = defineProps(['id'])
@@ -127,8 +126,6 @@ const defaultSubscription = {
 const subscription = ref(Object.assign({}, defaultSubscription))
 const availableNetworkEntities = ref([])
 const availablePlans = ref([])
-const promotions = ref([])
-const promotionsLoading = ref(false)
 
 function requestServerItems({ page, itemsPerPage }) {
     getCustomerSubscriptions({ page, itemsPerPage }, props.id)
@@ -167,7 +164,6 @@ const addNewSubscription = async () => {
 
 function openNewSubscriptionDialog() {
     dialog.value = true
-    getCustomertAcceptedOffers();
 }
 
 function close() {
@@ -228,18 +224,6 @@ function changeActiveStatus() {
     }).catch(error => {
         console.log(error)
     })
-}
-
-function getCustomertAcceptedOffers(){
-    promotionsLoading.value = true;
-    getAcceptedOfferedPromotionsByCustomerAndType(props.id, 'PLAN', '').then(response => {
-    promotions.value = response.content.map(offeredPromotion => {
-      return {
-        id: offeredPromotion.promotion.id,
-        name: offeredPromotion.promotion.name
-      };
-    });
-  }).then(() => promotionsLoading.value = false);
 }
 
 watch(deviceType, (newValue) => {

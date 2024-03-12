@@ -9,6 +9,7 @@
                             item-value="id" item-title="brand"></v-select>
                         <v-select :disabled="!newDeviceType" v-model="newDeviceTemplate" label="Device template"
                             :items="availableDevices" required chips item-title="name" item-value="id"></v-select>
+                        <OfferedPromotionsByCustomerAndType v-model="promotion" :promotion="promotion"  :customerId="props.id" type="DEVICE"></OfferedPromotionsByCustomerAndType>
                     </v-window-item>
                     <v-window-item :value="2">
                         <div v-if="!responseObj.loading" class="pa-4 text-center">
@@ -23,7 +24,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="close">Close</v-btn>
-                <v-btn v-if="step == 1" color="primary" text @click="sellDevice(id, newDeviceTemplate)"
+                <v-btn v-if="step == 1" color="primary" text @click="sellDevice(id, newDeviceTemplate, promotion)"
                     :disabled="!newDeviceTemplate">Sell</v-btn>
             </v-card-actions>
         </v-card>
@@ -57,6 +58,7 @@ import { ref } from 'vue'
 import { getDevicesByCustomer, getAvailableDevicesWithoutPagination, sellDeviceToCustomer } from '@/services/rest/devices-api'
 import { formatDateString, convertPeriodToDate } from '@/services/date-formatting.js'
 import { watch } from 'vue';
+import OfferedPromotionsByCustomerAndType from '@/components/offered-promotions/OfferedPromotionsByCustomerAndType.vue';
 
 const props = defineProps(['id'])
 
@@ -67,6 +69,7 @@ const step = ref(1)
 const availableDevices = ref([])
 const newDeviceType = ref(null)
 const newDeviceTemplate = ref(null)
+const promotion = ref(null)
 const dialog = ref(false)
 const itemsPerPage = ref(15)
 const totalItems = ref(0)
@@ -96,16 +99,17 @@ function openSellDeviceDialog() {
 
 function close() {
     dialog.value = false
+    promotion.value = null
     step.value = 1
     responseObj.value = { loading: false, success: false, message: '' }
     newDeviceType.value = null
     newDeviceTemplate.value = null
 }
 
-function sellDevice(customerId, deviceTemplateId) {
+function sellDevice(customerId, deviceTemplateId, promotionId = null) {
     step.value = 2
     responseObj.value.loading = true
-    sellDeviceToCustomer(customerId, deviceTemplateId).then(response => {
+    sellDeviceToCustomer(customerId, deviceTemplateId, promotionId).then(response => {
         if (response) {
             responseObj.value.message = 'Device sold successfully'
             responseObj.value.success = true
