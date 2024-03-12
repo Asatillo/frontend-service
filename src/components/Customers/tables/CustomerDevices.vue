@@ -1,14 +1,14 @@
 <template>
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
         <v-card>
-            <v-card-title class="text-h6">Sell device</v-card-title>
+            <v-card-title class="text-h6 text-center">Sell device</v-card-title>
             <v-card-text>
                 <v-window v-model="step">
-                    <v-window-item :value="1">
+                    <v-window-item :value="1" class="ma-1">
                         <v-select v-model="newDeviceType" label="Device type" :items="['MOBILE', 'ROUTER']" required
                             item-value="id" item-title="brand"></v-select>
                         <v-select :disabled="!newDeviceType" v-model="newDeviceTemplate" label="Device template"
-                            :items="availableDevices" required chips item-title="name" item-value="id"></v-select>
+                            :items="availableDevices" required chips item-title="name" item-value="id" density="comfortable"></v-select>
                         <OfferedPromotionsByCustomerAndType v-model="promotion" :promotion="promotion"  :customerId="props.id" type="DEVICE"></OfferedPromotionsByCustomerAndType>
                     </v-window-item>
                     <v-window-item :value="2">
@@ -23,7 +23,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="close">Close</v-btn>
+                <v-btn color="secondary" text @click="close">Close</v-btn>
                 <v-btn v-if="step == 1" color="primary" text @click="sellDevice(id, newDeviceTemplate, promotion)"
                     :disabled="!newDeviceTemplate">Sell</v-btn>
             </v-card-actions>

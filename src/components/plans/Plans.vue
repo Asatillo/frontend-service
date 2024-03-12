@@ -2,11 +2,11 @@
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
         <v-card>
             <v-card-title>
-                <div class="text-h6">{{ editedItem.id ? "Edit Plan" : "New Plan" }}</div>
+                <div class="text-h6 text-center">{{ editedItem.id ? "Edit Plan" : "New Plan" }}</div>
             </v-card-title>
             <v-card-text>
                 <v-window v-model="step">
-                    <v-window-item :value="1">
+                    <v-window-item :value="1" class="ma-1">
                         <v-text-field v-model="editedItem.name" label="Name" required></v-text-field>
                         <v-textarea v-model="editedItem.description" auto-grow label="Description" required
                             rows="3"></v-textarea>
@@ -25,10 +25,10 @@
                         </v-row>
                         <v-text-field v-model="editedItem.price" type="number" label="Price" required></v-text-field>
                         <v-select v-model="editedItem.designatedDeviceType" label="Designated device type"
-                            :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect" chips></v-select>
+                            :items="['MOBILE', 'ROUTER']" required @update:model-value="handleTypeSelect" chips density="comfortable"></v-select>
                         <v-select v-model="editedItem.services" :disabled="!editedItem.designatedDeviceType"
                             label="Services" :items="services[editedItem.designatedDeviceType]" multiple required chips
-                            item-title="name" item-value="id"></v-select>
+                            item-title="name" item-value="id" density="comfortable"></v-select>
                     </v-window-item>
                     <v-window-item :value="2">
                         <div v-if="!responseObj.loading" class="pa-4 text-center">
@@ -43,7 +43,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red" @click="close">Cancel</v-btn>
+                <v-btn color="warning" @click="close">Cancel</v-btn>
                 <v-btn v-if="step == 1" color="primary" text @click="save">Save</v-btn>
             </v-card-actions>
         </v-card>

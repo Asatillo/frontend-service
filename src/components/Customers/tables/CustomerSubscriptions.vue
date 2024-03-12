@@ -33,10 +33,10 @@
     </v-data-table-server>
     <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
         <v-card>
-            <v-card-title class="text-h6">New Subscription</v-card-title>
+            <v-card-title class="text-h6 text-center">New Subscription</v-card-title>
             <v-card-text>
                 <v-window v-model="step">
-                    <v-window-item :value="1">
+                    <v-window-item :value="1"  class="ma-1">
                         <v-select v-model="deviceType" label="Device type" :items="['MOBILE', 'ROUTER']" required
                             item-value="id" item-title="brand"></v-select>
                         <v-select v-model="subscription.networkEntityId" label="Phone number" required chips
@@ -53,8 +53,7 @@
                         <v-progress-linear v-if="responseObj.loading" indeterminate color="primary"></v-progress-linear>
                         <div v-else class="pa-4 text-center">
                             <v-icon size="80" color="green">mdi-check</v-icon>
-                            <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :
-        'Fail' }}!</h3>
+                            <h3 class="text-h6 font-weight-light mb-2">{{ responseObj.success ? 'Success' :'Fail' }}!</h3>
                             <span class="text-caption text-grey">{{ responseObj.message }}</span>
                         </div>
                     </v-window-item>
@@ -62,7 +61,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="close">Close</v-btn>
+                <v-btn color="secondary" text @click="close">Close</v-btn>
                 <v-btn v-if="step == 1" color="primary" text @click="addNewSubscription"
                     :disabled="!subscription.planId || !subscription.networkEntityId">Save</v-btn>
             </v-card-actions>
