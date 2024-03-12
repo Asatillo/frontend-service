@@ -136,7 +136,6 @@ async function handleSignup() {
     } else {
       loading.value = false;
       step.value--;
-      console.log(response);
       error.value = 'Authentication failed';
     }
   }).catch(error => {
