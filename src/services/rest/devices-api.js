@@ -44,9 +44,10 @@ export const getAvailableDevicesWithoutPagination = async (type) => {
 }
 
 
-export const sellDeviceToCustomer = async (customerId, deviceId) => {
+export const sellDeviceToCustomer = async (customerId, deviceId, promotionId) => {
     return await http.post(`/crm/devices/${deviceId}/sell`, {
         customerId: customerId,
+        promotionId: promotionId,
     }).then(response => {
         return response.data;
     }).catch(err => {
