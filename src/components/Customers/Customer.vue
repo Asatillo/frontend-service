@@ -136,19 +136,19 @@
                     </v-window-item>
 
                     <v-window-item value="devices">
-                        <CustomerDevices v-bind:id=route.params.id @invoice-created="updateInvoiceTable"/>
+                        <CustomerDevices :id=route.params.id @invoice-created="updateInvoiceTable"/>
                     </v-window-item>
 
                     <v-window-item value="phone_numbers">
-                        <CustomerNetworkEntities v-bind:id=route.params.id />
+                        <CustomerNetworkEntities :id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="sales">
-                        <CustomerSales ref="salesTable" v-bind:id=route.params.id />
+                        <CustomerSales ref="salesTable" :id=route.params.id />
                     </v-window-item>
 
                     <v-window-item value="offers">
-                        <CustomerOfferedPromotions v-bind:id=route.params.id />
+                        <CustomerOfferedPromotions :id=route.params.id />
                     </v-window-item>
                 </v-window>
             </v-card-text>
