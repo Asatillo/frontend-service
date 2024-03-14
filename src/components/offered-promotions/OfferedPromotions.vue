@@ -8,7 +8,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import OfferedPromotionsTable from '@/components/offered-promotions/OfferedPromotionsTable.vue'
 
 </script>
