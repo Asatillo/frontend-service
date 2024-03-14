@@ -2,12 +2,6 @@
     <v-container>
         <v-tabs v-model="tab" class="mb-6" @update:model-value="handleTabChange">
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-                <template v-slot:activator="{ props }">
-                    <v-btn color="primary" class="mt-4" @click="openNewDeviceDialog" v-bind="props">
-                        <v-icon left>mdi-plus</v-icon>
-                        <span>New Devices</span>
-                    </v-btn>
-                </template>
                 <v-card>
                     <v-card-title class="text-h6">Add New Devices</v-card-title>
                     <v-card-text>
@@ -40,6 +34,10 @@
             </v-dialog>
             <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" class="mx-2" single-line
                 hide-details v-on:update:model-value="fetchBySearch" ></v-text-field>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-btn color="primary" class="mt-2 mr-3" @click="openNewDeviceDialog" prepend-icon="mdi-plus">
+                New Devices
+            </v-btn>
             <v-tab v-for="value, key in tabs" :key="key" :value="key">{{ key }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">

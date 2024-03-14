@@ -2,12 +2,6 @@
     <v-container>
         <v-tabs v-model="tab" class="mb-6" @update:model-value="handleTabChange">
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-                <template v-slot:activator="{ props }">
-                    <v-btn color="primary" class="mt-3" @click="openNewTemplateDialog" v-bind="props">
-                        <v-icon left>mdi-plus</v-icon>
-                        <span>New Template</span>
-                    </v-btn>
-                </template>
                 <v-card>
                     <v-card-title class="text-h6">New Template</v-card-title>
                     <v-card-text>
@@ -60,20 +54,25 @@
             </v-dialog>
             <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" class="mx-3" single-line
                 hide-details v-on:update:model-value="fetchBySearch"></v-text-field>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-btn color="primary" class="mt-2 mr-3" @click="openNewTemplateDialog" prepend-icon="mdi-plus">
+                New Template
+            </v-btn>
             <v-tab v-for="value, key in tabs" :key="key" :value="key">{{ key }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="value, key in tabs" :key="key" :value="key">
                 <v-row v-if="value.templates.length">
                     <v-col cols="5" md="4" lg="3" v-for="deviceTemplate in value.templates" :key="deviceTemplate.id">
-                        <DeviceTemplateCard :deviceTemplate=deviceTemplate  />
+                        <DeviceTemplateCard :deviceTemplate=deviceTemplate />
                     </v-col>
                 </v-row>
                 <v-row v-else>
                     <v-container class="pa-2 text-center">
                         <v-container class="pl-0 py-2" style="max-width: inherit;">
                             <v-icon size="80" color="blue">mdi-google-downasaur</v-icon>
-                            <v-card-title class="pb-0" prepend-icon="">No {{ key.toLowerCase() }}s so far...</v-card-title>
+                            <v-card-title class="pb-0" prepend-icon="">No {{ key.toLowerCase() }}s so
+                                far...</v-card-title>
                         </v-container>
                     </v-container>
                 </v-row>
@@ -84,7 +83,7 @@
         </v-window>
     </v-container>
 </template>
-  
+
 <script setup>
 import { getDeviceTemplatesByType, addDeviceTemplate } from '@/services/rest/device-templates-api'
 import DeviceTemplateCard from '@/components/devices/DeviceTemplateCard.vue'
