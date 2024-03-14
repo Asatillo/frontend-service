@@ -23,6 +23,13 @@
             <span v-else>-</span>
         </template>
 
+        <template v-slot:item.communicationType="{ item }">
+            <v-chip v-if="item.communicationType === 'SMS'" prepend-icon="mdi-message">{{ item.communicationType }}</v-chip>
+            <v-chip v-else-if="item.communicationType === 'EMAIL'" prepend-icon="mdi-gmail">{{ item.communicationType }}</v-chip>
+            <v-chip v-else-if="item.communicationType === 'CALL'" prepend-icon="mdi-phone">{{ item.communicationType }}</v-chip>
+            <v-chip v-else-if="item.communicationType === 'IN_PERSON'" prepend-icon="mdi-account-voice">{{ item.communicationType }}</v-chip>
+        </template>
+
         <template v-slot:item.expiresAt="{ item }">
             {{ formatDateString(item.promotion.endDate) }}
         </template>
