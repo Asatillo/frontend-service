@@ -8,7 +8,7 @@
                 <v-container class="pa-0">
                     <v-row>
                         <v-col class="py-0" cols="12" v-if="!props.id">
-                            <v-autocomplete v-model="editedItem.customerId" label="To Customer" :items="customers" required
+                            <v-autocomplete v-model="editedItem.customerId" label="Customer" :items="customers" required
                                 chips item-title="name" item-value="id" @update:search="updateCustomers"
                                 no-data-text="No customer with such name">
                             </v-autocomplete>
