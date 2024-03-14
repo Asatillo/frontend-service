@@ -12,15 +12,17 @@
         <v-divider></v-divider>
 
         <v-list :lines="false" density="compact" nav>
-            <v-list-item @click="redirectToRoute(item.value)" v-for="item in menuItems" :title="item.title">
-                <template v-slot:prepend>
-                    <v-icon :icon="item.icon" size="18"></v-icon>
-                </template>
-            </v-list-item>
+            <template v-for="item in menuItems">
+                <v-list-item @click="redirectToRoute(item.value)" :title="item.title" v-if="isVisible(item.roleRequired)">
+                    <template v-slot:prepend>
+                        <v-icon :icon="item.icon" size="18"></v-icon>
+                    </template>
+                </v-list-item>
+            </template>
         </v-list>
 
         <template v-slot:append>
-            <v-list :lines="false" density="compact" nav>     
+            <v-list :lines="false" density="compact" nav>
                 <v-list-item @click="handleChangeTheme" :title="isDark ? 'Light mode' : 'Dark mode'">
                     <template v-slot:prepend>
                         <v-icon icon="mdi-theme-light-dark" size="18"></v-icon>
@@ -44,24 +46,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, } from 'vue'
+import { ref, onMounted, computed, } from 'vue'
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 
 const drawer = ref(true)
 const rail = ref(false)
-const menuItems = ref([
-    { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers' },
-    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions' },
-    { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales' },
-    { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions' },
-    { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions'},
-    { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans' },
-    { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users' },
-    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services' },
-    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices' },
-    { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities' },
-])
+const menuItems = [
+    { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers', roleRequired: 'AGENT' },
+    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions', roleRequired: 'AGENT' },
+    { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales', roleRequired: 'SALES' },
+    { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions', roleRequired: 'SALES' },
+    { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions', roleRequired: 'SALES' },
+    { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans', roleRequired: 'AGENT' },
+    { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users', roleRequired: 'ADMIN' },
+    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: 'AGENT' },
+    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: 'AGENT' },
+    { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities', roleRequired: 'AGENT' },
+]
 const user = ref(null)
 const image = ref('')
 const username = ref('')
@@ -83,6 +85,10 @@ function handleChangeTheme() {
     vuetify.theme.global.name.value = isDark.value ? 'light' : 'dark'
     isDark.value = !isDark.value
 };
+
+function isVisible(role) {
+    return user.value && Object.values(user.value.roles).includes(role)
+}
 
 onMounted(() => {
     isDark.value = vuetify.theme.global.name.value == 'dark'
@@ -108,7 +114,7 @@ onMounted(() => {
 }
 
 /* TODO: place it to the global css file */
-.v-table{
+.v-table {
     border-radius: 13px;
     padding: 10px;
 }
