@@ -3,11 +3,12 @@
         <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
             class="ma-1"></v-text-field>
         <v-divider class="mx-4" inset vertical></v-divider>
-        <v-btn prepend-icon="mdi-plus" color="blue-darken-1">Make Offer</v-btn>
+        <v-btn prepend-icon="mdi-plus" color="blue-darken-1" @click="openMakeOfferDialog">Make Offer</v-btn>
     </v-toolbar>
+    <NewPromotionOfferDialog ref="offerPromotionDialog" @update-promotions="updateOfferedPromotionsTable" />
     <v-data-table-server :items="offeredPromotions" :items-length="totalItems" :itemsPerPageOptions="[15, 20, 25]"
         :loading="loading" @update:options="getAllOfferedPromotions" :search="search"
-        v-model:itemsPerPage="itemsPerPage" :headers="headers">
+        v-model:itemsPerPage="itemsPerPage" :headers="headers" v-model:page="page">
         <template v-slot:item.offerDate="{ item }">
             {{ formatDateString(item.offerDate) }}
         </template>
@@ -39,12 +40,16 @@ import { ref } from 'vue'
 import { getOfferedPromotions } from '@/services/rest/offered-promotions-api'
 import { getCustomersFullName } from '@/services/rest/customers-api'
 import { formatDateString } from '@/services/date-formatting'
+import NewPromotionOfferDialog from '@/components/offered-promotions/dialog/NewPromotionOfferDialog.vue'
+
+const offerPromotionDialog = ref(null)
 
 const offeredPromotions = ref([])
 const loading = ref(false)
 const totalItems = ref(0)
 const itemsPerPage = ref(15)
 const search = ref('')
+const page = ref(1)
 
 const headers = ref([
     { title: 'ID', value: 'id' },
@@ -76,5 +81,13 @@ const getCutomersFullName = async (customerId) => {
     }).catch(error => {
         console.log(error)
     })
+}
+
+function openMakeOfferDialog() {
+    offerPromotionDialog.value.openNewPromotionDialog()
+}
+
+function updateOfferedPromotionsTable(){
+    getAllOfferedPromotions({ page: page.value, itemsPerPage: itemsPerPage.value, search: search.value })
 }
 </script>

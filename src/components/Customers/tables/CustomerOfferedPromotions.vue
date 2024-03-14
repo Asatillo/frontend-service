@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import NewPromotionOfferDialog from '@/components/customers/dialogs/NewPromotionOfferDialog.vue'
+import NewPromotionOfferDialog from '@/components/offered-promotions/dialog/NewPromotionOfferDialog.vue'
 import MakeDecisionForPromotionDialog from '@/components/customers/dialogs/MakeDecisionForPromotionDialog.vue'
 import { ref } from 'vue'
 import { getOfferedPromotionsByCustomerId } from '@/services/rest/offered-promotions-api'

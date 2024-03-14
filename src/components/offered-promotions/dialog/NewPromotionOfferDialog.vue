@@ -7,13 +7,19 @@
             <v-card-text>
                 <v-container class="pa-0">
                     <v-row>
+                        <v-col class="py-0" cols="12" v-if="!props.id">
+                            <v-autocomplete v-model="editedItem.customerId" label="To Customer" :items="customers" required
+                                chips item-title="name" item-value="id" @update:search="updateCustomers"
+                                no-data-text="No customer with such name">
+                            </v-autocomplete>
+                        </v-col>
                         <v-col class="py-0" cols="12">
                             <v-autocomplete v-model="editedItem.promotionId" label="Promotion" :items="promotions"
                                 item-title="name" item-value="id" :search="promotionsSearch"></v-autocomplete>
                         </v-col>
                         <v-col class="py-0" cols="12">
-                            <v-select v-model="editedItem.communicationType" label="Communication type" :items="communticationTypes"
-                            item-title="name" item-value="value"></v-select>
+                            <v-select v-model="editedItem.communicationType" label="Communication type"
+                                :items="communticationTypes" item-title="name" item-value="value"></v-select>
                         </v-col>
                         <v-col class="py-0" cols="12">
                             <v-select v-model="editedItem.decision" label="Decision"
@@ -33,8 +39,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref} from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { getActivePromotions } from '@/services/rest/promotions-api'
+import { searchCustomers } from '@/services/rest/customers-api'
 import { addOfferedPromotion } from '@/services/rest/offered-promotions-api'
 
 
@@ -43,6 +50,7 @@ defineExpose({ openNewPromotionDialog })
 const emit = defineEmits(['update-promotions'])
 
 const promotions = ref([])
+const customers = ref([])
 const promotionsSearch = ref('')
 const communticationTypes = [{
     name: 'SMS',
@@ -97,6 +105,12 @@ function save() {
     addOfferedPromotion(editedItem.value).then(response => {
         emit('update-promotions')
         close()
+    })
+}
+
+function updateCustomers(search) {
+    searchCustomers(search).then(response => {
+        customers.value = response
     })
 }
 </script>
