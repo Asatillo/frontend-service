@@ -45,7 +45,7 @@ const itemsPerPage = ref(15)
 const page = ref(1)
 const loading = ref(false)
 const totalItems = ref(0)
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Product', value: 'product' },
     { title: 'Product type', value: 'productType' },
@@ -57,7 +57,7 @@ const headers = ref([
     { title: 'Payment progress', value: 'paymentProgress' },
     { title: 'Payment date', value: 'paymentDate' },
     { title: 'Create date', value: 'createDate' },
-])
+]
 
 defineExpose({ updateFromParent })
 

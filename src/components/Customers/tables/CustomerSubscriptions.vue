@@ -96,7 +96,7 @@ const props = defineProps(['id'])
 
 const emit = defineEmits(['invoice-created'])
 
-const headers = ref([
+const headers = [
     { title: 'ID', key: 'id' },
     { title: 'Active', key: 'active' },
     { title: 'Plan', key: 'plan.name' },
@@ -106,7 +106,7 @@ const headers = ref([
     { title: 'End date', key: 'endDate' },
     { title: 'Price (HUF)', key: 'plan.price', align: 'end' },
     { title: 'Actions', value: 'actions', align: 'center', sortable: false }
-]);
+];
 const subscriptions = ref([])
 const deviceType = ref('')
 const step = ref(1)

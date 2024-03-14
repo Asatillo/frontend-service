@@ -152,7 +152,7 @@ const defaultItem = {
 };
 const editedItem = ref(Object.assign({}, defaultItem));
 
-const headers = ref([
+const headers = [
   { title: 'Id', value: 'id', align: 'center' },
   { title: 'Active', value: 'active', align: 'center' },
   { title: 'Customer', value: 'customer', align: 'center' },
@@ -161,7 +161,7 @@ const headers = ref([
   { title: 'Start Date', value: 'startDate', align: 'right' },
   { title: 'End Date', value: 'endDate', align: 'right' },
   { title: 'Actions', value: 'actions', align: 'center' }
-]);
+]
 
 function requestServerItems({ page, itemsPerPage, search }) {
   loading.value = true;

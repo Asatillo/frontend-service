@@ -55,7 +55,7 @@ const search = ref('')
 const itemsPerPage = ref(15)
 const loading = ref(false)
 const totalItems = ref(0)
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Created at', value: 'createDate' },
     { title: 'Customer', value: 'customer' },
@@ -67,7 +67,7 @@ const headers = ref([
     { title: 'Amount', value: 'amount', align: 'end' },
     { title: 'Discount', value: 'discountAmount', align: 'end' },
     { title: 'Total', value: 'totalAmount', align: 'end' },
-])
+]
 
 function fetchSales({ page, itemsPerPage, search }) {
     loading.value = true

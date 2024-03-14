@@ -58,13 +58,13 @@ import { ref } from 'vue'
 import router from '@/router';
 import { assignNetworkEntityToCustomer, getNetworkEntities } from '@/services/rest/network-entities-api'
 
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Active', value: 'active' },
     { title: 'Owner', value: 'owner' },
     { title: 'Phone Number/SSID', value: 'networkIdentifier' },
     { title: 'Tag', value: 'tag', align: 'center' },
-])
+]
 const search = ref('')
 const dialog = ref(false)
 const totalItems = ref(0)

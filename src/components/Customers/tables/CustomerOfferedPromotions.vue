@@ -56,7 +56,7 @@ const offeredPromotions = ref([])
 const loading = ref(false)
 const itemsPerPage = ref(15)
 const totalItems = ref(0)
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Description', value: 'promotion.description' },
     { title: 'Product', value: 'promotion.productType', align: 'center'},
@@ -65,7 +65,7 @@ const headers = ref([
     { title: 'Communication', value: 'communicationType', align: 'center' },
     { title: 'Decision date', value: 'decisionDate', align: 'center' },
     { title: 'Decision', value: 'decision', align: 'center' },
-])
+]
 
 function fetchOfferedPromotions({ page, itemsPerPage, search }) {
     loading.value = true

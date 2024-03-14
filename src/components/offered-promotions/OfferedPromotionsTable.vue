@@ -51,7 +51,7 @@ const itemsPerPage = ref(15)
 const search = ref('')
 const page = ref(1)
 
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Customer', value: 'customerId' },
     { title: 'Description', value: 'promotion.description' },
@@ -60,7 +60,7 @@ const headers = ref([
     { title: 'Communication', value: 'communicationType', align: 'center' },
     { title: 'Decision date', value: 'decisionDate', align: 'center' },
     { title: 'Decision', value: 'decision', align: 'center' },
-])
+]
 
 const getAllOfferedPromotions = async ({ page, itemsPerPage, search }) => {
     loading.value = true

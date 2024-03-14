@@ -129,7 +129,7 @@ const defaultItem = ref({
 const editedItem = ref(Object.assign({}, defaultItem.value));
 const search = ref('');
 const dialogPurpose = ref('New Customer');
-const headers = ref([
+const headers = [
     { title: "Active", key: 'active', sortable: false },
     { title: 'Name', key: 'name', sortable: true },
     { title: 'Birth date', key: 'dob', sortable: true },
@@ -140,7 +140,7 @@ const headers = ref([
     { title: "Wired internet", key: "wiredInternetAvailable", sortable: false, align: "center" },
     { title: "Actions", key: "actions", sortable: false, align: "center" }
 
-])
+]
 const totalItems = ref(0);
 const customers = ref([]);
 const loading = ref(false);

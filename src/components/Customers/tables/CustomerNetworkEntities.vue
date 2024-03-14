@@ -59,12 +59,12 @@ import { watch } from 'vue';
 
 const props = defineProps(['id'])
 
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Active', value: 'active' },
     { title: 'Phone Number/SSID', value: 'networkIdentifier' },
     { title: 'Tag', value: 'tag', align: 'center' },
-])
+]
 const search = ref('')
 const dialog = ref(false)
 const totalItems = ref(0)

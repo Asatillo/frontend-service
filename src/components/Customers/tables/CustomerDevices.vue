@@ -75,13 +75,13 @@ const itemsPerPage = ref(15)
 const totalItems = ref(0)
 const search = ref('')
 const responseObj = ref({ loading: false, success: null, message: '' })
-const headers = ref([
+const headers = [
     { title: 'ID', value: 'id' },
     { title: 'Name', value: 'name' },
     { title: 'Purchase Date', value: 'purchaseDate' },
     { title: 'Warranty period', value: 'warrantyPeriod' },
     { title: 'Warranty ends', value: 'WarrantyEndDate' },
-])
+]
 
 const requestServerItems = async({ page, itemsPerPage, sortBy, groupBy, search }) => {
     getDevicesByCustomer(props.id, { page, itemsPerPage, search }).then(response => {

@@ -129,7 +129,7 @@ const defaultItem = ref({
     active: true
 });
 const editedItem = ref(Object.assign({}, defaultItem.value));
-const headers = reactive([
+const headers = [
     { title: 'Name', key: 'name', align: 'left', sortable: true },
     { title: 'Active', key: 'active', align: 'center', sortable: false },
     { title: 'Type', key: 'type', align: 'left', sortable: false },
@@ -137,7 +137,7 @@ const headers = reactive([
     { title: 'Device type', key: 'designatedDeviceType', align: 'center', sortable: false },
     { title: 'Price (HUF)', key: 'price', align: 'right', sortable: false },
     { title: 'Actions', key: 'actions', sortable: false, sortable: false },
-]);
+]
 
 const getAllServices = async ({ page, itemsPerPage, search }) => {
     loading.value = true;
