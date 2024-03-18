@@ -76,15 +76,15 @@
             </template>
 
             <template v-slot:item.type="{ item }">
-                <v-icon v-if="item.type == 'DATA'" color="blue">mdi-web</v-icon>
-                <v-icon v-else-if="item.type == 'VOICE'" color="green">mdi-phone</v-icon>
-                <v-icon v-else-if="item.type == 'SMS'" color="orange">mdi-message</v-icon>
+                <v-chip v-if="item.type == 'DATA'" color="primary" prepend-icon="mdi-web">Data</v-chip>
+                <v-chip v-else-if="item.type == 'VOICE'" color="success" prepend-icon="mdi-phone">Voice</v-chip>
+                <v-chip v-else-if="item.type == 'SMS'" color="orange" prepend-icon="mdi-message">SMS</v-chip>
             </template>
 
             <template v-slot:item.designatedDeviceType="{ item }">
-                <v-icon v-if="item.designatedDeviceType == 'MOBILE'" color="green">mdi-cellphone</v-icon>
-                <v-icon v-else color="blue">mdi-router-wireless</v-icon>
-                <span>{{ item.designatedDeviceType }}</span>
+                <v-chip v-if="item.designatedDeviceType == 'MOBILE'" color="green" prepend-icon="mdi-cellphone">Mobile
+                </v-chip>
+                <v-chip v-else color="blue" prepend-icon="mdi-router-wireless">Router</v-chip>
             </template>
 
             <template v-slot:item.price="{ item }">
@@ -132,11 +132,11 @@ const editedItem = ref(Object.assign({}, defaultItem.value));
 const headers = [
     { title: 'Name', key: 'name', align: 'left', sortable: true },
     { title: 'Active', key: 'active', align: 'center', sortable: false },
-    { title: 'Type', key: 'type', align: 'left', sortable: false },
-    { title: 'Amount', key: 'amount', align: 'left', sortable: false },
+    { title: 'Type', key: 'type', align: 'center', sortable: false },
     { title: 'Device type', key: 'designatedDeviceType', align: 'center', sortable: false },
-    { title: 'Price (HUF)', key: 'price', align: 'right', sortable: false },
-    { title: 'Actions', key: 'actions', sortable: false, sortable: false },
+    { title: 'Amount', key: 'amount', align: 'end', sortable: false },
+    { title: 'Price (HUF)', key: 'price', align: 'end', sortable: false },
+    { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 
 const getAllServices = async ({ page, itemsPerPage, search }) => {
