@@ -16,14 +16,14 @@
         </template>
 
         <template v-slot:item.paymentProgress="{ item }">
-            <v-chip v-if="item.paymentProgress == 'PAID'" color="success" small
+            <v-chip v-if="item.paymentProgress == 'PAID'" color="success" 
                 :prepend-icon="item.paymentMethod == 'CASH' ? 'mdi-cash' : 'mdi-credit-card'">{{ item.paymentProgress
                 }}</v-chip>
-            <v-chip v-else-if="item.paymentProgress == 'PENDING'" color="warning" small prepend-icon="mdi-timer-sand">{{
+            <v-chip v-else-if="item.paymentProgress == 'PENDING'" color="warning" prepend-icon="mdi-timer-sand">{{
             item.paymentProgress }}</v-chip>
-            <v-chip v-else-if="item.paymentProgress == 'CANCELED'" color="error" small prepend-icon="mdi-cancel">{{
+            <v-chip v-else-if="item.paymentProgress == 'CANCELED'" color="error" prepend-icon="mdi-cancel">{{
             item.paymentProgress }}</v-chip>
-            <v-chip v-else-if="item.paymentProgress == 'REFUNDED'" color="info" small
+            <v-chip v-else-if="item.paymentProgress == 'REFUNDED'" color="info"
                 :prepend-icon="item.paymentMethod == 'CASH' ? 'mdi-cash-refund' : 'mdi-credit-card-refund'">{{
             item.paymentProgress }}</v-chip>
         </template>
