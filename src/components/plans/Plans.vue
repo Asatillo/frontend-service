@@ -70,8 +70,8 @@
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-btn color="primary" @click="openNewPlanDialog" prepend-icon="mdi-plus">New Plan</v-btn>
         </v-toolbar>
-        <v-row style="display: flex; flex-wrap: wrap;">
-            <v-col v-for="plan in plans" :key="plan.id" style="flex: 1 0 20%;">
+        <v-row>
+            <v-col v-for="plan in plans" :key="plan.id" cols="3">
                 <PlanCard :plan="plan" @edit="openEditPlanDialog" @changeActive="openChangeActiveDialog" />
             </v-col>
         </v-row>
