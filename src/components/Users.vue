@@ -13,21 +13,27 @@
         <v-window v-model="tab">
             <v-window-item v-for="value, key in tabs" :key="key" :value="key">
                 <v-row v-if="value.users.length">
-                    <v-col v-for="user in value.users" :key="user.id" cols="4">
+                    <v-col v-for="user in value.users" :key="user.id" xs="12" sm="6" md="4" lg="3" xl="3">
                         <v-card class="px-2 d-flex align-center" :elevation="1" rounded="lg">
-                            <v-avatar size="80" class="ml-1" :image="user.imageUrl"></v-avatar>
+                            <v-avatar size="90" class="ml-1" :image="user.imageUrl"></v-avatar>
                             <v-container class="px-0 py-2 text-truncate" style="max-width: inherit;">
                                 <v-card-title class="pr-0 pb-0 d-flex justify-space-between">
-                                    <p class="mt-2 text-truncate">{{ user.firstName }} {{ user.lastName }}</p>
+                                    <v-col>
+                                        <v-row class="text-truncate">{{ user.firstName }} </v-row>
+                                        <v-row class="text-truncate">{{ user.lastName }}</v-row>
+                                    </v-col>
                                     <v-menu>
                                         <template v-slot:activator="{ props }">
                                             <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
                                         </template>
-                                        <v-list>
-                                            <v-list-item>
-                                                <v-btn variant="text">Edit</v-btn>
+                                        <v-card>
+                                            <v-list-item @click="">
+                                                Edit
                                             </v-list-item>
-                                        </v-list>
+                                            <v-list-item @click="">
+                                                Delete
+                                            </v-list-item>
+                                        </v-card>
                                     </v-menu>
                                 </v-card-title>
                                 <v-container class="pt-0 pl-0">
