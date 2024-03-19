@@ -43,7 +43,7 @@
         <v-window v-model="tab">
             <v-window-item v-for="value, key in tabs" :key="key" :value="key">
                 <v-row v-if="value.devices.length">
-                    <v-col cols="5" md="4" lg="3" v-for="device in value.devices" :key="device.id">
+                    <v-col xs="6" sm="4" md="3" lg="2" v-for="device in value.devices" :key="device.id">
                         <DeviceCard :device=device @sell="openSellDeviceDialog" />
                     </v-col>
                 </v-row>

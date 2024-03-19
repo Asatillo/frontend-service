@@ -63,7 +63,7 @@
         <v-window v-model="tab">
             <v-window-item v-for="value, key in tabs" :key="key" :value="key">
                 <v-row v-if="value.templates.length">
-                    <v-col cols="5" md="4" lg="3" v-for="deviceTemplate in value.templates" :key="deviceTemplate.id">
+                    <v-col xs="6" sm="4" md="3" lg="2" v-for="deviceTemplate in value.templates" :key="deviceTemplate.id">
                         <DeviceTemplateCard :deviceTemplate=deviceTemplate />
                     </v-col>
                 </v-row>
