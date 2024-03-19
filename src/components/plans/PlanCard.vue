@@ -30,12 +30,10 @@
             <v-list-item prepend-icon="mdi-cash-multiple">
                 <v-list-item-title>{{ addCommasToPrice(plan.price) }} HUF</v-list-item-title>
             </v-list-item>
-            <v-chip-group class="pl-2">
-                <v-chip v-for="service in plan.services" :key="service.id" :value="service.name">
+                <v-chip class="ma-1" v-for="service in plan.services" :key="service.id" :value="service.name">
                     <v-icon>{{ icons[service.type] }}</v-icon>
                     <span> {{ service.name }}</span>
                 </v-chip>
-            </v-chip-group>
         </v-card-text>
     </v-card>
 </template>
