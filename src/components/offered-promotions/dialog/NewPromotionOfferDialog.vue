@@ -8,10 +8,7 @@
                 <v-container class="pa-0">
                     <v-row>
                         <v-col class="py-0" cols="12" v-if="!props.id">
-                            <v-autocomplete v-model="editedItem.customerId" label="Customer" :items="customers" required
-                                chips item-title="name" item-value="id" @update:search="updateCustomers"
-                                no-data-text="No customer with such name">
-                            </v-autocomplete>
+                            <SelectCustomer v-model="editedItem.customerId" :customerId="editedItem.customerId" />
                         </v-col>
                         <v-col class="py-0" cols="12">
                             <v-autocomplete v-model="editedItem.promotionId" label="Promotion" :items="promotions"
@@ -39,9 +36,9 @@
 </template>
 
 <script setup>
+import SelectCustomer from '@/components/customers/components/SelectCustomer.vue'
 import { computed, onMounted, ref } from 'vue'
 import { getActivePromotions } from '@/services/rest/promotions-api'
-import { searchCustomers } from '@/services/rest/customers-api'
 import { addOfferedPromotion } from '@/services/rest/offered-promotions-api'
 
 
@@ -50,7 +47,6 @@ defineExpose({ openNewPromotionDialog })
 const emit = defineEmits(['update-promotions'])
 
 const promotions = ref([])
-const customers = ref([])
 const promotionsSearch = ref('')
 const communticationTypes = [{
     name: 'SMS',
@@ -105,12 +101,6 @@ function save() {
     addOfferedPromotion(editedItem.value).then(response => {
         emit('update-promotions')
         close()
-    })
-}
-
-function updateCustomers(search) {
-    searchCustomers(search).then(response => {
-        customers.value = response
     })
 }
 </script>

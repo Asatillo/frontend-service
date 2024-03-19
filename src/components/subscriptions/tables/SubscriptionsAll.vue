@@ -7,11 +7,7 @@
           <v-window-item :value="1">
             <v-row class="ma-1">
               <v-col cols="6">
-                <v-autocomplete v-model="editedItem.customer" label="Customer" :items="customers" required
-                  item-title="name" item-value="id" @update:search="getCustomers"
-                  @update:model-value="getNetworkEntities" :loading="customersLoading" no-data-text="No such customer"
-                  density="comfortable">
-                </v-autocomplete>
+                <SelectCustomer v-model="editedItem.customer" :customerId="editedItem.customer" />
               </v-col>
               <v-col cols="6">
                 <v-select v-model="deviceType" :items="['MOBILE', 'ROUTER']" label="Device type" density="comfortable"
@@ -109,6 +105,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import SelectCustomer from '@/components/customers/components/SelectCustomer.vue';
 import { formatDateString } from '@/services/date-formatting';
 import { searchCustomers } from '@/services/rest/customers-api'
 import { getSubscriptions, addSubscription, changeSubscriptionStatus } from '@/services/rest/subscriptions-api';

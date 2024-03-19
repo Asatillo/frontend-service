@@ -64,10 +64,7 @@
             <v-card v-if="deviceToSell">
                 <v-card-title class="text-h6">Sell {{ deviceToSell.deviceTemplate.model }}</v-card-title>
                 <v-card-text>
-                    <v-autocomplete v-model="selectedCustomer" label="To Customer" :items="customers" required chips
-                        item-title="name" item-value="id" @update:search="updateCustomers"
-                        no-data-text="No customer with such name">
-                    </v-autocomplete>
+                    <SelectCustomer v-model="selectedCustomer" :customerId="selectedCustomer"/>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -81,10 +78,11 @@
 </template>
   
 <script setup>
-import { addDevice, getDevices } from '@/services/rest/devices-api'
+import { addDevice, getDevices, sellDeviceToCustomer } from '@/services/rest/devices-api'
 import { getDeviceTemplates } from '@/services/rest/device-templates-api'
-import { searchCustomers } from '@/services/rest/customers-api'
+import SelectCustomer from '@/components/customers/components/SelectCustomer.vue'
 import DeviceCard from './DeviceCard.vue'
+
 import { onMounted } from 'vue'
 import { ref } from 'vue'
 
@@ -92,7 +90,6 @@ const newDeviceTemplate = ref(null)
 const newDeviceAmount = ref(null)
 const sellDialog = ref(false)
 const selectedCustomer = ref(null)
-const customers = ref([])
 const deviceToSell = ref(null)
 const search = ref('')
 const loading = ref(false)
@@ -193,12 +190,11 @@ function closeSellDialog() {
 }
 
 function sellDevice(deviceId, customerId) {
-    closeSellDialog()
-}
-
-function updateCustomers(search) {
-    searchCustomers(search).then(response => {
-        customers.value = response
+    sellDeviceToCustomer(customerId, deviceId, null).then(response => {
+        if (response) {
+            closeSellDialog()
+            loadDevices(tabs.value[tab.value].pagination.currentPage, search.value)
+        }
     })
 }
 
