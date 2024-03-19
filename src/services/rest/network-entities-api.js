@@ -32,6 +32,14 @@ export const getAvailableEntitiesWithoutLimit = async (type, search) => {
     })
 }
 
+export const addNetworkEntity = async (networkEntity) => {
+    return await http.post(`/crm/network-entities`, networkEntity).then(response => {
+        return response.data;
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 export const assignNetworkEntityToCustomer = async (entityId, updatedNetworkEntity) => {
     return await http.put(`/crm/network-entities/${entityId}/sell`, updatedNetworkEntity).then(response => {
         return response.data;
