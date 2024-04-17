@@ -17,14 +17,14 @@
           {{ error }}
         </v-alert>
 
-        <a href="#" class="text-body-2 font-weight-regular"> Forgot Password? </a>
+        <!-- <a href="#" class="text-body-2 font-weight-regular"> Forgot Password? </a> -->
 
-        <v-btn type="submit" color="primary" block class="mt-2" :disabled="!areAllRulesMet"> Log in </v-btn>
+        <v-btn type="submit" color="primary" block class="my-2" :disabled="!areAllRulesMet"> Log in </v-btn>
       </v-form>
 
-      <div class="mt-2">
+      <!-- <div class="mt-2">
         <p class="text-body-2"> Don't have an account? <router-link to="/signup"> Sign Up </router-link></p>
-      </div> <br>
+      </div> <br> -->
 
     </v-sheet>
   </div>
@@ -75,11 +75,11 @@ async function login() {
       }
       localStorage.setItem('user', JSON.stringify(user));
       router.push({ name: 'Home' });
-    } else if (response.error) {
-      error.value = response.message;
+    } else {
+      error.value = "Invalid username or password";
     }
   }).catch(error => {
-    console.log(error);
+    // console.log(error);
   });
 }
 </script>
