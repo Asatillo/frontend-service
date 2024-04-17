@@ -13,7 +13,8 @@
 
         <v-list :lines="false" density="compact" nav>
             <template v-for="item in menuItems">
-                <v-list-item @click="redirectToRoute(item.value)" :title="item.title" v-if="isVisible(item.roleRequired)">
+                <v-list-item @click="redirectToRoute(item.value)" :title="item.title"
+                    v-if="isVisible(item.roleRequired)">
                     <template v-slot:prepend>
                         <v-icon :icon="item.icon" size="18"></v-icon>
                     </template>
@@ -34,7 +35,7 @@
                     </template>
                 </v-list-item>
                 <v-divider thickness="3" class="pb-1"></v-divider>
-                <v-list-item v-if="user" :prepend-avatar="user.imageUrl" :title="user.firstName"
+                <v-list-item v-if="user.username" :prepend-avatar="user.imageUrl" :title="user.username"
                     @click="redirectToRoute('MyProfile')">
                     <template v-slot:append>
                         <v-btn class="ml-2" variant="text" @click.stop="handleLogout" icon="mdi-logout"></v-btn>
@@ -53,23 +54,27 @@ import router from '@/router';
 const drawer = ref(true)
 const rail = ref(false)
 const menuItems = [
-    { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers', roleRequired: 'AGENT' },
-    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions', roleRequired: 'AGENT' },
-    { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales', roleRequired: 'SALES' },
-    { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions', roleRequired: 'SALES' },
-    { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions', roleRequired: 'SALES' },
-    { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans', roleRequired: 'AGENT' },
-    { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users', roleRequired: 'ADMIN' },
-    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: 'AGENT' },
-    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: 'AGENT' },
-    { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities', roleRequired: 'AGENT' },
+    { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales', roleRequired: ['admin', 'sales'] },
+    { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions', roleRequired: ['admin', 'sales'] },
+    { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions', roleRequired: ['admin', 'sales'] },
+    { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users', roleRequired: ['admin', 'admin'] },
+    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities', roleRequired: ['admin', 'agent'] },
 ]
-const user = ref(null)
-const image = ref('')
-const username = ref('')
-const email = ref('')
-const fullname = ref('')
+var user = {};
 const isDark = ref(null)
+
+onMounted(() => {
+    isDark.value = vuetify.theme.global.name.value == 'dark'
+    if (!localStorage.getItem('accessToken')) {
+        router.push({ name: 'Login' });
+    }
+    user = JSON.parse(localStorage.getItem('user'));
+});
 
 function redirectToRoute(routeValue) {
     router.push({ name: routeValue });
@@ -77,6 +82,7 @@ function redirectToRoute(routeValue) {
 
 function handleLogout() {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     router.push({ name: 'Login' });
 };
@@ -86,25 +92,12 @@ function handleChangeTheme() {
     isDark.value = !isDark.value
 };
 
-function isVisible(role) {
-    return user.value && Object.values(user.value.roles).includes(role)
+function isVisible(rolesRequired) {
+  var setA = new Set(user.roles);
+  var setB = new Set(rolesRequired);
+  var intersection = new Set([...setA].filter(x => setB.has(x)));
+  return Array.from(intersection).length > 0;
 }
-
-onMounted(() => {
-    isDark.value = vuetify.theme.global.name.value == 'dark'
-
-    if (!localStorage.getItem('accessToken')) {
-        router.push({ name: 'Login' });
-    }
-
-    if (localStorage.getItem('user')) {
-        user.value = JSON.parse(localStorage.getItem('user'));
-        image.value = user.value.imageUrl;
-        username.value = user.value.username;
-        fullname.value = user.value.firstName + ' ' + user.value.lastName;
-        email.value = user.value.email;
-    }
-});
 </script>
 
 <style>

@@ -34,6 +34,7 @@
 import { ref, computed } from 'vue';
 import { authorizeUser } from '@/services/rest/auth-api';
 import router from '@/router';
+import VueJwtDecode from 'vue-jwt-decode'
 
 const show1 = ref(false);
 const username = ref('');
@@ -53,14 +54,26 @@ function required(value) {
 }
 
 function min(value) {
-  return value.length >= 5 || 'Min 5 characters';
+  return value.length >= 4 || 'Min 4 characters';
 }
 
 async function login() {
   authorizeUser(username.value, password.value).then(response => {
-    if (response.token) {
-      localStorage.setItem('accessToken', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+    if (response.access_token) {
+      localStorage.setItem('accessToken', response.access_token);
+      localStorage.setItem('refreshToken', response.refresh_token);
+
+      var decodedJWT = VueJwtDecode.decode(response.access_token);
+      var user = {
+        username: decodedJWT.preferred_username,
+        firstName: decodedJWT.given_name,
+        lastName: decodedJWT.family_name,
+        name: decodedJWT.name,
+        email: decodedJWT.email,
+        roles: decodedJWT.resource_access.nova_client.roles,
+        imageUrl: "https://randomuser.me/api/portraits/men/1.jpg"
+      }
+      localStorage.setItem('user', JSON.stringify(user));
       router.push({ name: 'Home' });
     } else if (response.error) {
       error.value = response.message;
