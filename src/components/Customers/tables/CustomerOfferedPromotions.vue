@@ -70,8 +70,11 @@ const headers = [
 function fetchOfferedPromotions({ page, itemsPerPage, search }) {
     loading.value = true
     getOfferedPromotionsByCustomerId(props.id, page, itemsPerPage, search).then(response => {
+        if(!response) return
         offeredPromotions.value = response.content
         totalItems.value = response.totalElements
+        loading.value = false
+    }).finally(() => {
         loading.value = false
     })
 }

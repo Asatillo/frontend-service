@@ -79,6 +79,7 @@ onMounted(() => {
 
 const fetchPromotions = async () => {
     getActivePromotions(1, 25, promotionsSearch.value).then(response => {
+        if(!response) return
         promotions.value = response.content.map(promotion => {
             return {
                 id: promotion.id,

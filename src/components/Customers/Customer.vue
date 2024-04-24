@@ -202,6 +202,7 @@ onMounted(() => {
 
 const getCustomer = async (id) => {
     getCustomerById(id).then(response => {
+        if (!response) return;
         customer.value = response;
     }).catch(error => {
         console.log(error);

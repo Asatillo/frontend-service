@@ -13,10 +13,6 @@
           :rules="passwordRules" :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1"
           autocomplete="on"></v-text-field>
 
-        <v-alert type="error" v-if="error" dismissible>
-          {{ error }}
-        </v-alert>
-
         <!-- <a href="#" class="text-body-2 font-weight-regular"> Forgot Password? </a> -->
 
         <v-btn type="submit" color="primary" block class="my-2" :disabled="!areAllRulesMet"> Log in </v-btn>
@@ -35,6 +31,7 @@ import { ref, computed } from 'vue';
 import { authorizeUser } from '@/services/rest/auth-api';
 import router from '@/router';
 import VueJwtDecode from 'vue-jwt-decode'
+import { useSnackbarStore } from '@/stores/SnackBarStore';
 
 const show1 = ref(false);
 const username = ref('');
@@ -62,6 +59,7 @@ async function login() {
     if (response.access_token) {
       localStorage.setItem('accessToken', response.access_token);
       localStorage.setItem('refreshToken', response.refresh_token);
+      useSnackbarStore().showSnackbar('Logged in successfully', 'mdi-check', 'success', 3000);
 
       var decodedJWT = VueJwtDecode.decode(response.access_token);
       var user = {
@@ -76,7 +74,7 @@ async function login() {
       localStorage.setItem('user', JSON.stringify(user));
       router.push({ name: 'Home' });
     } else {
-      error.value = "Invalid username or password";
+      useSnackbarStore().showSnackbar('Invalid credentials', 'mdi-alert-circle', 'error', 3000);
     }
   }).catch(error => {
     // console.log(error);

@@ -114,19 +114,24 @@ const defaultItem = ref({
 const editedItem = ref(Object.assign({}, defaultItem.value));
 
 async function fetchServicesByType(type) {
-    const response = await getServicesByDeviceType(type);
     var itemList = [];
-    response.forEach((element) => {
-        itemList.push({
-            id: element.id,
-            name: element.name,
+    return getServicesByDeviceType(type).then((response) => {
+        if (!response) {
+            return [];
+        }
+        response.forEach((element) => {
+            itemList.push({
+                id: element.id,
+                name: element.name,
+            });
         });
+        return itemList;
     });
-    return itemList;
 };
 
 const fetchPlans = () => {
     getPlans(page.value, itemsPerPage.value, search.value).then((response) => {
+        if (!response) return;
         plans.value = response.content;
         totalPages.value = response.totalPages;
         page.value = response.page;

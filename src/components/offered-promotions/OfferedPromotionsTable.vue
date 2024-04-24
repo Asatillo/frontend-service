@@ -78,6 +78,7 @@ const getAllOfferedPromotions = async ({ page, itemsPerPage, search }) => {
         })
         totalItems.value = response.totalElements
     }).catch(error => {
+        loading.value = false
         console.log(error)
     }).finally(() => loading.value = false)
 }

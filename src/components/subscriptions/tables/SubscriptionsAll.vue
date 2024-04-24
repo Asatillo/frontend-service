@@ -163,6 +163,7 @@ const headers = [
 function requestServerItems({ page, itemsPerPage, search }) {
   loading.value = true;
   getSubscriptions({ page, itemsPerPage, search }).then(response => {
+    if (!response) return;
     loading.value = false;
     totalItems.value = response.totalElements;
     subscriptions.value = response.content;

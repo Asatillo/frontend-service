@@ -153,7 +153,9 @@ const getAllCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) 
         loading.value = false;
     }).catch(error => {
         console.log(error)
-    })
+    }).finally(() => {
+        loading.value = false;
+    });
 };
 
 function changeActive(item) {

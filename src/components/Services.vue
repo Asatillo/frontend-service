@@ -142,6 +142,7 @@ const headers = [
 const getAllServices = async ({ page, itemsPerPage, search }) => {
     loading.value = true;
     getServices({ page, itemsPerPage, search }).then(response => {
+        if (!response) return;
         totalItems.value = response.totalElements;
         services.value = response.content;
     }).finally(() => {

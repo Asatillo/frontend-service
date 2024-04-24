@@ -127,6 +127,7 @@ function handleTabChange() {
 onMounted(() => {
     for (const [key, value] of Object.entries(tabs.value)) {
         getDevices(key, value.pagination.itemsPerPage, value.pagination.currentPage, '').then(response => {
+            if (!response) return
             var currentTab = tabs.value[key]
             currentTab.devices = response.content
             currentTab.pagination.totalPages = response.totalPages
@@ -141,6 +142,7 @@ function loadDevices(page, search) {
     }
     var currentTab = tabs.value[tab.value]
     getDevices(tab.value, currentTab.pagination.itemsPerPage, page, search).then(response => {
+        if (!response) return
         currentTab.devices = response.content
         currentTab.pagination.totalPages = response.totalPages
         currentTab.pagination.currentPage = response.page

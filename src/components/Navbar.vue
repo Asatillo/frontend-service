@@ -29,11 +29,11 @@
                         <v-icon icon="mdi-theme-light-dark" size="18"></v-icon>
                     </template>
                 </v-list-item>
-                <v-list-item @click="redirectToRoute('Settings')" title="Settings">
+                <!-- <v-list-item @click="redirectToRoute('Settings')" title="Settings">
                     <template v-slot:prepend>
                         <v-icon icon="mdi-cog" size="18"></v-icon>
                     </template>
-                </v-list-item>
+                </v-list-item> -->
                 <v-divider thickness="3" class="pb-1"></v-divider>
                 <v-list-item v-if="user.username" :prepend-avatar="user.imageUrl" :title="user.username"
                     @click="redirectToRoute('MyProfile')">
@@ -50,17 +50,18 @@
 import { ref, onMounted, computed, } from 'vue'
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
+import { useSnackbarStore } from '@/stores/SnackBarStore';
 
 const drawer = ref(true)
 const rail = ref(false)
 const menuItems = [
     { icon: 'mdi-account-multiple', value: 'Customers', title: 'Customers', roleRequired: ['admin', 'agent'] },
-    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-playlist-check', value: 'Subscriptions', title: 'Subscriptions', roleRequired: ['admin', 'agent', 'sales'] },
     { icon: 'mdi-currency-usd', value: 'Sales', title: 'Sales', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans', roleRequired: ['admin', 'agent'] },
-    { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users', roleRequired: ['admin', 'admin'] },
+    // { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users', roleRequired: ['admin', 'admin'] },
     { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: ['admin', 'agent'] },
     { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: ['admin', 'agent'] },
     { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities', roleRequired: ['admin', 'agent'] },
@@ -70,10 +71,11 @@ const isDark = ref(null)
 
 onMounted(() => {
     isDark.value = vuetify.theme.global.name.value == 'dark'
-    if (!localStorage.getItem('accessToken')) {
+    if (!localStorage.getItem('accessToken') || !localStorage.getItem('user')) {
         router.push({ name: 'Login' });
+    }else{
+        user = JSON.parse(localStorage.getItem('user'));
     }
-    user = JSON.parse(localStorage.getItem('user'));
 });
 
 function redirectToRoute(routeValue) {
@@ -84,6 +86,7 @@ function handleLogout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
+    useSnackbarStore().showSnackbar('Logged out successfully', 'mdi-check', 'success', 3000);
     router.push({ name: 'Login' });
 };
 
