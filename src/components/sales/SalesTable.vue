@@ -77,6 +77,8 @@ function fetchSales({ page, itemsPerPage, search }) {
             totalItems.value = response.totalElements
             loading.value = false
         }
+    }).finally(() => {
+        loading.value = false
     })
 }
 </script>
