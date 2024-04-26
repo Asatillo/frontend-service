@@ -2,7 +2,7 @@
   <div class="d-flex justify-center" style="height: fit-content">
     <v-sheet width="400" class="px-6">
       <v-container class="d-flex justify-center" style="max-width: 200px ">
-        <v-img src="../assets/logo1.png" width="200"></v-img>
+        <v-img src="../assets/logo_nova.png" width="200"></v-img>
       </v-container>
 
       <v-form fast-fail @submit.prevent="login">
@@ -13,7 +13,7 @@
           :rules="passwordRules" :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1"
           autocomplete="on"></v-text-field>
 
-        <v-btn type="submit" color="primary" block class="my-2" :disabled="!areAllRulesMet"> Log in </v-btn>
+        <v-btn type="submit" color="primary" block class="mt-2 mb-5" :disabled="!areAllRulesMet"> Log in </v-btn>
       </v-form>
 
     </v-sheet>

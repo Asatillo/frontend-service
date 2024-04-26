@@ -3,7 +3,7 @@
         style="color: azure; background-color: rgb(45, 47, 64); max-width: fit-content;" elevation="10" :rail="rail"
         @click="rail = false">
         <v-list density="compact">
-            <v-list-item title="NOVA" @click="redirectToRoute('Home')">
+            <v-list-item prepend-avatar="logo_nova.png" title="NOVA" @click="redirectToRoute('Home')">
                 <template v-slot:append>
                     <v-btn v-if="!rail" variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
                 </template>
