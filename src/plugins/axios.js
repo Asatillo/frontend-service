@@ -1,6 +1,8 @@
 import router from "@/router";
 import axios from "axios";
 import { useSnackbarStore } from "@/stores/SnackBarStore"
+import { useAuthStore } from "@/stores/AuthStore";
+import { refreshToken } from "@/services/rest/auth-api";
 
 const unauthorizedEndpoints = ["auth-service/auth/authenticate", "auth-service/auth/register"];
 const snackbarStore = useSnackbarStore();
@@ -16,32 +18,25 @@ const http = axios.create({
 http.interceptors.request.use((config) => {
     if (!unauthorizedEndpoints.includes(config.url)) {
         config.headers = {
-            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            "Authorization": `Bearer ${useAuthStore().getAccessToken}`
         };
     }
     return config;
 });
 
-http.interceptors.response.use((response) => {
-    if(response.status === 200 || response.status === 201){
-        return response;
-    }else{
-        snackbarStore.showSnackbar("Unhandled Error", "mdi-alert-circle", "error", 3000);
-        return Promise.reject(response);
-    }
-}, (error) => {
+http.interceptors.response.use(response => response, error => {
     if (error.response.status === 403) {
         snackbarStore.showSnackbar("Forbidden", "mdi-alert-circle", "error", 3000);
     }
-    else if (error.response.status === 401) {
+    
+    if (error.response.status === 401) {
         snackbarStore.showSnackbar("Unauthorized", "mdi-alert-circle", "error", 3000);
-        localStorage.removeItem("accessToken");
+        useAuthStore().logout();
         router.push({name: "Login", });
     }
-    else if (error.response.status === 503 || error.response.status === 500) {
-        snackbarStore.showSnackbar("Service Temporarily Unavailable", "mdi-alert-circle", "error", 3000);}
-    else{
-        router.push({name: "Unhandled"});
+    
+    if (error.response.status === 503 || error.response.status === 500) {
+        snackbarStore.showSnackbar("Service Temporarily Unavailable", "mdi-alert-circle", "error", 3000);
     }
     
     return Promise.reject(error);

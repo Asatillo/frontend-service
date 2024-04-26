@@ -51,6 +51,7 @@ import { ref, onMounted, computed, } from 'vue'
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 import { useSnackbarStore } from '@/stores/SnackBarStore';
+import { useAuthStore } from '@/stores/AuthStore';
 
 const drawer = ref(true)
 const rail = ref(false)
@@ -70,10 +71,10 @@ const isDark = ref(null)
 
 onMounted(() => {
     isDark.value = vuetify.theme.global.name.value == 'dark'
-    if (!localStorage.getItem('accessToken') || !localStorage.getItem('user')) {
+    if (!useAuthStore().getAccessToken || !useAuthStore().getRefreshToken || !useAuthStore().getUser){
         router.push({ name: 'Login' });
     }else{
-        user = JSON.parse(localStorage.getItem('user'));
+        user = useAuthStore().getUser;
     }
 });
 
@@ -82,9 +83,9 @@ function redirectToRoute(routeValue) {
 };
 
 function handleLogout() {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+    useAuthStore().setAccessToken(null);
+    useAuthStore().setRefreshToken(null);
+    useAuthStore().setUser(null);
     useSnackbarStore().showSnackbar('Logged out successfully', 'mdi-check', 'success', 3000);
     router.push({ name: 'Login' });
 };
