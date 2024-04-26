@@ -19,16 +19,21 @@ export const authorizeUser = async (username, password) => {
         });
 }
 
-export const signUpUser = async (userData) => {
-    return await http.post('auth-service/auth/register', userData).then(response => {
-        return response.data
-    }).catch(error => {
-        return error.response.data
-    })
-}
+export const refreshToken = async (username, refresh_token) => {
+    var formData = new FormData();
+    formData.append('username', username);
+    formData.append('refresh_token', refresh_token);
+    formData.append('grant_type', 'refresh_token');
+    formData.append('client_id', 'nova_client');
 
-export const getUsersByRole = async ({ page, itemsPerPage, search }, role) => {
-    return await http.get(`/auth-service/users?page=${page}&size=${itemsPerPage}&search=${search}&role=${role}`).then(response => {
-        return response.data
+    return fetch('http://localhost:8080/auth/realms/nova_realm/protocol/openid-connect/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(formData)
     })
+        .then(response => {
+            return response.json();
+        });
 }
