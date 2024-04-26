@@ -23,7 +23,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { authorizeUser } from '@/services/rest/auth-api';
-import router from '@/router';
+import router from '@/plugins/router';
 import VueJwtDecode from 'vue-jwt-decode'
 import { useSnackbarStore } from '@/stores/SnackBarStore';
 import { useAuthStore } from '@/stores/AuthStore';

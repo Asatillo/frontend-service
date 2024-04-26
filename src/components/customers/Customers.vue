@@ -105,7 +105,7 @@
 import { ref } from 'vue';
 import { formatDateString } from '@/services/date-formatting'
 import { getCustomers, changeCustomerStatus, editCustomer, addCustomer } from '@/services/rest/customers-api';
-import router from '@/router';
+import router from '@/plugins/router';
 const hu_cities = ref(require('@/assets/hu_cities.json'));
 
 const itemsPerPage = ref(15);

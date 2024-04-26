@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import router from '@/router';
+import router from '@/plugins/router';
 import { getNetworkEntities } from '@/services/rest/network-entities-api'
 import NewNetworkEntityDialog from '@/components/network-entities/dialogs/NewNetworkEntityDialog.vue'
 

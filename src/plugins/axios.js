@@ -1,4 +1,4 @@
-import router from "@/router";
+import router from "@/plugins/router";
 import axios from "axios";
 import { useSnackbarStore } from "@/stores/SnackBarStore"
 import { useAuthStore } from "@/stores/AuthStore";

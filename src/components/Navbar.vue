@@ -49,7 +49,7 @@
 <script setup>
 import { ref, onMounted, computed, } from 'vue'
 import vuetify from '@/plugins/vuetify';
-import router from '@/router';
+import router from '@/plugins/router';
 import { useSnackbarStore } from '@/stores/SnackBarStore';
 import { useAuthStore } from '@/stores/AuthStore';
 
