@@ -12,11 +12,6 @@ const routes = [
     component: () => import('../views/LoginView.vue')
   },
   {
-    path: '/signup',
-    name: 'Signup',
-    component: () => import('../views/SignupView.vue')
-  },
-  {
     path: '/subscriptions',
     name: 'Subscriptions',
     component: () => import('../views/SubscriptionsView.vue')
@@ -26,11 +21,6 @@ const routes = [
     path: '/sales',
     name: 'Sales',
     component: () => import('../views/SalesView.vue')
-  },
-  {
-    path: '/users',
-    name: 'Users',
-    component: () => import('../views/UsersView.vue')
   },
   {
     path: '/customers',
