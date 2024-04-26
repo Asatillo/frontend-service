@@ -13,14 +13,8 @@
           :rules="passwordRules" :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1"
           autocomplete="on"></v-text-field>
 
-        <!-- <a href="#" class="text-body-2 font-weight-regular"> Forgot Password? </a> -->
-
         <v-btn type="submit" color="primary" block class="my-2" :disabled="!areAllRulesMet"> Log in </v-btn>
       </v-form>
-
-      <!-- <div class="mt-2">
-        <p class="text-body-2"> Don't have an account? <router-link to="/signup"> Sign Up </router-link></p>
-      </div> <br> -->
 
     </v-sheet>
   </div>
@@ -36,7 +30,6 @@ import { useSnackbarStore } from '@/stores/SnackBarStore';
 const show1 = ref(false);
 const username = ref('');
 const password = ref('');
-const error = ref('');
 
 const usernameRules = computed(() => [required(username.value), min(username.value)]);
 const passwordRules = computed(() => [required(password.value), min(password.value)]);

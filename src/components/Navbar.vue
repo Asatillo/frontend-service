@@ -61,7 +61,6 @@ const menuItems = [
     { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans', roleRequired: ['admin', 'agent'] },
-    // { icon: 'mdi-account-hard-hat', value: 'Users', title: 'Users', roleRequired: ['admin', 'admin'] },
     { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: ['admin', 'agent'] },
     { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: ['admin', 'agent'] },
     { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities', roleRequired: ['admin', 'agent'] },
