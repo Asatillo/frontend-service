@@ -1,7 +1,6 @@
 import router from "@/plugins/router";
 import axios from "axios";
 import { useSnackbarStore } from "@/stores/SnackBarStore"
-import { useAuthStore } from "@/stores/AuthStore";
 import { refreshToken } from "@/services/rest/auth-api";
 
 const snackbarStore = useSnackbarStore();
@@ -16,7 +15,7 @@ const http = axios.create({
 
 http.interceptors.request.use((config) => {
     config.headers = {
-        "Authorization": `Bearer ${useAuthStore().getAccessToken}`
+        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
     };
     return config;
 });
@@ -28,7 +27,9 @@ http.interceptors.response.use(response => response, error => {
 
     if (error.response.status === 401) {
         snackbarStore.showSnackbar("Unauthorized", "mdi-alert-circle", "error", 3000);
-        useAuthStore().logout();
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user");
         router.push({ name: "Login", });
     }
 

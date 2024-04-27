@@ -47,11 +47,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, } from 'vue'
+import { ref, onMounted } from 'vue'
 import vuetify from '@/plugins/vuetify';
 import router from '@/plugins/router';
 import { useSnackbarStore } from '@/stores/SnackBarStore';
-import { useAuthStore } from '@/stores/AuthStore';
+import { refreshToken } from '@/services/rest/auth-api';
 
 const drawer = ref(true)
 const rail = ref(false)
@@ -62,8 +62,8 @@ const menuItems = [
     { icon: 'mdi-gift', value: 'Promotions', title: 'Promotions', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-account-question', value: 'OfferedPromotions', title: 'Offered Promotions', roleRequired: ['admin', 'sales'] },
     { icon: 'mdi-format-list-bulleted-type', value: 'Plans', title: 'Plans', roleRequired: ['admin', 'agent'] },
-    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: ['admin', 'agent'] },
-    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: ['admin', 'agent'] },
+    { icon: 'mdi-floor-plan', value: 'Services', title: 'Services', roleRequired: ['admin', 'agent', 'sales'] },
+    { icon: 'mdi-router-wireless', value: 'Devices', title: 'Devices', roleRequired: ['admin', 'agent', 'sales'] },
     { icon: 'mdi-phone-dial', value: 'NetworkEntities', title: 'Network Entities', roleRequired: ['admin', 'agent'] },
 ]
 var user = {};
@@ -71,10 +71,11 @@ const isDark = ref(null)
 
 onMounted(() => {
     isDark.value = vuetify.theme.global.name.value == 'dark'
-    if (!useAuthStore().getAccessToken || !useAuthStore().getRefreshToken || !useAuthStore().getUser){
+    var authToken = localStorage.getItem('access_token');
+    var refreshToken = localStorage.getItem('refresh_token');
+    user = JSON.parse(localStorage.getItem('user'));
+    if (!authToken || !refreshToken || !user){
         router.push({ name: 'Login' });
-    }else{
-        user = useAuthStore().getUser;
     }
 });
 
@@ -83,9 +84,9 @@ function redirectToRoute(routeValue) {
 };
 
 function handleLogout() {
-    useAuthStore().setAccessToken(null);
-    useAuthStore().setRefreshToken(null);
-    useAuthStore().setUser(null);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
     useSnackbarStore().showSnackbar('Logged out successfully', 'mdi-check', 'success', 3000);
     router.push({ name: 'Login' });
 };
