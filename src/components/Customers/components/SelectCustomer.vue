@@ -22,6 +22,7 @@ onMounted(() => {
 function updateCustomers(search) {
     loading.value = true
     searchCustomers(search).then(response => {
+        if(!response) return
         customers.value = response
     }).finally(loading.value = false)
 }

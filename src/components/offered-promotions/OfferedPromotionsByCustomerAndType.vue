@@ -25,13 +25,14 @@ function getOffers() {
   if (props.customerId && props.type) {
     loading.value = true
     getAcceptedOfferedPromotionsByCustomerAndType(props.customerId, props.type, '').then(response => {
+      if (!response) return
       promotions.value = response.content.map(offeredPromotion => {
         return {
           id: offeredPromotion.promotion.id,
           name: offeredPromotion.promotion.name
         };
       });
-    }).then(() => loading.value = false);
+    }).finally(() => loading.value = false);
   }
 }
 

@@ -239,12 +239,14 @@ const changeCustomer = async (item) => {
         segment: item.segment,
     }
     editCustomer(item.id, customerData).then(response => {
+        if (!response) return;
         customer.value = response;
     })
 };
 
 const changeCustomerActive = async (id, mode) => {
     changeCustomerStatus(id, mode).then(response => {
+        if(!response) return;
         customer.value = response;
     })
 };

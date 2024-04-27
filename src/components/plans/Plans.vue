@@ -141,9 +141,11 @@ const fetchPlans = () => {
 onMounted(() => {
     fetchPlans()
     fetchServicesByType('MOBILE').then((response) => {
+        if(!response) return
         services.value['MOBILE'] = response;
     });
     fetchServicesByType('ROUTER').then((response) => {
+        if(!response) return
         services.value['ROUTER'] = response;
     });
 })
@@ -195,6 +197,7 @@ function changeActiveDialogClose() {
 
 function changePlanActive(id, mode) {
     changePlanStatus(id, mode).then((response) => {
+        if(!response) return
         plans.value = plans.value.map((item) => {
             if (item.id === response.id) {
                 return response;
@@ -227,6 +230,7 @@ function save() {
         var plan = editedItem.value;
         plan.duration = convertDateToPeriod(plan.days, plan.months, plan.years);
         updatePlan(plan).then(() => {
+            if(!response) return
             responseObj.value.loading = false;
             responseObj.value.success = true;
             responseObj.value.message = 'Plan updated successfully';
@@ -245,6 +249,7 @@ function save() {
         var plan = editedItem.value;
         editedItem.value.period = convertDateToPeriod(plan.days, plan.months, plan.years);
         addPlan(editedItem.value).then(() => {
+            if(!response) return
             responseObj.value.loading = false;
             responseObj.value.success = true;
             responseObj.value.message = 'Plan added successfully';

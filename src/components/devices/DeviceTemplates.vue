@@ -162,6 +162,7 @@ function createDeviceTemplate() {
         warrantyDuration: convertDateToPeriod(newDeviceTemplate.days, newDeviceTemplate.months, newDeviceTemplate.years)
     }
     addDeviceTemplate(deviceTemplate).then(response => {
+        if (!response) return
         tab.value = response.deviceTemplate.deviceType
         loadDeviceTemplates(tabs.value[response.deviceTemplate.deviceType].pagination.currentPage, search.value)
     });

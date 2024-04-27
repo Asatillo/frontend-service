@@ -33,6 +33,7 @@ function changeActive(promotion) {
 
 function changeActiveStatus() {
     changePromotionStatus(itemToChange.value.id, (itemToChange.value.active ? 'deactivate' : 'activate')).then(response => {
+        if(!response) return
         dialog.value = false
         emit('update-table-after-active-change', response)
     })

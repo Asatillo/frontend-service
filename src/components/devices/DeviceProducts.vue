@@ -152,6 +152,7 @@ function loadDevices(page, search) {
 const openNewDeviceDialog = async () => {
     dialog.value = true
     getDeviceTemplates(false).then(response => {
+        if(!response) return
         deviceTemplates.value = response
     })
 }

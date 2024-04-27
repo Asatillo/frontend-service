@@ -37,6 +37,7 @@ function close() {
 
 function changeActiveStatus(decision) {
     makeDecision(offerIdToDecide.value, decision).then(response => {
+        if(!response) return
         emit('update-promotion', response)
         dialog.value = false        
     })

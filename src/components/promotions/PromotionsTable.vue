@@ -77,6 +77,7 @@ function updateTable() {
 const getAllPromotions = async ({ page, itemsPerPage, search }) => {
     loading.value = true
     getPromotions(page, itemsPerPage, search).then(response => {
+        if(!response) return
         promotions.value = response.content
         totalItems.value = response.totalElements
     }).finally(() => loading.value = false)

@@ -87,6 +87,7 @@ function requestServerItems({ page, itemsPerPage, search }) {
 
 const getCustomerEntities = async ({ page, itemsPerPage, search }, id) => {
     getNetworkEntitiesByCustomer(id, { page, itemsPerPage, search }).then(response => {
+        if(!response) return
         totalItems.value = response.totalElements
         entities.value = response.content
     })
@@ -106,6 +107,7 @@ function close() {
 
 const getAvailableEntities = async (deviceType, search) => {
     getAvailableEntitiesWithoutLimit(deviceType, search).then(response => {
+        if(!response) return
         availableEntities.value = response.content.map((entity) => ({
             id: entity.id,
             name: entity.networkIdentifier
@@ -121,6 +123,7 @@ const assignEntity = async (entityId, entity) => {
     step.value = 2
     responseObj.value.loading = true
     assignNetworkEntityToCustomer(entityId, entity).then(response => {
+        if(!response) return
         responseObj.value.loading = false
         responseObj.value.success = true
         responseObj.value.message = 'Number added successfully'

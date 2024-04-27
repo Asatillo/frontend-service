@@ -63,10 +63,9 @@ defineExpose({ updateFromParent })
 
 function fetchSales({ page, itemsPerPage, search }) {
     getSalesByCustomerId(props.id, page, itemsPerPage, search).then(response => {
-        if (response) {
-            sales.value = response.content
-            totalItems.value = response.totalElements
-        }
+        if(!response) return
+        sales.value = response.content
+        totalItems.value = response.totalElements
     })
 }
 
@@ -74,14 +73,17 @@ watch(sales, (sales) => {
     sales.forEach(sale => {
         if (sale.productType == 'PLAN') {
             getPlanNameById(sale.productId).then(name => {
+                if(!name) return
                 sale.product = name
             })
         } else if (sale.productType == 'DEVICE') {
             getDeviceNameById(sale.productId).then(name => {
+                if(!name) return
                 sale.product = name
             })
         } else if (sale.productType == 'SERVICE') {
             getServiceNameById(sale.productId).then(name => {
+                if(!name) return
                 sale.product = name
             })
         }
@@ -90,18 +92,21 @@ watch(sales, (sales) => {
 
 const getPlanNameById = async (id) => {
     return getPlanById(id).then(plan => {
+        if(!plan) return
         return plan.name
     })
 }
 
 const getDeviceNameById = async (id) => {
     return getDeviceById(id).then(device => {
+        if(!device) return
         return `${device.deviceTemplate.brand} ${device.deviceTemplate.model}`
     })
 }
 
 function getServiceNameById(id) {
     return getServiceById(id).then(service => {
+        if(!service) return
         return service.name
     })
 }

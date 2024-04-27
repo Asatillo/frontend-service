@@ -6,16 +6,20 @@
         <v-toolbar>
             <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
                 class="ma-1"></v-text-field>
-            <v-divider class="mx-2" inset vertical></v-divider>
-            <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
-                customer</v-btn>
+            <div v-if="user_roles?.includes()">
+                <v-divider class="mx-2" inset vertical></v-divider>
+                <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
+                    customer</v-btn>
+            </div>
+
         </v-toolbar>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :items="customers" item-value="id"
             :items-length="totalItems" :items-per-page-options="[15, 20, 25]" :loading="loading"
             @update:options="getAllCustomers" :headers="headers" :search="search" @click:row="handleRowClick"
             item-class="row-class">
             <template v-slot:item.active="{ item }">
-                <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close' }}</v-icon>
+                <v-icon :color="item.active ? 'green' : 'red'" dark>{{ item.active ? 'mdi-check' : 'mdi-close'
+                    }}</v-icon>
             </template>
             <template v-slot:item.actions="{ item }">
                 <v-row>
@@ -30,7 +34,7 @@
             </template>
             <template v-slot:item.wiredInternetAvailable="{ item }">
                 <v-icon :color="item.wiredInternetAvailable ? 'green' : 'red'" dark>{{ item.wiredInternetAvailable ?
-                    'mdi-check' : 'mdi-close' }}</v-icon>
+                'mdi-check' : 'mdi-close' }}</v-icon>
             </template>
             <template v-slot:item.dob="{ item }">
                 {{ formatDateString(item.dob) }}
@@ -78,7 +82,8 @@
                                 <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete v-model="editedItem.city" :items="hu_cities" label="City"></v-autocomplete>
+                                <v-autocomplete v-model="editedItem.city" :items="hu_cities"
+                                    label="City"></v-autocomplete>
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <v-text-field v-model="editedItem.dob" label="Birth date" type="date"></v-text-field>
@@ -100,12 +105,14 @@
         </v-dialog>
     </v-container>
 </template>
-  
+
 <script setup>
 import { ref } from 'vue';
 import { formatDateString } from '@/services/date-formatting'
 import { getCustomers, changeCustomerStatus, editCustomer, addCustomer } from '@/services/rest/customers-api';
 import router from '@/plugins/router';
+
+const user_roles = ref(JSON.parse(localStorage.getItem('user'))).roles;
 const hu_cities = ref(require('@/assets/hu_cities.json'));
 
 const itemsPerPage = ref(15);
@@ -148,6 +155,7 @@ const loading = ref(false);
 const getAllCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) => {
     loading.value = true;
     getCustomers({ page, itemsPerPage, sortBy, groupBy, search }).then(response => {
+        if (!response) return;
         totalItems.value = response.totalElements;
         customers.value = response.content;
         loading.value = false;
@@ -172,6 +180,7 @@ function changeActiveConfirm() {
 
 const changeCustomerActive = async (id, mode) => {
     changeCustomerStatus(id, mode).then(response => {
+        if(!response) return;
         customers.value = customers.value.map((item) => {
             if (item.id == id) {
                 return response;
@@ -217,6 +226,7 @@ const changeCustomer = async (item) => {
         segment: item.segment,
     }
     editCustomer(item.id, customerData).then(response => {
+        if(!response) return;
         customers.value = customers.value.map((item) => {
             if (item.id == response.id) {
                 return response;
@@ -242,7 +252,8 @@ const addNewCustomer = async (item) => {
         dob: item.dob,
         segment: item.segment,
     }
-    addCustomer(newCustomer).then(() => {
+    addCustomer(newCustomer).then((response) => {
+        if(!response) return;
         getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
     })
 };
@@ -252,8 +263,8 @@ function handleRowClick(event, customer) {
 }
 
 </script>
-    
-  
+
+
 <style scoped>
 .row-class:hover {
     background-color: lightblue;

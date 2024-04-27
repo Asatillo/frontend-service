@@ -180,8 +180,8 @@ function openAddNumberDialog() {
 function getCustomers(search) {
   customersLoading.value = true;
   searchCustomers(search).then(response => {
+    if(!response) return
     customers.value = response
-
   }).finally(() => customersLoading.value = false);
 }
 
@@ -189,6 +189,7 @@ function getNetworkEntities() {
   if (!editedItem.value.customer || !deviceType.value) return;
   networkEntitiesLoading.value = true;
   getNetworkEntitiesOfCustomerByType(editedItem.value.customer, deviceType.value).then(response => {
+    if(!response) return
     networkEntities.value = response.content.map(entity => {
       return {
         id: entity.id,
@@ -238,6 +239,7 @@ function closeActiveChangeDialog() {
 function changeActiveStatus() {
   var mode = itemToChange.value.active ? 'deactivate' : 'activate'
   changeSubscriptionStatus(itemToChange.value.id, mode).then(response => {
+    if (!response) return
     subscriptions.value = subscriptions.value.map(subscription => {
       if (subscription.id === response.id) {
         subscription.active = response.active
@@ -253,6 +255,7 @@ watch(deviceType, (newDeviceType) => {
   editedItem.value.plan = null;
   editedItem.value.networkEntity = null;
   getActivePlansByType(newDeviceType).then(response => {
+    if(!response) return
     plans.value = response.content.map(plan => {
       return {
         id: plan.id,

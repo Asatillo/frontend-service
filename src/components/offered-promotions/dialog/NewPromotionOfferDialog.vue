@@ -100,6 +100,7 @@ function close() {
 
 function save() {
     addOfferedPromotion(editedItem.value).then(response => {
+        if(!response) return
         emit('update-promotions')
         close()
     })

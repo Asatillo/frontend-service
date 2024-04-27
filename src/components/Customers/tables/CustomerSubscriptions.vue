@@ -132,6 +132,7 @@ function requestServerItems({ page, itemsPerPage }) {
 
 const getCustomerSubscriptions = async ({ page, itemsPerPage }, id) => {
     getSubscriptionsByCustomer(id, { page, itemsPerPage }).then(response => {
+        if(!response) return
         totalItems.value = response.totalElements
         subscriptions.value = response.content
     })
@@ -141,6 +142,7 @@ const addNewSubscription = async () => {
     step.value = 2
     responseObj.value.loading = true
     addSubscription(subscription.value.networkEntityId, subscription.value.planId, subscription.value.promotionId).then(response => {
+        if(!response) return
         responseObj.value.loading = false
         responseObj.value.success = true
         responseObj.value.message = 'Subscription added successfully'
@@ -174,6 +176,7 @@ function close() {
 
 const getNetworkEntitiesOfCustomer = async (deviceType) => {
     getNetworkEntitiesOfCustomerByType(props.id, deviceType).then(response => {
+        if(!response) return
         availableNetworkEntities.value = response.content.map((item) => {
             return {
                 id: item.id,
@@ -185,6 +188,7 @@ const getNetworkEntitiesOfCustomer = async (deviceType) => {
 
 const getAvailablePlans = async (deviceType) => {
     getActivePlansByType(deviceType).then(response => {
+        if(!response) return
         availablePlans.value = response.content.map((item) => {
             return {
                 id: item.id,
@@ -206,6 +210,7 @@ function closeActiveChangeDialog() {
 
 function changeActiveStatus() {
     changeSubscriptionStatus(itemToChange.value.id, (itemToChange.value.active ? 'deactivate' : 'activate')).then(response => {
+        if(!response) return
         dialogActive.value = false
         subscriptions.value = subscriptions.value.map(subscription => {
             if (subscription.id === response.id) {

@@ -85,6 +85,7 @@ const headers = [
 
 const requestServerItems = async({ page, itemsPerPage, sortBy, groupBy, search }) => {
     getDevicesByCustomer(props.id, { page, itemsPerPage, search }).then(response => {
+        if(!response) return
         totalItems.value = response.totalElements
         devices.value = response.content
     })
@@ -132,6 +133,7 @@ function sellDevice(customerId, deviceTemplateId, promotionId = null) {
 watch(newDeviceType, (newValue) => {
     newDeviceTemplate.value = null
     getAvailableDevicesWithoutPagination(newValue).then(response => {
+        if(!response) return
         availableDevices.value = response.content.map((item) => {
             return {
                 id: item.id,

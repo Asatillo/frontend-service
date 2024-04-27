@@ -76,6 +76,7 @@ const createEntity = () => {
     data.networkIdentifier = prefix.value + data.networkIdentifier
     addNetworkEntity(data)
         .then((response) => {
+            if (!response) return
             responseObj.value.success = true
             responseObj.value.message = 'Network entity created successfully'
             emit('update-table')

@@ -72,6 +72,7 @@ const headers = [
 const getAllOfferedPromotions = async ({ page, itemsPerPage, search }) => {
     loading.value = true
     getOfferedPromotions(page, itemsPerPage, search).then(response => {
+        if(!response) return
         offeredPromotions.value = response.content
         offeredPromotions.value.forEach(async (offeredPromotion) => {
             offeredPromotion.customer = await getCutomersFullName(offeredPromotion.customerId)
@@ -82,6 +83,7 @@ const getAllOfferedPromotions = async ({ page, itemsPerPage, search }) => {
 
 const getCutomersFullName = async (customerId) => {
     return await getCustomersFullName(customerId).then(response => {
+        if(!response) return
         return response
     })
 }
