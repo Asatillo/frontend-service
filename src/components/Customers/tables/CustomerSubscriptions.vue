@@ -134,8 +134,6 @@ const getCustomerSubscriptions = async ({ page, itemsPerPage }, id) => {
     getSubscriptionsByCustomer(id, { page, itemsPerPage }).then(response => {
         totalItems.value = response.totalElements
         subscriptions.value = response.content
-    }).catch(error => {
-        console.log(error)
     })
 }
 
@@ -157,7 +155,6 @@ const addNewSubscription = async () => {
         responseObj.value.loading = false
         responseObj.value.success = false
         responseObj.value.message = 'Something went wrong'
-        console.log(error)
     })
 }
 
@@ -183,8 +180,6 @@ const getNetworkEntitiesOfCustomer = async (deviceType) => {
                 networkIdentifier: `${item.networkIdentifier} (${item.tag})`
             }
         })
-    }).catch(error => {
-        console.log(error)
     })
 }
 
@@ -196,8 +191,6 @@ const getAvailablePlans = async (deviceType) => {
                 name: item.name
             }
         })
-    }).catch(error => {
-        console.log(error)
     })
 }
 
@@ -220,8 +213,6 @@ function changeActiveStatus() {
             }
             return subscription
         })
-    }).catch(error => {
-        console.log(error)
     })
 }
 

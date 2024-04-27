@@ -231,8 +231,6 @@ function createNewServiceDialog() {
 const addService = async (item) => {
     createService(item).then(() => {
         getAllServices({ page: 1, itemsPerPage: itemsPerPage.value, search: search.value });
-    }).catch(err => {
-        console.log(err);
-    });
+    })
 };
 </script>

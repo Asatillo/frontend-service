@@ -79,8 +79,6 @@ const getAllPromotions = async ({ page, itemsPerPage, search }) => {
     getPromotions(page, itemsPerPage, search).then(response => {
         promotions.value = response.content
         totalItems.value = response.totalElements
-    }).catch(error => {
-        console.log(error)
     }).finally(() => loading.value = false)
 }
 

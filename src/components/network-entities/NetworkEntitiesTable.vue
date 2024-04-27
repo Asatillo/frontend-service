@@ -52,8 +52,6 @@ function requestServerItems({ page, itemsPerPage, search }) {
     getNetworkEntities({ page, itemsPerPage, search }).then(response => {
         totalItems.value = response.totalElements
         entities.value = response.content
-    }).catch(error => {
-        console.log(error)
     })
 }
 

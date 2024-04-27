@@ -77,17 +77,12 @@ const getAllOfferedPromotions = async ({ page, itemsPerPage, search }) => {
             offeredPromotion.customer = await getCutomersFullName(offeredPromotion.customerId)
         })
         totalItems.value = response.totalElements
-    }).catch(error => {
-        loading.value = false
-        console.log(error)
     }).finally(() => loading.value = false)
 }
 
 const getCutomersFullName = async (customerId) => {
     return await getCustomersFullName(customerId).then(response => {
         return response
-    }).catch(error => {
-        console.log(error)
     })
 }
 

@@ -245,8 +245,6 @@ function changeActiveStatus() {
       return subscription
     })
     closeActiveChangeDialog()
-  }).catch(error => {
-    console.log(error)
   })
 }
 

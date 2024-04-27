@@ -204,9 +204,7 @@ const getCustomer = async (id) => {
     getCustomerById(id).then(response => {
         if (!response) return;
         customer.value = response;
-    }).catch(error => {
-        console.log(error);
-    });
+    })
 };
 
 
@@ -242,17 +240,13 @@ const changeCustomer = async (item) => {
     }
     editCustomer(item.id, customerData).then(response => {
         customer.value = response;
-    }).catch(error => {
-        console.log(error);
-    });
+    })
 };
 
 const changeCustomerActive = async (id, mode) => {
     changeCustomerStatus(id, mode).then(response => {
         customer.value = response;
-    }).catch(error => {
-        console.log(error);
-    });
+    })
 };
 
 function updateInvoiceTable() {

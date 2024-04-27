@@ -87,8 +87,6 @@ const requestServerItems = async({ page, itemsPerPage, sortBy, groupBy, search }
     getDevicesByCustomer(props.id, { page, itemsPerPage, search }).then(response => {
         totalItems.value = response.totalElements
         devices.value = response.content
-    }).catch(error => {
-        console.log(error)
     })
 }
 
@@ -140,8 +138,6 @@ watch(newDeviceType, (newValue) => {
                 name: item.deviceTemplate.brand + ' ' + item.deviceTemplate.model,
             }
         })
-    }).catch(error => {
-        console.log(error)
     })
 })
 

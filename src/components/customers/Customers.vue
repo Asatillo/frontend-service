@@ -151,8 +151,6 @@ const getAllCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) 
         totalItems.value = response.totalElements;
         customers.value = response.content;
         loading.value = false;
-    }).catch(error => {
-        console.log(error)
     }).finally(() => {
         loading.value = false;
     });
@@ -180,8 +178,6 @@ const changeCustomerActive = async (id, mode) => {
             }
             return item;
         });
-    }).catch(error => {
-        console.log(error)
     })
 };
 
@@ -227,8 +223,6 @@ const changeCustomer = async (item) => {
             }
             return item;
         });
-    }).catch(error => {
-        console.log(error)
     })
 };
 
@@ -250,8 +244,6 @@ const addNewCustomer = async (item) => {
     }
     addCustomer(newCustomer).then(() => {
         getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
-    }).catch(error => {
-        console.log(error)
     })
 };
 

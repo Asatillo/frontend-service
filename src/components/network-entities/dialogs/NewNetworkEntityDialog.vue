@@ -76,16 +76,10 @@ const createEntity = () => {
     data.networkIdentifier = prefix.value + data.networkIdentifier
     addNetworkEntity(data)
         .then((response) => {
-            console.log(response)
             responseObj.value.success = true
             responseObj.value.message = 'Network entity created successfully'
             emit('update-table')
-        })
-        .catch(() => {
-            responseObj.value.success = false
-            responseObj.value.message = 'Something went wrong'
-        })
-        .finally(() => {
+        }).finally(() => {
             responseObj.value.loading = false
             step.value = 2
         })

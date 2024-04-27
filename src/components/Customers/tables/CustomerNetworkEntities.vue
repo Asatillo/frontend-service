@@ -89,8 +89,6 @@ const getCustomerEntities = async ({ page, itemsPerPage, search }, id) => {
     getNetworkEntitiesByCustomer(id, { page, itemsPerPage, search }).then(response => {
         totalItems.value = response.totalElements
         entities.value = response.content
-    }).catch(error => {
-        console.log(error)
     })
 }
 
@@ -112,8 +110,6 @@ const getAvailableEntities = async (deviceType, search) => {
             id: entity.id,
             name: entity.networkIdentifier
         }))
-    }).catch(error => {
-        console.log(error)
     })
 }
 
@@ -138,7 +134,6 @@ const assignEntity = async (entityId, entity) => {
         responseObj.value.loading = false
         responseObj.value.success = false
         responseObj.value.message = 'Something went wrong'
-        console.log(error)
     })
     
 }
