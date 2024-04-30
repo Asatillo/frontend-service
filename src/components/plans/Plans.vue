@@ -229,7 +229,7 @@ function save() {
     if (editedItem.value.id) {
         var plan = editedItem.value;
         plan.duration = convertDateToPeriod(plan.days, plan.months, plan.years);
-        updatePlan(plan).then(() => {
+        updatePlan(plan).then((response) => {
             if(!response) return
             responseObj.value.loading = false;
             responseObj.value.success = true;
@@ -248,7 +248,7 @@ function save() {
     } else {
         var plan = editedItem.value;
         editedItem.value.period = convertDateToPeriod(plan.days, plan.months, plan.years);
-        addPlan(editedItem.value).then(() => {
+        addPlan(editedItem.value).then((response) => {
             if(!response) return
             responseObj.value.loading = false;
             responseObj.value.success = true;

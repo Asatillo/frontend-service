@@ -35,8 +35,7 @@
                     </template>
                 </v-list-item> -->
                 <v-divider thickness="3" class="pb-1"></v-divider>
-                <v-list-item v-if="user.username" :prepend-avatar="user.imageUrl" :title="user.username"
-                    @click="redirectToRoute('MyProfile')">
+                <v-list-item v-if="user.username" :prepend-avatar="user.imageUrl" :title="user.username">
                     <template v-slot:append>
                         <v-btn class="ml-2" variant="text" @click.stop="handleLogout" icon="mdi-logout"></v-btn>
                     </template>

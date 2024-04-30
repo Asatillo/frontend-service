@@ -6,12 +6,9 @@
         <v-toolbar>
             <v-text-field v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details
                 class="ma-1"></v-text-field>
-            <div v-if="user_roles?.includes()">
-                <v-divider class="mx-2" inset vertical></v-divider>
-                <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
-                    customer</v-btn>
-            </div>
-
+            <v-divider class="mx-2" inset vertical></v-divider>
+            <v-btn prepend-icon="mdi-plus" color="primary" @click="createNewCustomerDialog">New
+                customer</v-btn>
         </v-toolbar>
         <v-data-table-server v-model:itemsPerPage="itemsPerPage" :items="customers" item-value="id"
             :items-length="totalItems" :items-per-page-options="[15, 20, 25]" :loading="loading"
@@ -110,9 +107,9 @@
 import { ref } from 'vue';
 import { formatDateString } from '@/services/date-formatting'
 import { getCustomers, changeCustomerStatus, editCustomer, addCustomer } from '@/services/rest/customers-api';
+import { canAccess } from '@/services/roles-manager';
 import router from '@/plugins/router';
 
-const user_roles = ref(JSON.parse(localStorage.getItem('user'))).roles;
 const hu_cities = ref(require('@/assets/hu_cities.json'));
 
 const itemsPerPage = ref(15);
@@ -180,7 +177,7 @@ function changeActiveConfirm() {
 
 const changeCustomerActive = async (id, mode) => {
     changeCustomerStatus(id, mode).then(response => {
-        if(!response) return;
+        if (!response) return;
         customers.value = customers.value.map((item) => {
             if (item.id == id) {
                 return response;
@@ -226,7 +223,7 @@ const changeCustomer = async (item) => {
         segment: item.segment,
     }
     editCustomer(item.id, customerData).then(response => {
-        if(!response) return;
+        if (!response) return;
         customers.value = customers.value.map((item) => {
             if (item.id == response.id) {
                 return response;
@@ -253,7 +250,7 @@ const addNewCustomer = async (item) => {
         segment: item.segment,
     }
     addCustomer(newCustomer).then((response) => {
-        if(!response) return;
+        if (!response) return;
         getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
     })
 };

@@ -61,6 +61,7 @@ async function login() {
         lastName: decodedJWT.family_name,
         name: decodedJWT.name,
         email: decodedJWT.email,
+        city: decodedJWT.city,
         roles: decodedJWT.resource_access.nova_client.roles,
         imageUrl: "https://randomuser.me/api/portraits/men/1.jpg"
       }

@@ -8,7 +8,7 @@
                         <v-select v-model="editedItem.deviceType" label="Device type" cols="12" sm="6" md="6"
                             :items="['MOBILE', 'ROUTER']">
                         </v-select>
-                        <v-text-field :prefix="prefix" v-model="editedItem.networkIdentifier" label="Network Identifier" type="number"></v-text-field>
+                        <v-text-field :prefix="prefix" v-model="editedItem.networkIdentifier" label="Network Identifier" ></v-text-field>
                         <SelectCustomer :customerId="editedItem.ownerId" v-model="editedItem.ownerId"/>
                         <v-text-field v-model="editedItem.tag" label="Tag" type="text"></v-text-field>
                     </v-window-item>

@@ -34,7 +34,7 @@
                 <v-btn color="blue-darken-1" variant="text" @click="close">
                     Cancel
                 </v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="save" :disabled="!(editedItem.name && editedItem.designatedDeviceType && editedItem.type && editedItem.amount & editedItem.price)">
+                <v-btn color="blue-darken-1" variant="text" @click="save" :disabled="!(editedItem.name && editedItem.designatedDeviceType && editedItem.type && editedItem.amount && editedItem.price)">
                     Save
                 </v-btn>
             </v-card-actions>

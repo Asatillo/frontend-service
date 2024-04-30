@@ -6,8 +6,10 @@
             <v-toolbar flat color="transparent">
                 <v-text-field class="ml-1" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line
                     hide-details></v-text-field>
-                <v-divider class="mx-4" inset vertical></v-divider>
-                <v-btn color="green" prepend-icon="mdi-shopping" @click="openMakeOfferDialog">Make an Offer</v-btn>
+                    <div v-if="canAccess(['admin', 'sales'])">
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-btn color="green" prepend-icon="mdi-shopping" @click="openMakeOfferDialog">Make an Offer</v-btn>
+                    </div>  
             </v-toolbar>
         </template>
         <template v-slot:item.offerDate="{ item }">
@@ -45,6 +47,7 @@ import MakeDecisionForPromotionDialog from '@/components/customers/dialogs/MakeD
 import { ref } from 'vue'
 import { getOfferedPromotionsByCustomerId } from '@/services/rest/offered-promotions-api'
 import { formatDateString } from '@/services/date-formatting'
+import { canAccess } from '@/services/roles-manager'
 
 const newPromotionOfferDialog = ref(null) 
 const makeDecisionForPromotionDialog = ref(null)
