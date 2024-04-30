@@ -8,8 +8,8 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Layout from '../components/Layout.vue';
-import Services from '../components/Services.vue';
+import Layout from '@/components/Layout.vue';
+import Services from '@/components/Services.vue';
 
 export default defineComponent({
   name: 'HomeView',

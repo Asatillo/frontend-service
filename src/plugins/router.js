@@ -5,17 +5,17 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/HomeView.vue'),
+    component: () => import('@/views/HomeView.vue'),
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/LoginView.vue'),
+    component: () => import('@/views/LoginView.vue'),
   },
   {
     path: '/subscriptions',
     name: 'Subscriptions',
-    component: () => import('../views/SubscriptionsView.vue'),
+    component: () => import('@/views/SubscriptionsView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -24,7 +24,7 @@ const routes = [
   {
     path: '/sales',
     name: 'Sales',
-    component: () => import('../views/SalesView.vue'),
+    component: () => import('@/views/SalesView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales']
     }
@@ -32,7 +32,7 @@ const routes = [
   {
     path: '/customers',
     name: 'Customers',
-    component: () => import('../views/CustomersView.vue'),
+    component: () => import('@/views/CustomersView.vue'),
     meta: {
       roleAllowed: ['admin', 'agent']
     }
@@ -40,7 +40,7 @@ const routes = [
   {
     path: '/customers/:id',
     name: 'Customer',
-    component: () => import('../views/CustomerView.vue'),
+    component: () => import('@/views/CustomerView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -48,7 +48,7 @@ const routes = [
   {
     path: '/plans',
     name: 'Plans',
-    component: () => import('../views/PlansView.vue'),
+    component: () => import('@/views/PlansView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -56,7 +56,7 @@ const routes = [
   {
     path: '/devices',
     name: 'Devices',
-    component: () => import('../views/DevicesView.vue'),
+    component: () => import('@/views/DevicesView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -64,7 +64,7 @@ const routes = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import('../views/SettingsView.vue'),
+    component: () => import('@/views/SettingsView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -72,7 +72,7 @@ const routes = [
   {
     path: '/my-profile',
     name: 'MyProfile',
-    component: () => import('../views/MyProfileView.vue'),
+    component: () => import('@/views/MyProfileView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -80,7 +80,7 @@ const routes = [
   {
     path: '/services',
     name: 'Services',
-    component: () => import('../views/ServicesView.vue'),
+    component: () => import('@/views/ServicesView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales', 'agent']
     }
@@ -88,7 +88,7 @@ const routes = [
   {
     path: '/promotions',
     name: 'Promotions',
-    component: () => import('../views/PromotionsView.vue'),
+    component: () => import('@/views/PromotionsView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales']
     }
@@ -96,14 +96,14 @@ const routes = [
   {
     path: '/offered-promotions',
     name: 'OfferedPromotions',
-    component: () => import('../views/OfferedPromotionsView.vue'),
+    component: () => import('@/views/OfferedPromotionsView.vue'),
     meta: {
       roleAllowed: ['admin', 'sales']
     }
   }, {
     path: '/network-entities',
     name: 'NetworkEntities',
-    component: () => import('../views/NetworkEntitiesView.vue'),
+    component: () => import('@/views/NetworkEntitiesView.vue'),
     meta: {
       roleAllowed: ['admin', 'agent']
     }
@@ -116,7 +116,7 @@ const routes = [
       errorStatus: "403",
       errorText: "SORRY, YOU DON'T HAVE THE PERMISSION TO ACCESS THIS PAGE"
     },
-    component: () => import('../views/ErrorTemplate.vue')
+    component: () => import('@/views/ErrorTemplate.vue')
   },
   {
     path: '/error',
@@ -126,7 +126,7 @@ const routes = [
       errorStatus: "503",
       errorText: "SORRY, THE SERVICE YOU ARE TRYING TO ACCESS IS CURRENTLY UNAVAILABLE"
     },
-    component: () => import('../views/ErrorTemplate.vue')
+    component: () => import('@/views/ErrorTemplate.vue')
   },
   {
     path: '/error',
@@ -136,7 +136,7 @@ const routes = [
       errorStatus: "???",
       errorText: "SORRY, AN ERROR OCCURRED WE HAVEN'T HANDLED YET"
     },
-    component: () => import('../views/ErrorTemplate.vue')
+    component: () => import('@/views/ErrorTemplate.vue')
   },
   {
     path: '/:catchAll(.*)',
@@ -146,7 +146,7 @@ const routes = [
       errorStatus: "404",
       errorText: "SORRY, BUT THE PAGE YOU ARE LOOKING FOR DOES NOT EXIST, HAVE BEEN REMOVED, NAME CHANGED OR IS TEMPORARILY UNAVAILABLE"
     },
-    component: () => import('../views/ErrorTemplate.vue')
+    component: () => import('@/views/ErrorTemplate.vue')
   }
 ]
 

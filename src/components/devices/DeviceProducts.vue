@@ -81,7 +81,7 @@
 import { addDevice, getDevices, sellDeviceToCustomer } from '@/services/rest/devices-api'
 import { getDeviceTemplates } from '@/services/rest/device-templates-api'
 import SelectCustomer from '@/components/customers/components/SelectCustomer.vue'
-import DeviceCard from './DeviceCard.vue'
+import DeviceCard from '@/components/devices/DeviceCard.vue'
 
 import { onMounted } from 'vue'
 import { ref } from 'vue'

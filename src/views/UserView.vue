@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 // Components
-import User from '../components/User.vue';
+import User from '@/components/User.vue';
 import Layout from '@/components/Layout.vue';
 
 export default defineComponent({

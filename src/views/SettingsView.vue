@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 // Components
-import Settings from '../components/Settings.vue';
+import Settings from '@/components/Settings.vue';
 import Layout from '@/components/Layout.vue';
 
 export default defineComponent({
