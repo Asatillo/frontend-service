@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <Navbar />
     <v-main>
       <router-view />
       <v-snackbar v-model="snackbarStore.show" varian="tonal" :timeout="snackbarStore.timeout"
@@ -17,6 +18,7 @@
 
 <script setup>
 import { useSnackbarStore } from "@/stores/SnackBarStore"
+import Navbar from "@/components/Navbar.vue"
 
 const snackbarStore = useSnackbarStore()
 </script>
