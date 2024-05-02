@@ -22,3 +22,11 @@ import Navbar from "@/components/Navbar.vue"
 
 const snackbarStore = useSnackbarStore()
 </script>
+
+<style>
+/* TODO: place it to the global css file */
+.v-table {
+    border-radius: 13px;
+    padding: 10px;
+}
+</style>

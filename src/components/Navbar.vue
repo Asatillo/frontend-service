@@ -29,11 +29,6 @@
                         <v-icon icon="mdi-theme-light-dark" size="18"></v-icon>
                     </template>
                 </v-list-item>
-                <!-- <v-list-item @click="redirectToRoute('Settings')" title="Settings">
-                    <template v-slot:prepend>
-                        <v-icon icon="mdi-cog" size="18"></v-icon>
-                    </template>
-                </v-list-item> -->
                 <v-divider thickness="3" class="pb-1"></v-divider>
                 <v-list-item v-if="user.username" :prepend-avatar="user.imageUrl" :title="user.username">
                     <template v-slot:append>
@@ -50,7 +45,6 @@ import { ref, onMounted } from 'vue'
 import vuetify from '@/plugins/vuetify';
 import router from '@/plugins/router';
 import { useSnackbarStore } from '@/stores/SnackBarStore';
-import { refreshToken } from '@/services/rest/auth-api';
 
 const drawer = ref(true)
 const rail = ref(false)
@@ -69,7 +63,7 @@ var user = {};
 const isDark = ref(null)
 
 onMounted(() => {
-    isDark.value = vuetify.theme.global.name.value == 'dark'
+    vuetify.theme.global.name.value = localStorage.getItem('isDark') == 'true' ? 'dark' : 'light';
     var authToken = localStorage.getItem('access_token');
     var refreshToken = localStorage.getItem('refresh_token');
     user = JSON.parse(localStorage.getItem('user'));
@@ -92,6 +86,7 @@ function handleLogout() {
 
 function handleChangeTheme() {
     vuetify.theme.global.name.value = isDark.value ? 'light' : 'dark'
+    localStorage.setItem('isDark', vuetify.theme.global.name.value == 'dark');
     isDark.value = !isDark.value
 };
 
