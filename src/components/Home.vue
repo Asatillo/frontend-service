@@ -15,7 +15,7 @@
       </v-card-title>
       <br>
       <v-card-text>
-        <div :style="`right: calc(${review} - 32px)`" class="position-absolute mt-n8 text-caption text-primary">
+        <div :style="`right: calc(32px)`" class="position-absolute mt-n8 text-caption text-primary">
           Activity review
         </div>
         <v-progress-linear color="primary" height="22" model-value="90" rounded="lg">
@@ -44,7 +44,7 @@
       </v-card-title>
       <br>
       <v-card-text>
-        <div :style="`right: calc(${review} - 32px)`" class="position-absolute mt-n8 text-caption text-primary">
+        <div :style="`right: calc(32px)`" class="position-absolute mt-n8 text-caption text-primary">
           Revenue review
         </div>
         <v-progress-linear color="primary" height="22" model-value="80" rounded="lg">
@@ -74,7 +74,7 @@
       </v-card-title>
       <br>
       <v-card-text>
-        <div :style="`right: calc(${review} - 32px)`" class="position-absolute mt-n8 text-caption text-primary">
+        <div :style="`right: calc(32px)`" class="position-absolute mt-n8 text-caption text-primary">
           Employee review
         </div>
         <v-progress-linear color="primary" height="22" model-value="70" rounded="lg">
