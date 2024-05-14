@@ -5,7 +5,7 @@
                 <div class="text-h1 error-status">{{ errorStatus }}</div>
                 <div class="text-h4">Oops! {{ errorMessage }}</div><br>
                 <p>{{ errorText }}</p>
-                <router-link to="/"> Go to Homepage </router-link>
+                <v-btn @click="$router.back()" color="primary" prepend-icon="mdi-arrow-left">Go Back</v-btn>
             </v-col>
         </v-row>
     </v-container>
