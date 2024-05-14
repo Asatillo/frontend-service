@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useSnackbarStore } from '@/stores/SnackBarStore'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: () => import('@/views/HomeView.vue'),
+    meta: {
+      roleAllowed: ['admin', 'sales', 'agent']
+    }
   },
   {
     path: '/login',
@@ -165,6 +167,7 @@ router.beforeEach((to, from) => {
 
 function isAllowed(rolesAlowed) {
   var user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return false;
   var setA = new Set(user.roles);
   var setB = new Set(rolesAlowed);
   var intersection = new Set([...setA].filter(x => setB.has(x)));
