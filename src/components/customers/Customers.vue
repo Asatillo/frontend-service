@@ -95,7 +95,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue-darken-1" variant="text" @click="close">Cancel</v-btn>
-                    <v-btn color="blue-darken-1" variant="text" @click="save">Save</v-btn>
+                    <v-btn color="blue-darken-1" variant="text" @click="save" :disabled="!saveButtonActive">Save</v-btn>
                     <v-spacer></v-spacer>
                 </v-card-actions>
             </v-card>
@@ -104,10 +104,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { formatDateString } from '@/services/date-formatting'
 import { getCustomers, changeCustomerStatus, editCustomer, addCustomer } from '@/services/rest/customers-api';
-import { canAccess } from '@/services/roles-manager';
 import router from '@/plugins/router';
 
 const hu_cities = ref(require('@/assets/hu_cities.json'));
@@ -148,6 +147,10 @@ const headers = [
 const totalItems = ref(0);
 const customers = ref([]);
 const loading = ref(false);
+
+const saveButtonActive = computed(() => {
+    return editedItem.value.firstName && editedItem.value.lastName && editedItem.value.email && editedItem.value.address && editedItem.value.city && editedItem.value.dob && editedItem.value.segment;
+});
 
 const getAllCustomers = async ({ page, itemsPerPage, sortBy, groupBy, search }) => {
     loading.value = true;
@@ -204,12 +207,20 @@ function close() {
 
 function save() {
     if (editedItem.value.id) {
-        changeCustomer(editedItem.value);
+        changeCustomer(editedItem.value).then(response => {
+            if (response) {
+                close();
+                getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
+            }
+        })
     } else {
-        addNewCustomer(editedItem.value);
+        addNewCustomer(editedItem.value).then(response => {
+            if (response) {
+                close();
+                getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
+            }
+        })
     }
-
-    close();
 };
 
 const changeCustomer = async (item) => {
@@ -249,9 +260,9 @@ const addNewCustomer = async (item) => {
         dob: item.dob,
         segment: item.segment,
     }
-    addCustomer(newCustomer).then((response) => {
-        if (!response) return;
-        getAllCustomers({ page: 1, itemsPerPage: itemsPerPage.value, sortBy: [], groupBy: [], search: '' });
+    return addCustomer(newCustomer).then((response) => {
+        if (!response || response.message) return false;
+        else return true;
     })
 };
 

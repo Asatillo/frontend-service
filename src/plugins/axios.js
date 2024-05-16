@@ -37,6 +37,26 @@ http.interceptors.response.use(response => response, error => {
         snackbarStore.showSnackbar("Service Temporarily Unavailable", "mdi-alert-circle", "error", 3000);
     }
 
+    if (error.response.status === 400) {
+        if (error.response.data.error) {
+            var errorText = "";
+            if(error.response.data.validationErrors){
+                for (var key in error.response.data.validationErrors) {
+                    errorText += error.response.data.validationErrors[key] + "\n";
+                }
+            }
+            else if(error.response.data.error){
+                errorText += error.response.data.message;
+            }
+            
+            snackbarStore.showSnackbar(errorText, "mdi-alert-circle", "error", 3000);
+        }
+
+        if(error.response.data.success === false){
+            snackbarStore.showSnackbar(error.response.data.message, "mdi-alert-circle", "error", 3000);
+        }
+    }
+
     return Promise.reject(error);
 });
 

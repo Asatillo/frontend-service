@@ -59,6 +59,6 @@ export const addCustomer = async (customer) => {
     return await http.post(`/crm/customers`, customer).then(response => {
         return response.data;
     }).catch(err => {
-        console.log(err);
+        return err.response.data;
     })
 }
